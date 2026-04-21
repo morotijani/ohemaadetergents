@@ -93,3 +93,22 @@ CREATE TABLE IF NOT EXISTS `order_items` (
     INDEX `idx_order_items_order_id` (`order_id`),
     INDEX `idx_order_items_product_id` (`product_id`)
 ) ENGINE=InnoDB;
+
+-- Logs Table
+CREATE TABLE IF NOT EXISTS `logs` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `log_id` BINARY(16) NOT NULL UNIQUE COMMENT 'UUID v7',
+    `admin_id` INT,
+    `customer_id` INT,
+    `action` VARCHAR(100) NOT NULL,
+    `description` TEXT,
+    `ip_address` VARCHAR(45),
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`admin_id`) REFERENCES `admins`(`id`) ON DELETE SET NULL,
+    FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON DELETE SET NULL,
+    INDEX `idx_logs_log_id` (`log_id`),
+    INDEX `idx_logs_admin_id` (`admin_id`),
+    INDEX `idx_logs_customer_id` (`customer_id`),
+    INDEX `idx_logs_action` (`action`)
+) ENGINE=InnoDB;
