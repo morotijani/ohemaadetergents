@@ -1,7 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../src/Cart.php';
+$cartObj = new \App\Cart();
+$cartCount = $cartObj->count();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -139,13 +139,30 @@ if (session_status() === PHP_SESSION_NONE) {
                 </li>
             </ul>
             <div class="d-flex align-items-center">
-                <a href="#" class="nav-link position-relative me-3">
+                <a href="/ohemaadetergents/cart.php" class="nav-link position-relative me-3">
                     <i class="bi bi-cart3 fs-5"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                        0
+                    <span id="cartBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                        <?php echo $cartCount; ?>
                     </span>
                 </a>
             </div>
         </div>
     </div>
 </nav>
+
+<script>
+async function addToCart(productId, qty = 1) {
+    try {
+        const res = await fetch('/ohemaadetergents/cart_action.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({action: 'add', product_id: productId, qty: qty})
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            document.getElementById('cartBadge').innerText = data.data.count;
+            // Optionally show a toast here
+        }
+    } catch(e) { console.error(e); }
+}
+</script>

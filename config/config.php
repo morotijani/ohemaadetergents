@@ -35,5 +35,9 @@ return [
         'database' => $_ENV['DB_DATABASE'] ?? 'ohemaa_db',
         'username' => $_ENV['DB_USERNAME'] ?? 'root',
         'password' => $_ENV['DB_PASSWORD'] ?? '',
+    ],
+    'paystack' => [
+        'secret_key' => $_ENV['PAYSTACK_SECRET_KEY'] ?? '',
+        'public_key' => $_ENV['PAYSTACK_PUBLIC_KEY'] ?? '',
     ]
 ];

@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 CREATE TABLE IF NOT EXISTS `orders` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `order_id` BINARY(16) NOT NULL UNIQUE COMMENT 'UUID v7',
+    `tracking_number` VARCHAR(50) UNIQUE,
     `customer_id` INT NOT NULL,
     `total_amount` DECIMAL(10,2) NOT NULL,
     `status` ENUM('pending', 'processing', 'completed', 'cancelled') DEFAULT 'pending',

@@ -89,7 +89,9 @@ include 'includes/header.php';
                                     </h5>
                                     <div class="mt-auto">
                                         <div class="price-tag mb-3">GHS <?php echo number_format($product['price'], 2); ?></div>
-                                        <button class="btn btn-outline-gold w-100 rounded-pill"><i class="bi bi-cart-plus me-2"></i>Add to Cart</button>
+                                        <button class="btn btn-outline-gold w-100 rounded-pill" onclick="addToCart(<?php echo $product['id']; ?>)">
+                                            <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                        </button>
                                     </div>
                                 </div>
                             </div>
