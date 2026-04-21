@@ -69,6 +69,12 @@
                 <input type="file" class="form-control" id="productImage" accept="image/jpeg, image/png, image/webp">
                 <small id="currentImageInfo" class="text-muted d-none">Current image exists. Upload a new one to replace.</small>
             </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="productIsFeatured">
+                <label class="form-check-label" for="productIsFeatured">
+                    Featured Product
+                </label>
+            </div>
         </form>
       </div>
       <div class="modal-footer border-0 pt-0">
@@ -155,6 +161,7 @@ function openEditModal(id) {
     document.getElementById('productDescription').value = p.description;
     document.getElementById('productPrice').value = p.price;
     document.getElementById('productStock').value = p.stock;
+    document.getElementById('productIsFeatured').checked = p.is_featured == 1;
     
     if (p.image_url) {
         document.getElementById('currentImageInfo').classList.remove('d-none');
@@ -178,6 +185,7 @@ async function saveProduct() {
     formData.append('description', document.getElementById('productDescription').value);
     formData.append('price', document.getElementById('productPrice').value);
     formData.append('stock', document.getElementById('productStock').value);
+    formData.append('is_featured', document.getElementById('productIsFeatured').checked ? 1 : 0);
     
     const imageFile = document.getElementById('productImage').files[0];
     if (imageFile) {

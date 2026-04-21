@@ -17,7 +17,7 @@ $admin = Auth::requireAdmin();
 
 try {
     $db = Database::getInstance()->getConnection();
-    $stmt = $db->query("SELECT id, HEX(product_id) as uuid, name, slug, description, price, stock, image_url, created_at FROM products ORDER BY created_at DESC");
+    $stmt = $db->query("SELECT id, HEX(product_id) as uuid, name, slug, description, price, stock, image_url, is_featured, created_at FROM products ORDER BY created_at DESC");
     $products = $stmt->fetchAll();
     
     foreach ($products as &$product) {

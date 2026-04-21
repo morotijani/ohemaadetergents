@@ -25,6 +25,7 @@ $slug = trim($_POST['slug'] ?? '');
 $description = trim($_POST['description'] ?? '');
 $price = (float)($_POST['price'] ?? 0);
 $stock = (int)($_POST['stock'] ?? 0);
+$isFeatured = isset($_POST['is_featured']) && $_POST['is_featured'] ? 1 : 0;
 
 $stmt = $db->prepare("SELECT image_url FROM products WHERE id = ?");
 $stmt->execute([$id]);
@@ -57,8 +58,8 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 }
 
 try {
-    $stmt = $db->prepare("UPDATE products SET name=?, slug=?, description=?, price=?, stock=?, image_url=? WHERE id=?");
-    $stmt->execute([$name, $slug, $description, $price, $stock, $imageUrl, $id]);
+    $stmt = $db->prepare("UPDATE products SET name=?, slug=?, description=?, price=?, stock=?, image_url=?, is_featured=? WHERE id=?");
+    $stmt->execute([$name, $slug, $description, $price, $stock, $imageUrl, $isFeatured, $id]);
     
     Helpers::logAction($db, 'update_product', "Updated product: $name (ID: $id)", $admin['admin_id']);
     

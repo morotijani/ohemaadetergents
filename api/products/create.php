@@ -22,6 +22,7 @@ $slug = trim($_POST['slug'] ?? '');
 $description = trim($_POST['description'] ?? '');
 $price = (float)($_POST['price'] ?? 0);
 $stock = (int)($_POST['stock'] ?? 0);
+$isFeatured = isset($_POST['is_featured']) && $_POST['is_featured'] ? 1 : 0;
 $categoryId = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : null;
 
 if (empty($name) || empty($slug) || empty($price)) {
@@ -55,7 +56,7 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 }
 
 try {
-    $stmt = $db->prepare("INSERT INTO products (product_id, category_id, name, slug, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO products (product_id, category_id, name, slug, description, price, stock, image_url, is_featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $productIdBin = Helpers::generateUuidV7Binary();
     $stmt->execute([
         $productIdBin,
@@ -65,7 +66,8 @@ try {
         $description,
         $price,
         $stock,
-        $imageUrl
+        $imageUrl,
+        $isFeatured
     ]);
     
     Helpers::logAction($db, 'create_product', "Created product: $name", $admin['admin_id']);
