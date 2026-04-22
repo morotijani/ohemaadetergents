@@ -7,7 +7,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Account Admin</title>
+    <title>Ohemaa Detergents Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
@@ -205,8 +205,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         }
         .no-sidebar .main-content { margin-left: 0; max-width: 100%; }
 
-        /* Google Cards */
-        .google-card {
+        /* Ohemaa Cards */
+        .ohemaa-card {
             background: var(--card-bg); 
             border-radius: 16px;
             border: 1px solid var(--card-border);
@@ -214,7 +214,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             transition: background-color 0.2s, border-color 0.2s;
             margin-bottom: 24px;
         }
-        .google-card-header {
+        .ohemaa-card-header {
             font-family: 'Google Sans', sans-serif;
             font-size: 22px;
             font-weight: 400;
@@ -222,7 +222,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         }
 
         /* Buttons */
-        .btn-google {
+        .btn-ohemaa {
             background-color: var(--btn-primary-bg); 
             color: var(--btn-primary-text); 
             font-family: 'Google Sans', sans-serif;
@@ -232,9 +232,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             border: none;
             transition: background-color 0.2s;
         }
-        .btn-google:hover { background-color: var(--btn-primary-hover); color: var(--btn-primary-text); }
+        .btn-ohemaa:hover { background-color: var(--btn-primary-hover); color: var(--btn-primary-text); }
         
-        .btn-google-outline {
+        .btn-ohemaa-outline {
             background-color: transparent; 
             color: var(--active-text); 
             font-family: 'Google Sans', sans-serif;
@@ -244,7 +244,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             border: 1px solid var(--card-border);
             transition: background-color 0.2s;
         }
-        .btn-google-outline:hover { background-color: var(--hover-bg); }
+        .btn-ohemaa-outline:hover { background-color: var(--hover-bg); }
 
         /* Forms & Modals */
         .modal-content {
@@ -282,7 +282,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         .text-dark { color: var(--text-color) !important; }
 
         /* List Items */
-        .google-list-item {
+        .ohemaa-list-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -291,11 +291,45 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             transition: background-color 0.2s;
             cursor: pointer;
         }
-        .google-list-item:hover {
+        .ohemaa-list-item:hover {
             background-color: var(--hover-bg);
         }
-        .google-list-item:last-child {
+        .ohemaa-list-item:last-child {
             border-bottom: none;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 2000;
+        }
+        .ohemaa-toast {
+            background: #323232;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 300px;
+        }
+        .ohemaa-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .ohemaa-toast.success { border-left: 4px solid #81c995; }
+        .ohemaa-toast.error { border-left: 4px solid #f28b82; }
+        [data-theme="dark"] .ohemaa-toast {
+            background: #e8eaed;
+            color: #202124;
         }
 
     </style>
@@ -330,19 +364,43 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 icon.innerText = target === 'dark' ? 'light_mode' : 'dark_mode';
             }
         }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `ohemaa-toast ${type}`;
+            
+            const icon = type === 'success' ? 'check_circle' : 'error';
+            toast.innerHTML = `
+                <span class="material-symbols-outlined" style="color: ${type === 'success' ? '#81c995' : '#f28b82'}">${icon}</span>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Force reflow
+            toast.offsetHeight;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
     </script>
 </head>
 <body class="<?php echo isset($hideSidebar) && $hideSidebar ? 'no-sidebar' : ''; ?>">
+<div id="toastContainer" class="toast-container"></div>
 
 <?php if (!isset($hideSidebar) || !$hideSidebar): ?>
     <div class="topbar">
         <a href="/ohemaadetergents/admin/index" class="logo-area">
-            <span style="font-weight: 500;">Google Account</span>
+            <span style="font-weight: 500;">Ohemaa Account</span>
         </a>
         
         <div class="search-container">
             <span class="material-symbols-outlined search-icon">search</span>
-            <input type="text" class="search-input" id="globalSearch" placeholder="Search Google Account" onkeyup="if(typeof handleSearch === 'function') handleSearch(this.value)">
+            <input type="text" class="search-input" id="globalSearch" placeholder="Search Ohemaa Account" onkeyup="if(typeof handleSearch === 'function') handleSearch(this.value)">
         </div>
 
         <div class="topbar-actions">
@@ -376,6 +434,13 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
             <a href="/ohemaadetergents/admin/admins/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/admins/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">admin_panel_settings</span> Admins
+            </a>
+            <hr class="mx-3" style="border-color: var(--card-border);">
+            <a href="/ohemaadetergents/admin/profile" class="<?php echo $currentPage == 'profile.php' || $currentPage == 'profile' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">person</span> Profile
+            </a>
+            <a href="/ohemaadetergents/admin/settings" class="<?php echo $currentPage == 'settings.php' || $currentPage == 'settings' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">settings</span> Settings
             </a>
         </div>
         <div class="main-content">

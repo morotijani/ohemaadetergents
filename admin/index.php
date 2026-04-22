@@ -5,7 +5,7 @@
 
 <div class="row mt-4">
     <div class="col-md-6 mb-4">
-        <div class="google-card h-100 p-0 overflow-hidden d-flex flex-column">
+        <div class="ohemaa-card h-100 p-0 overflow-hidden d-flex flex-column">
             <div class="p-4 border-bottom" style="border-color: var(--card-border) !important;">
                 <div class="d-flex align-items-center mb-3">
                     <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background-color: var(--active-bg); color: var(--active-text);">
@@ -17,7 +17,7 @@
             </div>
             
             <div class="flex-grow-1">
-                <div class="google-list-item" onclick="window.location.href='/ohemaadetergents/admin/products/index'">
+                <div class="ohemaa-list-item" onclick="window.location.href='/ohemaadetergents/admin/products/index'">
                     <div class="d-flex align-items-center">
                         <span class="material-symbols-outlined me-3 text-muted">category</span>
                         <div>

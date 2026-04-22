@@ -5,7 +5,7 @@
     <h2 class="mb-0" style="font-weight: 400; font-size: 28px;">Orders</h2>
 </div>
 
-<div class="google-card p-0 overflow-hidden">
+<div class="ohemaa-card p-0 overflow-hidden">
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
@@ -49,8 +49,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-google-outline" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn-google" id="saveStatusBtn" onclick="updateOrderStatus()">Update Status</button>
+                <button type="button" class="btn-ohemaa-outline" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn-ohemaa" id="saveStatusBtn" onclick="updateOrderStatus()">Update Status</button>
             </div>
         </div>
     </div>
@@ -99,7 +99,7 @@ function renderTable(filter = '') {
         const date = new Date(o.created_at).toLocaleDateString();
         const statusClass = getStatusClass(o.status);
         const tr = document.createElement('tr');
-        tr.className = 'google-list-item';
+        tr.className = 'ohemaa-list-item';
         tr.style.display = 'table-row';
         tr.innerHTML = `
             <td class="px-4 py-3 fw-medium">${o.tracking_number}</td>
@@ -176,9 +176,10 @@ function viewOrder(id) {
 async function updateOrderStatus() {
     const status = document.getElementById('orderStatusSelect').value;
     const saveBtn = document.getElementById('saveStatusBtn');
+    const originalText = saveBtn.innerHTML;
     
     saveBtn.disabled = true;
-    saveBtn.innerText = 'Updating...';
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Updating...';
     
     try {
         const response = await fetch(apiBase + '/orders/update_status', {
@@ -191,18 +192,17 @@ async function updateOrderStatus() {
         });
         
         const data = await response.json();
+        showToast(data.message, data.status === 'success' ? 'success' : 'error');
         if (data.status === 'success') {
             orderModalInstance.hide();
             loadOrders();
-        } else {
-            alert(data.message);
         }
     } catch (err) {
         console.error(err);
-        alert('Error updating status');
+        showToast('Error updating status', 'error');
     } finally {
         saveBtn.disabled = false;
-        saveBtn.innerText = 'Update Status';
+        saveBtn.innerHTML = originalText;
     }
 }
 </script>

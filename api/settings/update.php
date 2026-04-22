@@ -17,35 +17,25 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') Helpers::jsonResponse(405, 'Method No
 $admin = Auth::requireAdmin();
 $input = json_decode(file_get_contents('php://input'), true);
 
-$id = (int)($input['id'] ?? 0);
-
-if (!$id) {
-    Helpers::jsonResponse(400, 'Admin ID is required');
-}
-
-// Prevent self-deletion
-if ($id === (int)$admin['admin_id']) {
-    Helpers::jsonResponse(400, 'You cannot delete yourself');
+if (!is_array($input)) {
+    Helpers::jsonResponse(400, 'Invalid settings data');
 }
 
 try {
     $db = Database::getInstance()->getConnection();
-    
-    // Find email for logging
-    $stmt = $db->prepare("SELECT email FROM admins WHERE id = ?");
-    $stmt->execute([$id]);
-    $target = $stmt->fetch();
-    
-    if (!$target) {
-        Helpers::jsonResponse(404, 'Admin not found');
+    $db->beginTransaction();
+
+    $stmt = $db->prepare("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
+
+    foreach ($input as $key => $value) {
+        $stmt->execute([$key, $value]);
     }
 
-    $stmt = $db->prepare("DELETE FROM admins WHERE id = ?");
-    $stmt->execute([$id]);
+    $db->commit();
+    Helpers::logAction($db, 'update_settings', "Updated global settings", $admin['admin_id']);
     
-    Helpers::logAction($db, 'delete_admin', "Deleted admin: " . $target['email'], $admin['admin_id']);
-    
-    Helpers::jsonResponse(200, 'Admin deleted successfully');
+    Helpers::jsonResponse(200, 'Settings updated successfully');
 } catch (\Exception $e) {
+    if ($db->inTransaction()) $db->rollBack();
     Helpers::jsonResponse(500, 'Server error');
 }

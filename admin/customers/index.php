@@ -5,7 +5,7 @@
     <h2 class="mb-0" style="font-weight: 400; font-size: 28px;">Customers</h2>
 </div>
 
-<div class="google-card p-0 overflow-hidden">
+<div class="ohemaa-card p-0 overflow-hidden">
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
@@ -63,7 +63,7 @@ function renderTable(filter = '') {
     filteredCustomers.forEach(c => {
         const date = new Date(c.created_at).toLocaleDateString();
         const tr = document.createElement('tr');
-        tr.className = 'google-list-item';
+        tr.className = 'ohemaa-list-item';
         tr.style.display = 'table-row';
         tr.innerHTML = `
             <td class="px-4 py-3 fw-medium">${c.first_name} ${c.last_name}</td>

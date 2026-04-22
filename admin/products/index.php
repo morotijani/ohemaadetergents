@@ -3,12 +3,12 @@
 
 <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
     <h2 class="mb-0" style="font-weight: 400; font-size: 28px;">Products</h2>
-    <button class="btn-google d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreateModal()">
+    <button class="btn-ohemaa d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreateModal()">
         <span class="material-symbols-outlined me-2" style="font-size: 20px;">add</span> Add Product
     </button>
 </div>
 
-<div class="google-card">
+<div class="ohemaa-card">
     <div class="table-responsive">
         <table class="table align-middle">
             <thead>
@@ -30,7 +30,7 @@
 <!-- Product Modal -->
 <div class="modal fade" id="productModal" tabindex="-1">
   <div class="modal-dialog">
-    <div class="modal-content google-card border-0 p-0">
+    <div class="modal-content ohemaa-card border-0 p-0">
       <div class="modal-header border-0 pb-0">
         <h5 class="modal-title" id="modalTitle" style="font-weight: 500;">Add Product</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -77,8 +77,8 @@
         </form>
       </div>
       <div class="modal-footer border-0 pt-0">
-        <button type="button" class="btn-google-outline" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn-google" id="saveBtn" onclick="saveProduct()">Save</button>
+        <button type="button" class="btn-ohemaa-outline" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn-ohemaa" id="saveBtn" onclick="saveProduct()">Save</button>
       </div>
     </div>
   </div>
@@ -181,7 +181,7 @@ function renderTable(filter = '') {
 
     filteredProducts.forEach(p => {
         const tr = document.createElement('tr');
-        tr.className = 'google-list-item';
+        tr.className = 'ohemaa-list-item';
         tr.style.display = 'table-row'; // Reset to table row behavior
         
         const imgUrl = p.image_url ? `/ohemaadetergents/${p.image_url}` : 'https://via.placeholder.com/40';
@@ -257,8 +257,9 @@ async function saveProduct() {
     pendingFiles.forEach(file => formData.append('images[]', file));
     
     const saveBtn = document.getElementById('saveBtn');
+    const originalText = saveBtn.innerHTML;
     saveBtn.disabled = true;
-    saveBtn.innerText = 'Saving...';
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Saving...';
     
     try {
         const response = await fetch(apiBase + endpoint, {
@@ -269,21 +270,21 @@ async function saveProduct() {
         
         const data = await response.json();
         if (response.ok && data.status === 'success') {
+            showToast(data.message);
             productModalInstance.hide();
             loadProducts();
         } else {
+            showToast(data.message || 'Error saving product', 'error');
             const alert = document.getElementById('modalAlert');
             alert.innerText = data.message || 'Error saving product';
             alert.classList.remove('d-none');
         }
     } catch (err) {
         console.error(err);
-        const alert = document.getElementById('modalAlert');
-        alert.innerText = 'Network error';
-        alert.classList.remove('d-none');
+        showToast('Network error', 'error');
     } finally {
         saveBtn.disabled = false;
-        saveBtn.innerText = 'Save';
+        saveBtn.innerHTML = originalText;
     }
 }
 

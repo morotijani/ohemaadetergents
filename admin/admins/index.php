@@ -3,12 +3,12 @@
 
 <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
     <h2 class="mb-0" style="font-weight: 400; font-size: 28px;">Admins</h2>
-    <button class="btn-google d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#adminModal" onclick="openCreateModal()">
+    <button class="btn-ohemaa d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#adminModal" onclick="openCreateModal()">
         <span class="material-symbols-outlined me-2" style="font-size: 20px;">add</span> Add Admin
     </button>
 </div>
 
-<div class="google-card p-0 overflow-hidden">
+<div class="ohemaa-card p-0 overflow-hidden">
     <div class="table-responsive">
         <table class="table align-middle mb-0">
             <thead>
@@ -52,8 +52,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-google-outline" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn-google" id="saveAdminBtn" onclick="saveAdmin()">Save Admin</button>
+                <button type="button" class="btn-ohemaa-outline" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn-ohemaa" id="saveAdminBtn" onclick="saveAdmin()">Save Admin</button>
             </div>
         </div>
     </div>
@@ -102,7 +102,7 @@ function renderTable(filter = '') {
     filteredAdmins.forEach(a => {
         const date = new Date(a.created_at).toLocaleDateString();
         const tr = document.createElement('tr');
-        tr.className = 'google-list-item';
+        tr.className = 'ohemaa-list-item';
         tr.style.display = 'table-row';
         
         let actions = '';
@@ -138,11 +138,12 @@ async function saveAdmin() {
     const email = document.getElementById('adminEmail').value;
     const password = document.getElementById('adminPassword').value;
     const saveBtn = document.getElementById('saveAdminBtn');
+    const originalText = saveBtn.innerHTML;
     
     if (!name || !email || !password) return;
 
     saveBtn.disabled = true;
-    saveBtn.innerText = 'Saving...';
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Saving...';
     
     try {
         const response = await fetch(apiBase + '/admins/create', {
@@ -155,19 +156,18 @@ async function saveAdmin() {
         });
         
         const data = await response.json();
+        showToast(data.message, data.status === 'success' ? 'success' : 'error');
+        
         if (data.status === 'success') {
             adminModalInstance.hide();
             loadAdmins();
-        } else {
-            const alert = document.getElementById('modalAlert');
-            alert.innerText = data.message;
-            alert.classList.remove('d-none');
         }
     } catch (err) {
         console.error(err);
+        showToast('Network error', 'error');
     } finally {
         saveBtn.disabled = false;
-        saveBtn.innerText = 'Save Admin';
+        saveBtn.innerHTML = originalText;
     }
 }
 

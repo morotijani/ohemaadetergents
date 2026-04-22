@@ -17,35 +17,29 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') Helpers::jsonResponse(405, 'Method No
 $admin = Auth::requireAdmin();
 $input = json_decode(file_get_contents('php://input'), true);
 
-$id = (int)($input['id'] ?? 0);
+$name = trim($input['name'] ?? '');
+$email = trim($input['email'] ?? '');
 
-if (!$id) {
-    Helpers::jsonResponse(400, 'Admin ID is required');
-}
-
-// Prevent self-deletion
-if ($id === (int)$admin['admin_id']) {
-    Helpers::jsonResponse(400, 'You cannot delete yourself');
+if (empty($name) || empty($email)) {
+    Helpers::jsonResponse(400, 'Name and email are required');
 }
 
 try {
     $db = Database::getInstance()->getConnection();
     
-    // Find email for logging
-    $stmt = $db->prepare("SELECT email FROM admins WHERE id = ?");
-    $stmt->execute([$id]);
-    $target = $stmt->fetch();
-    
-    if (!$target) {
-        Helpers::jsonResponse(404, 'Admin not found');
+    // Check if email is used by another admin
+    $stmt = $db->prepare("SELECT id FROM admins WHERE email = ? AND id != ?");
+    $stmt->execute([$email, $admin['admin_id']]);
+    if ($stmt->fetch()) {
+        Helpers::jsonResponse(400, 'Email already in use');
     }
 
-    $stmt = $db->prepare("DELETE FROM admins WHERE id = ?");
-    $stmt->execute([$id]);
+    $stmt = $db->prepare("UPDATE admins SET name = ?, email = ? WHERE id = ?");
+    $stmt->execute([$name, $email, $admin['admin_id']]);
     
-    Helpers::logAction($db, 'delete_admin', "Deleted admin: " . $target['email'], $admin['admin_id']);
+    Helpers::logAction($db, 'update_profile', "Updated profile: $email", $admin['admin_id']);
     
-    Helpers::jsonResponse(200, 'Admin deleted successfully');
+    Helpers::jsonResponse(200, 'Profile updated successfully');
 } catch (\Exception $e) {
     Helpers::jsonResponse(500, 'Server error');
 }
