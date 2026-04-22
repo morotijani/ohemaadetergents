@@ -17,7 +17,7 @@ $admin = Auth::requireAdmin();
 
 try {
     $db = Database::getInstance()->getConnection();
-    $stmt = $db->prepare("SELECT name, email FROM admins WHERE id = ?");
+    $stmt = $db->prepare("SELECT name, email, profile_image FROM admins WHERE id = ?");
     $stmt->execute([$admin['admin_id']]);
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
 

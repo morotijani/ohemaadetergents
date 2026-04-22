@@ -5,9 +5,20 @@
 <p class="text-muted mb-4">Info about you and your preferences across Ohemaa services</p>
 
 <div class="ohemaa-card p-0 overflow-hidden mb-4">
-    <div class="p-4 border-bottom" style="border-color: var(--card-border) !important;">
-        <h3 class="mb-0 fs-5">Basic info</h3>
-        <p class="text-muted mb-0 small">Some info may be visible to other people using Ohemaa services.</p>
+    <div class="p-4 border-bottom d-flex align-items-center justify-content-between" style="border-color: var(--card-border) !important;">
+        <div>
+            <h3 class="mb-0 fs-5">Basic info</h3>
+            <p class="text-muted mb-0 small">Some info may be visible to other people using Ohemaa services.</p>
+        </div>
+        <div class="position-relative" style="width: 80px; height: 80px;">
+            <div id="profileImageDisplay" class="rounded-circle overflow-hidden shadow-sm d-flex align-items-center justify-content-center text-white fw-bold fs-2" style="width: 80px; height: 80px; background-color: var(--active-bg); border: 2px solid var(--card-border);">
+                A
+            </div>
+            <button class="btn btn-sm btn-light position-absolute bottom-0 end-0 rounded-circle shadow-sm p-1 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; border: 1px solid var(--card-border);" onclick="document.getElementById('imageUploadInput').click()">
+                <span class="material-symbols-outlined" style="font-size: 18px;">photo_camera</span>
+            </button>
+            <input type="file" id="imageUploadInput" class="d-none" accept="image/jpeg,image/png,image/webp" onchange="uploadProfileImage(this)">
+        </div>
     </div>
     
     <div class="ohemaa-list-item d-block" onclick="focusInput('profileName')">
@@ -81,6 +92,13 @@ async function loadProfile() {
         if (data.status === 'success') {
             document.getElementById('profileName').value = data.data.name;
             document.getElementById('profileEmail').value = data.data.email;
+            
+            const display = document.getElementById('profileImageDisplay');
+            if (data.data.profile_image) {
+                display.innerHTML = `<img src="/ohemaadetergents/${data.data.profile_image}" class="w-100 h-100 object-fit-cover">`;
+            } else {
+                display.innerText = data.data.name.charAt(0).toUpperCase();
+            }
         }
     } catch (err) {
         console.error(err);
@@ -163,6 +181,43 @@ async function changePassword() {
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
+    }
+}
+
+async function uploadProfileImage(input) {
+    if (!input.files || !input.files[0]) return;
+    
+    const formData = new FormData();
+    formData.append('profile_image', input.files[0]);
+    
+    const display = document.getElementById('profileImageDisplay');
+    const originalContent = display.innerHTML;
+    display.innerHTML = '<div class="spinner-border spinner-border-sm text-white"></div>';
+    
+    try {
+        const response = await fetch(apiBase + '/profile/upload_image', {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: formData
+        });
+        const data = await response.json();
+        
+        showToast(data.message, data.status === 'success' ? 'success' : 'error');
+        
+        if (data.status === 'success') {
+            display.innerHTML = `<img src="/ohemaadetergents/${data.data.image_url}" class="w-100 h-100 object-fit-cover">`;
+            // Update topbar avatar if possible
+            const topbarAvatar = document.getElementById('userAvatar');
+            if (topbarAvatar) {
+                topbarAvatar.innerHTML = `<img src="/ohemaadetergents/${data.data.image_url}" class="w-100 h-100 object-fit-cover">`;
+            }
+        } else {
+            display.innerHTML = originalContent;
+        }
+    } catch (err) {
+        console.error(err);
+        showToast('Upload error', 'error');
+        display.innerHTML = originalContent;
     }
 }
 </script>

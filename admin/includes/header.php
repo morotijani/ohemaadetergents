@@ -412,7 +412,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <button class="icon-btn" onclick="logout()" title="Sign Out">
                 <span class="material-symbols-outlined">logout</span>
             </button>
-            <div id="userAvatar" class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px; background-color: var(--btn-primary-bg); font-weight: 500; margin-left: 8px;">
+            <div id="userAvatar" class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px; background-color: var(--btn-primary-bg); font-weight: 500; margin-left: 8px; overflow: hidden;">
                 A
             </div>
         </div>
@@ -447,9 +447,24 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
                     const user = JSON.parse(localStorage.getItem('admin_user') || '{}');
+                    const avatar = document.getElementById('userAvatar');
+
                     if(user.name) {
-                        document.getElementById('userAvatar').innerText = user.name.charAt(0).toUpperCase();
+                        if (avatar) avatar.innerText = user.name.charAt(0).toUpperCase();
                     }
+
+                    // Fetch latest profile data to get image
+                    fetch(apiBase + '/profile/read', {
+                        headers: getAuthHeaders()
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success' && data.data.profile_image) {
+                            const imgHtml = `<img src="/ohemaadetergents/${data.data.profile_image}" class="w-100 h-100 object-fit-cover rounded-circle">`;
+                            if (avatar) avatar.innerHTML = imgHtml;
+                        }
+                    })
+                    .catch(err => console.error('Error fetching profile for avatar', err));
                 });
             </script>
 <?php endif; ?>
