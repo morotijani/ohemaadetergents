@@ -10,18 +10,19 @@ $cartCount = $cartObj->count();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ohemaa Detergents</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         :root {
             --ohemaa-white: #FFFFFF;
+            --ohemaa-bg-offwhite: #F8F9FA;
             --ohemaa-blue: #003366;
             --ohemaa-gold: #D4AF37;
             --ohemaa-gold-hover: #c49f27;
         }
         body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--ohemaa-white);
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--ohemaa-bg-offwhite);
             color: var(--ohemaa-blue);
         }
         h1, h2, h3, h4, h5, h6, .navbar-brand {
@@ -31,7 +32,7 @@ $cartCount = $cartObj->count();
         }
         .navbar {
             background-color: var(--ohemaa-white);
-            box-shadow: 0 2px 10px rgba(0, 51, 102, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 51, 102, 0.05);
         }
         .nav-link {
             color: var(--ohemaa-blue);
@@ -51,7 +52,7 @@ $cartCount = $cartObj->count();
             background-color: var(--ohemaa-gold-hover);
             color: var(--ohemaa-white);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.2);
         }
         .btn-outline-gold {
             border: 2px solid var(--ohemaa-gold);
@@ -65,11 +66,13 @@ $cartCount = $cartObj->count();
             color: var(--ohemaa-white);
         }
         .product-card {
-            border: 1px solid #eef2f5;
-            border-radius: 12px;
+            border: none;
+            border-radius: 16px;
             overflow: hidden;
             transition: all 0.3s ease;
             height: 100%;
+            background-color: var(--ohemaa-white);
+            box-shadow: 0 4px 15px rgba(0, 51, 102, 0.04);
         }
         .product-card:hover {
             box-shadow: 0 10px 20px rgba(0, 51, 102, 0.08);
@@ -119,27 +122,48 @@ $cartCount = $cartObj->count();
             padding: 40px 0 20px;
             margin-top: 60px;
         }
+        
+        /* Mobile Sticky CTA Container */
+        .mobile-sticky-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--ohemaa-white);
+            padding: 15px;
+            box-shadow: 0 -4px 20px rgba(0, 51, 102, 0.1);
+            z-index: 1030;
+            display: none;
+        }
+        @media (max-width: 767.98px) {
+            .mobile-sticky-cta.active {
+                display: flex;
+            }
+            .checkout-mobile-spacing {
+                padding-bottom: 100px;
+            }
+        }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg sticky-top py-3">
     <div class="container">
-        <a class="navbar-brand fs-3" href="/ohemaadetergents/index.php">Ohemaa</a>
+        <a class="navbar-brand fs-3" href="/ohemaadetergents/index">Ohemaa</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link px-3" href="/ohemaadetergents/index.php">Home</a>
+                    <a class="nav-link px-3" href="/ohemaadetergents/index">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-3" href="/ohemaadetergents/shop.php">Shop</a>
+                    <a class="nav-link px-3" href="/ohemaadetergents/shop">Shop</a>
                 </li>
             </ul>
             <div class="d-flex align-items-center">
-                <a href="/ohemaadetergents/cart.php" class="nav-link position-relative me-3">
+                <a href="/ohemaadetergents/cart" class="nav-link position-relative me-3">
                     <i class="bi bi-cart3 fs-5"></i>
                     <span id="cartBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
                         <?php echo $cartCount; ?>
@@ -153,7 +177,7 @@ $cartCount = $cartObj->count();
 <script>
 async function addToCart(productId, qty = 1) {
     try {
-        const res = await fetch('/ohemaadetergents/cart_action.php', {
+        const res = await fetch('/ohemaadetergents/cart_action', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({action: 'add', product_id: productId, qty: qty})

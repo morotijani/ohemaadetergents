@@ -23,7 +23,7 @@ include 'includes/header.php';
     <div class="container py-5">
         <h1 class="display-4 fw-bold mb-4">Discover True Brightness</h1>
         <p class="lead mb-5 opacity-75 mx-auto" style="max-width: 600px;">Experience the power of Ohemaa Detergents. Tough on stains, gentle on fabrics.</p>
-        <a href="shop.php" class="btn btn-gold btn-lg px-5 py-3 rounded-pill">Shop Now</a>
+        <a href="shop" class="btn btn-gold btn-lg px-5 py-3 rounded-pill">Shop Now</a>
     </div>
 </section>
 
@@ -45,10 +45,14 @@ include 'includes/header.php';
                         <?php 
                         $img = $product['image_url'] ? $product['image_url'] : 'https://via.placeholder.com/300x300?text=No+Image';
                         ?>
-                        <img src="<?php echo htmlspecialchars($img); ?>" class="product-image img-fluid" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        <a href="product?slug=<?php echo urlencode($product['slug']); ?>" class="text-decoration-none">
+                            <img src="<?php echo htmlspecialchars($img); ?>" class="product-image img-fluid" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        </a>
                         
                         <div class="p-3 p-md-4 d-flex flex-column flex-grow-1">
-                            <h5 class="mb-2 fs-6 fs-md-5 text-truncate"><?php echo htmlspecialchars($product['name']); ?></h5>
+                            <a href="product?slug=<?php echo urlencode($product['slug']); ?>" class="text-decoration-none text-dark">
+                                <h5 class="mb-2 fs-6 fs-md-5 text-truncate" style="color: var(--ohemaa-blue);"><?php echo htmlspecialchars($product['name']); ?></h5>
+                            </a>
                             <div class="mt-auto">
                                 <div class="price-tag mb-3">GHS <?php echo number_format($product['price'], 2); ?></div>
                                 <button class="btn btn-outline-gold w-100 rounded-pill" onclick="addToCart(<?php echo $product['id']; ?>)">
@@ -63,7 +67,7 @@ include 'includes/header.php';
     </div>
     
     <div class="text-center mt-5">
-        <a href="shop.php" class="btn btn-outline-gold px-4 py-2 rounded-pill">View All Products</a>
+        <a href="shop" class="btn btn-outline-gold px-4 py-2 rounded-pill">View All Products</a>
     </div>
 </section>
 

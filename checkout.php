@@ -13,7 +13,7 @@ $cart = new Cart();
 $cartItems = $cart->getItems();
 
 if (empty($cartItems)) {
-    header("Location: cart.php");
+    header("Location: cart");
     exit;
 }
 
@@ -131,26 +131,26 @@ include 'includes/header.php';
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">First Name *</label>
-                                <input type="text" name="first_name" class="form-control" required>
+                                <input type="text" name="first_name" class="form-control form-control-lg" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Last Name *</label>
-                                <input type="text" name="last_name" class="form-control" required>
+                                <input type="text" name="last_name" class="form-control form-control-lg" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email *</label>
-                                <input type="email" name="email" class="form-control" required>
+                                <input type="email" name="email" class="form-control form-control-lg" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Phone Number *</label>
-                                <input type="text" name="phone" class="form-control" required>
+                                <input type="text" name="phone" class="form-control form-control-lg" required>
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Delivery Address *</label>
-                                <textarea name="address" class="form-control" rows="3" required></textarea>
+                                <textarea name="address" class="form-control form-control-lg" rows="3" required></textarea>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-gold mt-4 w-100 py-3 rounded-pill">Pay GHS <?php echo number_format($total, 2); ?> via Paystack</button>
+                        <button type="submit" class="btn btn-gold mt-4 w-100 py-3 rounded-pill fs-5">Pay GHS <?php echo number_format($total, 2); ?> via Paystack</button>
                     </form>
                 </div>
             </div>

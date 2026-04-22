@@ -44,13 +44,13 @@ include 'includes/header.php';
         <p class="lead">Thank you for your order. We are processing it right away.</p>
         <p class="fs-5 mt-3">Your Tracking Number is: <strong class="text-primary"><?php echo htmlspecialchars($reference); ?></strong></p>
         <p>You can use this number to track your order status.</p>
-        <a href="track_order.php" class="btn btn-outline-gold mt-4 rounded-pill px-4">Track Order</a>
-        <a href="index.php" class="btn btn-gold mt-4 rounded-pill px-4 ms-2">Back to Home</a>
+        <a href="track_order" class="btn btn-outline-gold mt-4 rounded-pill px-4">Track Order</a>
+        <a href="index" class="btn btn-gold mt-4 rounded-pill px-4 ms-2">Back to Home</a>
     <?php else: ?>
         <i class="bi bi-x-circle-fill text-danger" style="font-size: 5rem;"></i>
         <h2 class="mt-4">Payment Failed</h2>
         <p class="lead">We could not verify your payment. Please try again or contact support.</p>
-        <a href="cart.php" class="btn btn-gold mt-4 rounded-pill px-4">Return to Cart</a>
+        <a href="cart" class="btn btn-gold mt-4 rounded-pill px-4">Return to Cart</a>
     <?php endif; ?>
 </div>
 <?php include 'includes/footer.php'; ?>

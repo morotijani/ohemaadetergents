@@ -44,9 +44,9 @@ include 'includes/header.php';
         <div class="col-lg-3 mb-4 mb-lg-0">
             <div class="bg-white p-4 border rounded-3">
                 <h4 class="sidebar-title">Categories</h4>
-                <a href="shop.php" class="category-link <?php echo empty($categoryFilter) ? 'active' : ''; ?>">All Products</a>
+                <a href="shop" class="category-link <?php echo empty($categoryFilter) ? 'active' : ''; ?>">All Products</a>
                 <?php foreach ($categories as $cat): ?>
-                    <a href="shop.php?category=<?php echo urlencode($cat['slug']); ?>" 
+                    <a href="shop?category=<?php echo urlencode($cat['slug']); ?>" 
                        class="category-link <?php echo ($categoryFilter === $cat['slug']) ? 'active' : ''; ?>">
                         <?php echo htmlspecialchars($cat['name']); ?>
                     </a>
@@ -65,7 +65,7 @@ include 'includes/header.php';
                     <div class="col-12 text-center py-5">
                         <i class="bi bi-box-seam fs-1 text-muted mb-3 d-block"></i>
                         <h4 class="text-muted">No products found.</h4>
-                        <a href="shop.php" class="btn btn-gold mt-3">Clear Filters</a>
+                        <a href="shop" class="btn btn-gold mt-3">Clear Filters</a>
                     </div>
                 <?php else: ?>
                     <?php foreach ($products as $product): ?>
@@ -74,19 +74,23 @@ include 'includes/header.php';
                                 <?php 
                                 $img = $product['image_url'] ? $product['image_url'] : 'https://via.placeholder.com/300x300?text=No+Image';
                                 ?>
-                                <div class="position-relative">
-                                    <img src="<?php echo htmlspecialchars($img); ?>" class="product-image img-fluid" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                                    <?php if($product['category_name']): ?>
-                                        <span class="badge bg-light text-dark position-absolute top-0 end-0 m-2 shadow-sm border">
-                                            <?php echo htmlspecialchars($product['category_name']); ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
+                                <a href="product?slug=<?php echo urlencode($product['slug']); ?>" class="text-decoration-none text-dark">
+                                    <div class="position-relative">
+                                        <img src="<?php echo htmlspecialchars($img); ?>" class="product-image img-fluid" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                        <?php if($product['category_name']): ?>
+                                            <span class="badge bg-light text-dark position-absolute top-0 end-0 m-2 shadow-sm border">
+                                                <?php echo htmlspecialchars($product['category_name']); ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                </a>
                                 
                                 <div class="p-3 p-md-4 d-flex flex-column flex-grow-1">
-                                    <h5 class="mb-2 fs-6 fs-md-5 text-truncate" title="<?php echo htmlspecialchars($product['name']); ?>">
-                                        <?php echo htmlspecialchars($product['name']); ?>
-                                    </h5>
+                                    <a href="product?slug=<?php echo urlencode($product['slug']); ?>" class="text-decoration-none text-dark">
+                                        <h5 class="mb-2 fs-6 fs-md-5 text-truncate" title="<?php echo htmlspecialchars($product['name']); ?>" style="color: var(--ohemaa-blue);">
+                                            <?php echo htmlspecialchars($product['name']); ?>
+                                        </h5>
+                                    </a>
                                     <div class="mt-auto">
                                         <div class="price-tag mb-3">GHS <?php echo number_format($product['price'], 2); ?></div>
                                         <button class="btn btn-outline-gold w-100 rounded-pill" onclick="addToCart(<?php echo $product['id']; ?>)">

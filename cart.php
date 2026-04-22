@@ -43,7 +43,7 @@ include 'includes/header.php';
     <?php if (empty($products)): ?>
         <div class="text-center py-5">
             <h4 class="text-muted">Your cart is empty</h4>
-            <a href="shop.php" class="btn btn-gold mt-3">Continue Shopping</a>
+            <a href="shop" class="btn btn-gold mt-3">Continue Shopping</a>
         </div>
     <?php else: ?>
         <div class="row">
@@ -97,7 +97,7 @@ include 'includes/header.php';
                             <span class="fs-5">Total</span>
                             <span class="fs-5 fw-bold" style="color: var(--ohemaa-blue);">GHS <?php echo number_format($total, 2); ?></span>
                         </div>
-                        <a href="checkout.php" class="btn btn-gold w-100 py-3 rounded-pill">Proceed to Checkout</a>
+                        <a href="checkout" class="btn btn-gold w-100 py-3 rounded-pill">Proceed to Checkout</a>
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@ include 'includes/header.php';
 
 <script>
 async function updateCart(productId, qty) {
-    await fetch('/ohemaadetergents/cart_action.php', {
+    await fetch('/ohemaadetergents/cart_action', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({action: 'update', product_id: productId, qty: qty})
@@ -116,7 +116,7 @@ async function updateCart(productId, qty) {
 }
 
 async function removeFromCart(productId) {
-    await fetch('/ohemaadetergents/cart_action.php', {
+    await fetch('/ohemaadetergents/cart_action', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({action: 'remove', product_id: productId})

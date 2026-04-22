@@ -8,8 +8,8 @@
             <div class="col-md-4 mb-4 mb-md-0">
                 <h5 class="text-white mb-3">Quick Links</h5>
                 <ul class="list-unstyled">
-                    <li><a href="/ohemaadetergents/index.php" class="text-light text-decoration-none opacity-75">Home</a></li>
-                    <li><a href="/ohemaadetergents/shop.php" class="text-light text-decoration-none opacity-75">Shop All</a></li>
+                    <li><a href="/ohemaadetergents/index" class="text-light text-decoration-none opacity-75">Home</a></li>
+                    <li><a href="/ohemaadetergents/shop" class="text-light text-decoration-none opacity-75">Shop All</a></li>
                     <li><a href="#" class="text-light text-decoration-none opacity-75">About Us</a></li>
                     <li><a href="#" class="text-light text-decoration-none opacity-75">Contact</a></li>
                 </ul>
