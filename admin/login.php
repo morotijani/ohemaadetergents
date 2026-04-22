@@ -3,9 +3,9 @@ $hideSidebar = true;
 include 'includes/header.php'; 
 ?>
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="google-card text-center" style="width: 100%; max-width: 450px; padding: 48px 40px 36px;">
-        <h2 class="mb-2 text-primary" style="font-weight: 500;">Ohemaa</h2>
-        <h4 class="mb-4" style="font-weight: 400;">Sign in</h4>
+    <div class="google-card text-center" style="width: 100%; max-width: 450px; padding: 48px 40px 36px; margin: 0 auto;">
+        <h2 class="mb-2" style="font-weight: 500; color: var(--active-text);">Ohemaa</h2>
+        <h4 class="mb-4" style="font-weight: 400; color: var(--text-color);">Sign in</h4>
         <p class="text-muted mb-4">Use your Admin Account</p>
         
         <form id="loginForm">

@@ -21,13 +21,24 @@ try {
         header("Location: shop");
         exit;
     }
+    $stmt = $db->prepare("SELECT image_url FROM product_images WHERE product_id = ? ORDER BY id ASC");
+    $stmt->execute([$product['id']]);
+    $extraImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $allImages = [];
+    if ($product['image_url']) {
+        $allImages[] = $product['image_url'];
+    }
+    $allImages = array_merge($allImages, $extraImages);
+    if (empty($allImages)) {
+        $allImages[] = 'https://via.placeholder.com/600x600?text=No+Image';
+    }
+
 } catch (Exception $e) {
     header("Location: shop");
     exit;
 }
 
 include 'includes/header.php';
-$img = $product['image_url'] ? $product['image_url'] : 'https://via.placeholder.com/600x600?text=No+Image';
 ?>
 
 <div class="bg-white py-5 mb-5 border-bottom">
@@ -49,7 +60,15 @@ $img = $product['image_url'] ? $product['image_url'] : 'https://via.placeholder.
                     <span class="badge bg-gold position-absolute top-0 start-0 m-4 py-2 px-3 shadow-sm rounded-pill d-flex align-items-center" style="background-color: var(--ohemaa-gold); color: white;">
                         <i class="bi bi-shield-check me-2"></i> Clinical Grade
                     </span>
-                    <img src="<?php echo htmlspecialchars($img); ?>" class="img-fluid rounded-3 object-fit-cover" style="max-height: 500px;" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                    <img id="mainProductImage" src="<?php echo htmlspecialchars($allImages[0]); ?>" class="img-fluid rounded-3 object-fit-cover" style="max-height: 500px; width:100%; transition: opacity 0.3s;" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                    
+                    <?php if (count($allImages) > 1): ?>
+                    <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
+                        <?php foreach ($allImages as $idx => $imgUrl): ?>
+                            <img src="<?php echo htmlspecialchars($imgUrl); ?>" class="product-thumbnail rounded object-fit-cover border <?php echo $idx === 0 ? 'border-primary' : 'border-secondary'; ?>" style="width: 70px; height: 70px; cursor: pointer; border-width: 2px !important;" onclick="document.getElementById('mainProductImage').src=this.src; document.querySelectorAll('.product-thumbnail').forEach(el=>el.classList.replace('border-primary','border-secondary')); this.classList.replace('border-secondary','border-primary');">
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="col-md-6">

@@ -1,9 +1,11 @@
 <?php include '../includes/header.php'; ?>
 <script>checkAuth();</script>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="text-secondary mb-0">Products</h3>
-    <button class="btn-google" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreateModal()">Add Product</button>
+<div class="d-flex justify-content-between align-items-center mt-2 mb-4">
+    <h2 class="mb-0" style="font-weight: 400; font-size: 28px;">Products</h2>
+    <button class="btn-google d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreateModal()">
+        <span class="material-symbols-outlined me-2" style="font-size: 20px;">add</span> Add Product
+    </button>
 </div>
 
 <div class="google-card">
@@ -43,10 +45,6 @@
                 <label>Name</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="productSlug" required>
-                <label>Slug</label>
-            </div>
-            <div class="form-floating mb-3">
                 <textarea class="form-control" id="productDescription" style="height: 100px"></textarea>
                 <label>Description</label>
             </div>
@@ -65,9 +63,10 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label text-muted">Product Image (JPG, PNG, WEBP)</label>
-                <input type="file" class="form-control" id="productImage" accept="image/jpeg, image/png, image/webp">
-                <small id="currentImageInfo" class="text-muted d-none">Current image exists. Upload a new one to replace.</small>
+                <label class="form-label text-muted">Product Images (JPG, PNG, WEBP) - Max 4</label>
+                <input type="file" class="form-control" id="productImages" accept="image/jpeg, image/png, image/webp" multiple>
+                <small class="text-muted">You can upload up to 4 images. The first image is the primary.</small>
+                <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
             </div>
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" id="productIsFeatured">
@@ -88,15 +87,70 @@
 <script>
 let products = [];
 let productModalInstance = null;
+let currentExistingImages = [];
+let pendingFiles = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     productModalInstance = new bootstrap.Modal(document.getElementById('productModal'));
     loadProducts();
 });
 
+document.getElementById('productImages').addEventListener('change', function(e) {
+    if (currentExistingImages.length + pendingFiles.length + this.files.length > 4) {
+        alert('You can only have up to 4 images total.');
+        this.value = '';
+        return;
+    }
+    
+    for(let file of this.files) {
+        pendingFiles.push(file);
+    }
+    this.value = ''; // clear so same file can be selected again if removed
+    renderPreviews();
+});
+
+function removeExistingImage(index) {
+    currentExistingImages.splice(index, 1);
+    renderPreviews();
+}
+
+function removePendingFile(index) {
+    pendingFiles.splice(index, 1);
+    renderPreviews();
+}
+
+function renderPreviews() {
+    const container = document.getElementById('imagePreviewContainer');
+    container.innerHTML = '';
+    
+    currentExistingImages.forEach((imgUrl, index) => {
+        const div = document.createElement('div');
+        div.className = 'position-relative';
+        div.innerHTML = `
+            <img src="/ohemaadetergents/${imgUrl}" class="rounded object-fit-cover shadow-sm" style="width: 80px; height: 80px;">
+            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-1 d-flex align-items-center justify-content-center" style="line-height:1; width:20px; height:20px; font-size:12px;" onclick="removeExistingImage(${index})"><i class="bi bi-x"></i></button>
+        `;
+        container.appendChild(div);
+    });
+    
+    pendingFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'position-relative';
+            div.innerHTML = `
+                <img src="${e.target.result}" class="rounded object-fit-cover shadow-sm border border-primary" style="width: 80px; height: 80px;">
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-1 d-flex align-items-center justify-content-center" style="line-height:1; width:20px; height:20px; font-size:12px;" onclick="removePendingFile(${index})"><i class="bi bi-x"></i></button>
+            `;
+            container.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 async function loadProducts() {
     try {
-        const response = await fetch(apiBase + '/products/read.php', {
+        const response = await fetch(apiBase + '/products/read', {
             headers: getAuthHeaders()
         });
         
@@ -114,30 +168,43 @@ async function loadProducts() {
     }
 }
 
-function renderTable() {
+function renderTable(filter = '') {
     const tbody = document.getElementById('productsTableBody');
     tbody.innerHTML = '';
     
-    if (products.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No products found.</td></tr>`;
+    const filteredProducts = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+    
+    if (filteredProducts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5"><span class="material-symbols-outlined fs-1 mb-2">search_off</span><br>No products found.</td></tr>`;
         return;
     }
 
-    products.forEach(p => {
+    filteredProducts.forEach(p => {
         const tr = document.createElement('tr');
+        tr.className = 'google-list-item';
+        tr.style.display = 'table-row'; // Reset to table row behavior
+        
         const imgUrl = p.image_url ? `/ohemaadetergents/${p.image_url}` : 'https://via.placeholder.com/40';
         tr.innerHTML = `
-            <td><img src="${imgUrl}" alt="img" width="40" height="40" class="rounded object-fit-cover shadow-sm"></td>
-            <td class="fw-medium text-dark">${p.name}</td>
-            <td>GHS ${parseFloat(p.price).toFixed(2)}</td>
-            <td>${p.stock}</td>
-            <td class="text-end">
-                <button class="btn btn-sm btn-google-outline me-2" onclick="openEditModal(${p.id})">Edit</button>
-                <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${p.id})">Delete</button>
+            <td style="padding: 16px 24px;"><img src="${imgUrl}" alt="img" width="48" height="48" class="rounded object-fit-cover shadow-sm border" style="border-color: var(--card-border) !important;"></td>
+            <td class="fw-medium text-dark" style="font-size: 15px;">${p.name}</td>
+            <td class="text-muted">GHS ${parseFloat(p.price).toFixed(2)}</td>
+            <td class="text-muted">${p.stock} in stock</td>
+            <td class="text-end" style="padding-right: 24px;">
+                <button class="icon-btn d-inline-flex" onclick="openEditModal(${p.id})" title="Edit">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">edit</span>
+                </button>
+                <button class="icon-btn d-inline-flex text-danger" onclick="deleteProduct(${p.id})" title="Delete">
+                    <span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+                </button>
             </td>
         `;
         tbody.appendChild(tr);
     });
+}
+
+function handleSearch(term) {
+    renderTable(term);
 }
 
 function openCreateModal() {
@@ -145,7 +212,10 @@ function openCreateModal() {
     document.getElementById('productId').value = '';
     document.getElementById('modalTitle').innerText = 'Add Product';
     document.getElementById('modalAlert').classList.add('d-none');
-    document.getElementById('currentImageInfo').classList.add('d-none');
+    
+    currentExistingImages = [];
+    pendingFiles = [];
+    renderPreviews();
 }
 
 function openEditModal(id) {
@@ -157,17 +227,14 @@ function openEditModal(id) {
     
     document.getElementById('productId').value = p.id;
     document.getElementById('productName').value = p.name;
-    document.getElementById('productSlug').value = p.slug;
     document.getElementById('productDescription').value = p.description;
     document.getElementById('productPrice').value = p.price;
     document.getElementById('productStock').value = p.stock;
     document.getElementById('productIsFeatured').checked = p.is_featured == 1;
     
-    if (p.image_url) {
-        document.getElementById('currentImageInfo').classList.remove('d-none');
-    } else {
-        document.getElementById('currentImageInfo').classList.add('d-none');
-    }
+    currentExistingImages = p.images ? [...p.images] : [];
+    pendingFiles = [];
+    renderPreviews();
 
     document.getElementById('modalTitle').innerText = 'Edit Product';
     productModalInstance.show();
@@ -176,21 +243,18 @@ function openEditModal(id) {
 async function saveProduct() {
     const id = document.getElementById('productId').value;
     const isEdit = !!id;
-    const endpoint = isEdit ? '/products/update.php' : '/products/create.php';
+    const endpoint = isEdit ? '/products/update' : '/products/create';
     
     const formData = new FormData();
     if (isEdit) formData.append('id', id);
     formData.append('name', document.getElementById('productName').value);
-    formData.append('slug', document.getElementById('productSlug').value);
     formData.append('description', document.getElementById('productDescription').value);
     formData.append('price', document.getElementById('productPrice').value);
     formData.append('stock', document.getElementById('productStock').value);
     formData.append('is_featured', document.getElementById('productIsFeatured').checked ? 1 : 0);
     
-    const imageFile = document.getElementById('productImage').files[0];
-    if (imageFile) {
-        formData.append('image', imageFile);
-    }
+    currentExistingImages.forEach(img => formData.append('existing_images[]', img));
+    pendingFiles.forEach(file => formData.append('images[]', file));
     
     const saveBtn = document.getElementById('saveBtn');
     saveBtn.disabled = true;
@@ -199,7 +263,7 @@ async function saveProduct() {
     try {
         const response = await fetch(apiBase + endpoint, {
             method: 'POST',
-            headers: getAuthHeaders(), // Don't set Content-Type, fetch sets multipart boundary automatically
+            headers: getAuthHeaders(),
             body: formData
         });
         
@@ -227,7 +291,7 @@ async function deleteProduct(id) {
     if (!confirm('Are you sure you want to delete this product?')) return;
     
     try {
-        const response = await fetch(apiBase + '/products/delete.php', {
+        const response = await fetch(apiBase + '/products/delete', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

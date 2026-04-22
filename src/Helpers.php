@@ -79,6 +79,22 @@ class Helpers
         return $ip;
     }
 
+    public static function slugify(string $text): string
+    {
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        $text = trim($text, '-');
+        $text = preg_replace('~-+~', '-', $text);
+        $text = strtolower($text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
+    }
+
     public static function logAction(\PDO $db, string $action, string $description, ?int $adminId = null, ?int $customerId = null)
     {
         $stmt = $db->prepare("INSERT INTO logs (log_id, admin_id, customer_id, action, description, ip_address) VALUES (?, ?, ?, ?, ?, ?)");
