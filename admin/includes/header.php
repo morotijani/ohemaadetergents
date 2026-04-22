@@ -429,6 +429,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <a href="/ohemaadetergents/admin/orders/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/orders/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">local_shipping</span> Orders
             </a>
+            <a href="/ohemaadetergents/admin/expenditure" class="<?php echo $currentPage == 'expenditure.php' || $currentPage == 'expenditure' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">payments</span> Expenditure
+            </a>
             <a href="/ohemaadetergents/admin/customers/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/customers/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">group</span> Customers
             </a>
