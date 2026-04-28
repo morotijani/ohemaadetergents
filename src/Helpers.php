@@ -65,6 +65,12 @@ class Helpers
                 return $matches[1];
             }
         }
+        
+        // Also check query param for pages like invoices
+        if (isset($_GET['token'])) {
+            return $_GET['token'];
+        }
+        
         return null;
     }
 

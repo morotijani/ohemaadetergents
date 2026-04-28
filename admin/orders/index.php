@@ -50,6 +50,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-ohemaa-outline" data-bs-dismiss="modal">Close</button>
+                <a id="invoiceBtn" href="#" target="_blank" class="btn-ohemaa-outline text-decoration-none d-flex align-items-center">
+                    <span class="material-symbols-outlined me-2" style="font-size: 18px;">receipt_long</span> Invoice
+                </a>
                 <button type="button" class="btn-ohemaa" id="saveStatusBtn" onclick="updateOrderStatus()">Update Status</button>
             </div>
         </div>
@@ -143,6 +146,9 @@ function viewOrder(id) {
     if (!o) return;
     
     selectedOrderId = id;
+    const token = localStorage.getItem('admin_token');
+    document.getElementById('invoiceBtn').href = `/ohemaadetergents/admin/orders/invoice?id=${id}&token=${token}`;
+    
     const detailsDiv = document.getElementById('orderDetails');
     
     let itemsHtml = '<table class="table table-sm mt-3"><thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead><tbody>';

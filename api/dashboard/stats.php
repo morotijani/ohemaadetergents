@@ -67,7 +67,7 @@ try {
     $stats['top_performers'] = $stmt->fetchAll();
     
     // Recent Orders
-    $stmt = $db->query("SELECT o.id, o.tracking_number, o.total_amount, o.status, o.created_at, c.name as customer_name 
+    $stmt = $db->query("SELECT o.id, o.tracking_number, o.total_amount, o.status, o.created_at, CONCAT(c.first_name, ' ', c.last_name) as customer_name 
                         FROM orders o 
                         LEFT JOIN customers c ON o.customer_id = c.id 
                         ORDER BY o.created_at DESC LIMIT 5");

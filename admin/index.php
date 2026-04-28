@@ -285,6 +285,7 @@ async function loadDashboard() {
             if (stats.recent_orders.length > 0) {
                 ordersBody.innerHTML = stats.recent_orders.map(o => {
                     const date = new Date(o.created_at).toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                    const token = localStorage.getItem('admin_token');
                     let statusClass = 'bg-secondary';
                     if (o.status === 'completed') statusClass = 'bg-success';
                     if (o.status === 'pending') statusClass = 'bg-warning text-dark';
@@ -298,7 +299,7 @@ async function loadDashboard() {
                             <td>GHS ${parseFloat(o.total_amount).toFixed(2)}</td>
                             <td><span class="badge ${statusClass}" style="text-transform: capitalize;">${o.status}</span></td>
                             <td class="pe-4 text-end">
-                                <a href="/ohemaadetergents/admin/orders/index?id=${o.id}" class="icon-btn d-inline-flex">
+                                <a href="/ohemaadetergents/admin/orders/index?id=${o.id}&token=${token}" class="icon-btn d-inline-flex">
                                     <span class="material-symbols-outlined" style="font-size: 18px;">visibility</span>
                                 </a>
                             </td>
