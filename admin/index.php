@@ -6,7 +6,7 @@
     <div class="text-muted small" id="lastUpdated">Last updated: Just now</div>
 </div>
 
-<!-- Stats Grid -->
+<!-- Financial Stats Grid -->
 <div class="row g-4 mb-4">
     <div class="col-md-4">
         <div class="ohemaa-card p-4 h-100">
@@ -61,6 +61,7 @@
     </div>
 </div>
 
+<!-- Operational Stats Grid -->
 <div class="row g-4 mb-4">
     <div class="col-md-4">
         <div class="ohemaa-card p-4 h-100">
@@ -108,9 +109,9 @@
     </div>
 </div>
 
-<div class="row mb-4">
+<div class="row g-4 mb-4">
     <!-- Chart Section -->
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="ohemaa-card p-4">
             <h4 class="ohemaa-card-header mb-4" style="font-size: 18px;">Sales Performance (<?php echo date('Y'); ?>)</h4>
             <div style="height: 300px;">
@@ -118,22 +119,42 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Top Performers -->
+    <div class="col-md-4">
+        <div class="ohemaa-card p-4 h-100">
+            <h4 class="ohemaa-card-header mb-4" style="font-size: 18px;">Top Performers</h4>
+            <div id="topPerformersList">
+                <!-- Top products will be loaded here -->
+            </div>
+            <div class="mt-auto pt-3">
+                <a href="/ohemaadetergents/admin/products/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Review Catalog</a>
+            </div>
+        </div>
+    </div>
     
-    <!-- Low Stock Sidebar -->
+    <!-- Low Stock -->
     <div class="col-md-4">
         <div class="ohemaa-card p-4 h-100">
             <h4 class="ohemaa-card-header mb-4" style="font-size: 18px;">Inventory Alerts</h4>
-            <div id="lowStockList" class="mb-4">
+            <div id="lowStockList">
                 <!-- Low stock items will be loaded here -->
             </div>
-            
-            <hr class="mb-4" style="border-color: var(--card-border) !important;">
-            
+            <div class="mt-auto pt-3">
+                <a href="/ohemaadetergents/admin/products/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">View Inventory</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Expenditure -->
+    <div class="col-md-4">
+        <div class="ohemaa-card p-4 h-100">
             <h4 class="ohemaa-card-header mb-4" style="font-size: 18px;">Recent Expenditure</h4>
             <div id="recentExpenditureList">
                 <!-- Expenditures will be loaded here -->
             </div>
-
             <div class="mt-auto pt-3">
                 <a href="/ohemaadetergents/admin/expenditure" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Manage Finances</a>
             </div>
@@ -218,7 +239,7 @@ async function loadDashboard() {
                 `).join('');
             } else {
                 document.getElementById('lowStockAlert').innerText = 'All stock levels healthy';
-                lowStockList.innerHTML = '<div class="text-center py-3 text-muted small"><span class="material-symbols-outlined fs-2">check_circle</span><p class="mt-1">Stock levels healthy</p></div>';
+                lowStockList.innerHTML = '<div class="text-center py-3 text-muted small"><span class="material-symbols-outlined fs-2 text-success">check_circle</span><p class="mt-1">Stock levels healthy</p></div>';
             }
 
             // Recent Expenditure
@@ -235,6 +256,28 @@ async function loadDashboard() {
                 `).join('');
             } else {
                 expList.innerHTML = '<div class="text-center py-3 text-muted small"><p>No recent expenditures.</p></div>';
+            }
+
+            // Top Performers
+            const topList = document.getElementById('topPerformersList');
+            if (stats.top_performers.length > 0) {
+                topList.innerHTML = stats.top_performers.map(p => {
+                    const imgUrl = p.image_url ? `/ohemaadetergents/${p.image_url}` : 'https://via.placeholder.com/40';
+                    return `
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center" style="max-width: 70%;">
+                                <img src="${imgUrl}" alt="${p.name}" class="rounded object-fit-cover me-3" style="width: 32px; height: 32px;">
+                                <div class="text-truncate">
+                                    <div class="fw-medium" style="font-size: 14px;">${p.name}</div>
+                                    <div class="text-muted small">${p.total_sold} units sold</div>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-gold" style="font-size: 20px;">workspace_premium</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                topList.innerHTML = '<div class="text-center py-5 text-muted small"><p>No sales data yet.</p></div>';
             }
 
             // Recent Orders

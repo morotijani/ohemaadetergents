@@ -55,6 +55,17 @@ try {
     $stmt = $db->query("SELECT id, category, amount, description, date FROM expenditure ORDER BY date DESC LIMIT 5");
     $stats['recent_expenditures'] = $stmt->fetchAll();
     
+    // Top Performing Products
+    $stmt = $db->query("SELECT p.id, p.name, SUM(oi.quantity) as total_sold, p.image_url 
+                        FROM order_items oi 
+                        JOIN products p ON oi.product_id = p.id 
+                        JOIN orders o ON oi.order_id = o.id 
+                        WHERE o.status != 'cancelled' 
+                        GROUP BY p.id 
+                        ORDER BY total_sold DESC 
+                        LIMIT 5");
+    $stats['top_performers'] = $stmt->fetchAll();
+    
     // Recent Orders
     $stmt = $db->query("SELECT o.id, o.tracking_number, o.total_amount, o.status, o.created_at, c.name as customer_name 
                         FROM orders o 
