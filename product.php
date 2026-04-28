@@ -13,7 +13,7 @@ try {
     $stmt = $db->prepare("SELECT p.id, p.name, p.slug, p.description, p.price, p.image_url, p.stock, c.name as category_name 
                           FROM products p 
                           LEFT JOIN categories c ON p.category_id = c.id 
-                          WHERE p.slug = ?");
+                          WHERE p.slug = ? AND p.is_deleted = 0");
     $stmt->execute([$slug]);
     $product = $stmt->fetch();
     

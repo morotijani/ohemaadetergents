@@ -28,11 +28,9 @@ try {
     
     if (!$product) Helpers::jsonResponse(404, 'Product not found');
     
-    $db->prepare("DELETE FROM products WHERE id = ?")->execute([$id]);
-    
-    if ($product['image_url'] && file_exists(__DIR__ . '/../../' . $product['image_url'])) {
-        unlink(__DIR__ . '/../../' . $product['image_url']);
-    }
+    // Soft delete: update is_deleted flag instead of deleting row
+    $stmt = $db->prepare("UPDATE products SET is_deleted = 1 WHERE id = ?");
+    $stmt->execute([$id]);
     
     Helpers::logAction($db, 'delete_product', "Deleted product: {$product['name']} (ID: $id)", $admin['admin_id']);
     

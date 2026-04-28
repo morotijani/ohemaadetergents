@@ -20,6 +20,7 @@ try {
     $stmt = $db->query("SELECT p.id, HEX(p.product_id) as uuid, p.name, p.slug, p.description, p.price, p.stock, p.image_url, p.is_featured, p.category_id, c.name as category_name, p.created_at 
                         FROM products p 
                         LEFT JOIN categories c ON p.category_id = c.id 
+                        WHERE p.is_deleted = 0
                         ORDER BY p.created_at DESC");
     $products = $stmt->fetchAll();
     

@@ -35,62 +35,94 @@
 
 <!-- Product Modal -->
 <div class="modal fade" id="productModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content ohemaa-card border-0 p-0">
-      <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title" id="modalTitle" style="font-weight: 500;">Add Product</h5>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content ohemaa-card border-0 p-0 overflow-hidden">
+      <div class="modal-header border-0 p-4 pb-0">
+        <div>
+            <h5 class="modal-title" id="modalTitle" style="font-weight: 500; font-size: 22px;">Add Product</h5>
+            <p class="text-muted small mb-0">Fill in the details below to list a new item.</p>
+        </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body p-4">
         <form id="productForm">
             <input type="hidden" id="productId">
             <div id="modalAlert" class="alert alert-danger d-none"></div>
             
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="productName" required>
-                <label>Name</label>
-            </div>
-            <div class="form-floating mb-3">
-                <textarea class="form-control" id="productDescription" style="height: 100px"></textarea>
-                <label>Description</label>
-            </div>
-            <div class="form-floating mb-3">
-                <select class="form-select" id="productCategory">
-                    <option value="">No Category</option>
-                </select>
-                <label>Category</label>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row g-4">
+                <!-- Left Column: General Info -->
+                <div class="col-md-7">
+                    <h6 class="fw-bold mb-3 d-flex align-items-center">
+                        <span class="material-symbols-outlined me-2 fs-5 text-primary">info</span>
+                        General Information
+                    </h6>
                     <div class="form-floating mb-3">
-                        <input type="number" step="0.01" class="form-control" id="productPrice" required>
-                        <label>Price</label>
+                        <input type="text" class="form-control" id="productName" placeholder="Product Name" required>
+                        <label>Product Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="productDescription" placeholder="Description" style="height: 150px"></textarea>
+                        <label>Product Description</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="productCategory">
+                            <option value="">Select a Category</option>
+                        </select>
+                        <label>Category</label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="productIsFeatured" role="switch">
+                        <label class="form-check-label fw-medium" for="productIsFeatured">
+                            Mark as Featured Product
+                        </label>
+                        <div class="text-muted small">Featured products appear on the homepage hero slider.</div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="productStock" required>
-                        <label>Stock</label>
+
+                <!-- Right Column: Inventory & Media -->
+                <div class="col-md-5">
+                    <div class="p-4 rounded-4 bg-light border mb-4">
+                        <h6 class="fw-bold mb-3 d-flex align-items-center">
+                            <span class="material-symbols-outlined me-2 fs-5 text-success">payments</span>
+                            Inventory & Pricing
+                        </h6>
+                        <div class="form-floating mb-3">
+                            <input type="number" step="0.01" class="form-control" id="productPrice" placeholder="0.00" required>
+                            <label>Price (GHS)</label>
+                        </div>
+                        <div class="form-floating mb-0">
+                            <input type="number" class="form-control" id="productStock" placeholder="0" required>
+                            <label>Stock Quantity</label>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3 d-flex align-items-center">
+                        <span class="material-symbols-outlined me-2 fs-5 text-warning">image</span>
+                        Product Media
+                    </h6>
+                    <div class="mb-3">
+                        <div class="upload-zone border border-dashed rounded-4 p-4 text-center position-relative" style="background: var(--hover-bg); border-style: dashed !important; border-width: 2px !important;">
+                            <span class="material-symbols-outlined fs-1 text-muted mb-2">cloud_upload</span>
+                            <p class="small text-muted mb-0">Click to upload images</p>
+                            <p class="text-muted" style="font-size: 10px;">Max 4 images (JPG, PNG, WEBP)</p>
+                            <input type="file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" id="productImages" accept="image/jpeg, image/png, image/webp" multiple style="cursor: pointer;">
+                        </div>
+                        <div id="imagePreviewContainer" class="row g-2 mt-2">
+                            <!-- Previews will load here -->
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label text-muted">Product Images (JPG, PNG, WEBP) - Max 4</label>
-                <input type="file" class="form-control" id="productImages" accept="image/jpeg, image/png, image/webp" multiple>
-                <small class="text-muted">You can upload up to 4 images. The first image is the primary.</small>
-                <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-3"></div>
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="productIsFeatured">
-                <label class="form-check-label" for="productIsFeatured">
-                    Featured Product
-                </label>
             </div>
         </form>
       </div>
-      <div class="modal-footer border-0 pt-0">
-        <button type="button" class="btn-ohemaa-outline" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn-ohemaa" id="saveBtn" onclick="saveProduct()">Save</button>
+      <div class="modal-footer border-0 p-4 pt-0">
+        <button type="button" class="btn-ohemaa-outline border-0" data-bs-dismiss="modal">Discard Changes</button>
+        <button type="button" class="btn-ohemaa px-5" id="saveBtn" onclick="saveProduct()">
+            <span class="d-flex align-items-center">
+                <span class="material-symbols-outlined me-2">check_circle</span>
+                Save Product
+            </span>
+        </button>
       </div>
     </div>
   </div>
@@ -156,10 +188,14 @@ function renderPreviews() {
     
     currentExistingImages.forEach((imgUrl, index) => {
         const div = document.createElement('div');
-        div.className = 'position-relative';
+        div.className = 'col-3 position-relative';
         div.innerHTML = `
-            <img src="/ohemaadetergents/${imgUrl}" class="rounded object-fit-cover shadow-sm" style="width: 80px; height: 80px;">
-            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-1 d-flex align-items-center justify-content-center" style="line-height:1; width:20px; height:20px; font-size:12px;" onclick="removeExistingImage(${index})"><i class="bi bi-x"></i></button>
+            <div class="ratio ratio-1x1">
+                <img src="/ohemaadetergents/${imgUrl}" class="rounded-3 object-fit-cover shadow-sm border">
+            </div>
+            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center" style="width:20px; height:20px;" onclick="removeExistingImage(${index})">
+                <span class="material-symbols-outlined" style="font-size: 14px;">close</span>
+            </button>
         `;
         container.appendChild(div);
     });
@@ -168,10 +204,14 @@ function renderPreviews() {
         const reader = new FileReader();
         reader.onload = (e) => {
             const div = document.createElement('div');
-            div.className = 'position-relative';
+            div.className = 'col-3 position-relative';
             div.innerHTML = `
-                <img src="${e.target.result}" class="rounded object-fit-cover shadow-sm border border-primary" style="width: 80px; height: 80px;">
-                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-1 d-flex align-items-center justify-content-center" style="line-height:1; width:20px; height:20px; font-size:12px;" onclick="removePendingFile(${index})"><i class="bi bi-x"></i></button>
+                <div class="ratio ratio-1x1">
+                    <img src="${e.target.result}" class="rounded-3 object-fit-cover shadow-sm border border-primary">
+                </div>
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center" style="width:20px; height:20px;" onclick="removePendingFile(${index})">
+                    <span class="material-symbols-outlined" style="font-size: 14px;">close</span>
+                </button>
             `;
             container.appendChild(div);
         };

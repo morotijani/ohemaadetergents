@@ -12,10 +12,11 @@ try {
     $queryParams = [];
     $query = "SELECT p.id, p.name, p.slug, p.price, p.image_url, c.name as category_name 
               FROM products p 
-              LEFT JOIN categories c ON p.category_id = c.id";
+              LEFT JOIN categories c ON p.category_id = c.id
+              WHERE p.is_deleted = 0";
 
     if (!empty($categoryFilter)) {
-        $query .= " WHERE c.slug = ?";
+        $query .= " AND c.slug = ?";
         $queryParams[] = $categoryFilter;
     }
 

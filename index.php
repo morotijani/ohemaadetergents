@@ -5,11 +5,11 @@ use App\Database;
 try {
     $db = Database::getInstance()->getConnection();
 
-    $stmt = $db->query("SELECT id, name, slug, price, image_url FROM products WHERE is_featured = 1 ORDER BY created_at DESC LIMIT 4");
+    $stmt = $db->query("SELECT id, name, slug, price, image_url FROM products WHERE is_featured = 1 AND is_deleted = 0 ORDER BY created_at DESC LIMIT 4");
     $featuredProducts = $stmt->fetchAll();
 
     if (empty($featuredProducts)) {
-        $stmt = $db->query("SELECT id, name, slug, price, image_url FROM products ORDER BY created_at DESC LIMIT 4");
+        $stmt = $db->query("SELECT id, name, slug, price, image_url FROM products WHERE is_deleted = 0 ORDER BY created_at DESC LIMIT 4");
         $featuredProducts = $stmt->fetchAll();
     }
 } catch (Exception $e) {
