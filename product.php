@@ -172,6 +172,119 @@ include 'includes/header.php';
             </div>
         </div>
     </div>
+
+    <!-- Reviews Section -->
+    <div class="row mt-5 pt-5 reveal">
+        <div class="col-lg-12">
+            <hr class="mb-5 opacity-10">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h2 class="fw-800 text-primary mb-1">Customer Reviews</h2>
+                    <p class="text-muted small mb-0">Discover what others are saying about this product.</p>
+                </div>
+                <button class="btn btn-outline-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                    <i class="bi bi-pencil-square me-2"></i> Write a Review
+                </button>
+            </div>
+
+            <div class="row g-4" id="reviewsContainer">
+                <?php
+                $stmt = $db->prepare("SELECT r.*, CONCAT(c.first_name, ' ', c.last_name) as customer_name 
+                                    FROM product_reviews r 
+                                    JOIN customers c ON r.customer_id = c.id 
+                                    WHERE r.product_id = ? AND r.status = 'approved' 
+                                    ORDER BY r.created_at DESC");
+                $stmt->execute([$product['id']]);
+                $reviews = $stmt->fetchAll();
+
+                if ($reviews):
+                    foreach ($reviews as $rev):
+                ?>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="glass p-4 rounded-lg h-100 border-0 shadow-sm transition-base hover-lift">
+                            <div class="d-flex align-items-center gap-2 mb-3 text-gold">
+                                <?php for($i=1; $i<=5; $i++): ?>
+                                    <i class="bi bi-star<?php echo $i <= $rev['rating'] ? '-fill' : ''; ?>"></i>
+                                <?php endfor; ?>
+                            </div>
+                            <p class="text-muted small mb-4" style="line-height: 1.6; min-height: 60px;">
+                                "<?php echo nl2br(htmlspecialchars($rev['comment'])); ?>"
+                            </p>
+                            <div class="d-flex align-items-center gap-3 border-top pt-3">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold small" style="width: 32px; height: 32px;">
+                                    <?php echo strtoupper(substr($rev['customer_name'], 0, 1)); ?>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 small fw-bold"><?php echo htmlspecialchars($rev['customer_name']); ?></h6>
+                                    <span class="text-muted" style="font-size: 0.7rem;"><?php echo date('M d, Y', strtotime($rev['created_at'])); ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php 
+                    endforeach;
+                else: 
+                ?>
+                    <div class="col-12 text-center py-5">
+                        <div class="opacity-25 mb-3">
+                            <i class="bi bi-chat-heart display-1"></i>
+                        </div>
+                        <h5 class="text-muted fw-bold">No reviews yet</h5>
+                        <p class="text-muted small">Be the first to share your experience!</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Submission Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass border-0 rounded-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-800 text-primary">Share Your Experience</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="reviewForm">
+                    <input type="hidden" id="reviewProductId" value="<?php echo $product['id']; ?>">
+                    <div class="mb-4 text-center">
+                        <label class="form-label d-block small fw-bold text-uppercase opacity-75 mb-3">Your Rating</label>
+                        <div class="star-rating fs-2 text-gold cursor-pointer">
+                            <i class="bi bi-star rating-star" data-rating="1"></i>
+                            <i class="bi bi-star rating-star" data-rating="2"></i>
+                            <i class="bi bi-star rating-star" data-rating="3"></i>
+                            <i class="bi bi-star rating-star" data-rating="4"></i>
+                            <i class="bi bi-star rating-star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="reviewRating" value="0">
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-uppercase opacity-75">Your Name</label>
+                            <input type="text" id="reviewName" class="form-control glass border-0 p-3" required placeholder="John Doe">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-uppercase opacity-75">Email Address</label>
+                            <input type="email" id="reviewEmail" class="form-control glass border-0 p-3" required placeholder="john@example.com">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-uppercase opacity-75">Your Review</label>
+                        <textarea id="reviewComment" class="form-control glass border-0 p-3" rows="4" required placeholder="Tell us what you liked (or didn't like) about this product..."></textarea>
+                    </div>
+
+                    <button type="button" onclick="submitReview()" class="btn btn-gold w-100 py-3 rounded-pill fw-bold" id="submitReviewBtn">
+                        Submit Review
+                    </button>
+                    <div id="reviewMessage" class="mt-3 small text-center d-none"></div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -188,6 +301,94 @@ function updateGallery(el, src) {
     });
     el.classList.remove('border-transparent');
     el.classList.add('border-gold');
+}
+
+// Review Star Logic
+document.querySelectorAll('.rating-star').forEach(star => {
+    star.addEventListener('mouseover', function() {
+        const rating = this.dataset.rating;
+        highlightStars(rating);
+    });
+    
+    star.addEventListener('click', function() {
+        const rating = this.dataset.rating;
+        document.getElementById('reviewRating').value = rating;
+        highlightStars(rating);
+    });
+});
+
+document.querySelector('.star-rating').addEventListener('mouseleave', function() {
+    const currentRating = document.getElementById('reviewRating').value;
+    highlightStars(currentRating);
+});
+
+function highlightStars(rating) {
+    document.querySelectorAll('.rating-star').forEach(star => {
+        if (star.dataset.rating <= rating) {
+            star.classList.remove('bi-star');
+            star.classList.add('bi-star-fill');
+        } else {
+            star.classList.remove('bi-star-fill');
+            star.classList.add('bi-star');
+        }
+    });
+}
+
+async function submitReview() {
+    const btn = document.getElementById('submitReviewBtn');
+    const msg = document.getElementById('reviewMessage');
+    const rating = document.getElementById('reviewRating').value;
+    const name = document.getElementById('reviewName').value;
+    const email = document.getElementById('reviewEmail').value;
+    const comment = document.getElementById('reviewComment').value;
+    const productId = document.getElementById('reviewProductId').value;
+
+    if (rating == 0 || !name || !email || !comment) {
+        msg.innerText = 'Please fill in all fields and provide a rating.';
+        msg.className = 'mt-3 small text-center text-danger';
+        msg.classList.remove('d-none');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Submitting...';
+
+    try {
+        const res = await fetch('/ohemaadetergents/api/reviews/create', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                product_id: productId,
+                name: name,
+                email: email,
+                rating: rating,
+                comment: comment
+            })
+        });
+        const data = await res.json();
+        
+        msg.classList.remove('d-none');
+        if (res.ok) {
+            msg.innerText = data.message;
+            msg.className = 'mt-3 small text-center text-success fw-bold';
+            document.getElementById('reviewForm').reset();
+            highlightStars(0);
+            setTimeout(() => {
+                bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+                msg.classList.add('d-none');
+            }, 3000);
+        } else {
+            msg.innerText = data.message;
+            msg.className = 'mt-3 small text-center text-danger';
+        }
+    } catch(e) {
+        msg.innerText = 'Something went wrong. Please try again.';
+        msg.className = 'mt-3 small text-center text-danger';
+        msg.classList.remove('d-none');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Submit Review';
+    }
 }
 </script>
 

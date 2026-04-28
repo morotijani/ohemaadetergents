@@ -66,6 +66,16 @@ try {
                         LIMIT 5");
     $stats['top_performers'] = $stmt->fetchAll();
     
+    // Top VIP Customers
+    $stmt = $db->query("SELECT c.id, CONCAT(c.first_name, ' ', c.last_name) as name, c.email, COUNT(o.id) as order_count, SUM(o.total_amount) as total_spent 
+                        FROM customers c 
+                        JOIN orders o ON c.id = o.customer_id 
+                        WHERE o.status != 'cancelled' 
+                        GROUP BY c.id 
+                        ORDER BY total_spent DESC 
+                        LIMIT 5");
+    $stats['top_customers'] = $stmt->fetchAll();
+    
     // Recent Orders
     $stmt = $db->query("SELECT o.id, o.tracking_number, o.total_amount, o.status, o.created_at, CONCAT(c.first_name, ' ', c.last_name) as customer_name 
                         FROM orders o 

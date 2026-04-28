@@ -3,9 +3,14 @@
 
 <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
     <h2 class="mb-0" style="font-weight: 400; font-size: 28px;">Products</h2>
-    <button class="btn-ohemaa d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreateModal()">
-        <span class="material-symbols-outlined me-2" style="font-size: 20px;">add</span> Add Product
-    </button>
+    <div class="d-flex gap-2">
+        <a href="/ohemaadetergents/admin/products/bulk" class="btn-ohemaa-outline d-flex align-items-center text-decoration-none">
+            <span class="material-symbols-outlined me-2" style="font-size: 20px;">batch_prediction</span> Bulk Edit
+        </a>
+        <button class="btn-ohemaa d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreateModal()">
+            <span class="material-symbols-outlined me-2" style="font-size: 20px;">add</span> Add Product
+        </button>
+    </div>
 </div>
 
 <div class="ohemaa-card">

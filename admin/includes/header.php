@@ -427,6 +427,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <a href="/ohemaadetergents/admin/products/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/products/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">inventory_2</span> Products
             </a>
+            <a href="/ohemaadetergents/admin/reviews/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/reviews/') !== false ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">reviews</span> Reviews
+            </a>
             <a href="/ohemaadetergents/admin/categories/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/categories/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">category</span> Categories
             </a>
@@ -444,6 +447,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
             <a href="/ohemaadetergents/admin/admins/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/admins/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">admin_panel_settings</span> Admins
+            </a>
+            <a href="/ohemaadetergents/admin/logs/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/logs/') !== false ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">historyed</span> Activity Logs
             </a>
             <hr class="mx-3" style="border-color: var(--card-border);">
             <a href="/ohemaadetergents/admin/profile" class="<?php echo $currentPage == 'profile.php' || $currentPage == 'profile' ? 'active' : ''; ?>">

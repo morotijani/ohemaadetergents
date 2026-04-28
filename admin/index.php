@@ -135,7 +135,20 @@
         </div>
     </div>
     
-    <!-- Low Stock -->
+    <!-- VIP Customers -->
+    <div class="col-md-4">
+        <div class="ohemaa-card p-4 h-100">
+            <h4 class="ohemaa-card-header mb-4" style="font-size: 18px;">VIP Customers</h4>
+            <div id="vipCustomersList">
+                <!-- Top customers will be loaded here -->
+            </div>
+            <div class="mt-auto pt-3">
+                <a href="/ohemaadetergents/admin/customers/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Customer CRM</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Alerts -->
     <div class="col-md-4">
         <div class="ohemaa-card p-4 h-100">
             <h4 class="ohemaa-card-header mb-4" style="font-size: 18px;">Inventory Alerts</h4>
@@ -144,6 +157,36 @@
             </div>
             <div class="mt-auto pt-3">
                 <a href="/ohemaadetergents/admin/products/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">View Inventory</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Orders -->
+    <div class="col-md-8">
+        <div class="ohemaa-card p-0 overflow-hidden h-100">
+            <div class="p-4 d-flex justify-content-between align-items-center border-bottom" style="border-color: var(--card-border) !important;">
+                <h4 class="mb-0" style="font-size: 18px; font-weight: 400;">Recent Orders</h4>
+                <a href="/ohemaadetergents/admin/orders/index" class="btn-ohemaa-outline text-decoration-none" style="padding: 4px 12px; font-size: 13px;">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 text-muted" style="font-weight: 500; font-size: 13px;">ORDER ID</th>
+                            <th class="text-muted" style="font-weight: 500; font-size: 13px;">CUSTOMER</th>
+                            <th class="text-muted" style="font-weight: 500; font-size: 13px;">TOTAL</th>
+                            <th class="text-muted" style="font-weight: 500; font-size: 13px;">STATUS</th>
+                            <th class="pe-4 text-end text-muted" style="font-weight: 500; font-size: 13px;">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentOrdersBody">
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">Loading recent orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -157,37 +200,6 @@
             </div>
             <div class="mt-auto pt-3">
                 <a href="/ohemaadetergents/admin/expenditure" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Manage Finances</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Recent Orders -->
-    <div class="col-12">
-        <div class="ohemaa-card p-0 overflow-hidden">
-            <div class="p-4 d-flex justify-content-between align-items-center border-bottom" style="border-color: var(--card-border) !important;">
-                <h4 class="mb-0" style="font-size: 18px; font-weight: 400;">Recent Orders</h4>
-                <a href="/ohemaadetergents/admin/orders/index" class="btn-ohemaa-outline text-decoration-none" style="padding: 4px 12px; font-size: 13px;">View All</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table align-middle mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th class="ps-4 text-muted" style="font-weight: 500; font-size: 13px;">ORDER ID</th>
-                            <th class="text-muted" style="font-weight: 500; font-size: 13px;">CUSTOMER</th>
-                            <th class="text-muted" style="font-weight: 500; font-size: 13px;">DATE</th>
-                            <th class="text-muted" style="font-weight: 500; font-size: 13px;">TOTAL</th>
-                            <th class="text-muted" style="font-weight: 500; font-size: 13px;">STATUS</th>
-                            <th class="pe-4 text-end text-muted" style="font-weight: 500; font-size: 13px;">ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recentOrdersBody">
-                        <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">Loading recent orders...</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -280,6 +292,27 @@ async function loadDashboard() {
                 topList.innerHTML = '<div class="text-center py-5 text-muted small"><p>No sales data yet.</p></div>';
             }
 
+            // VIP Customers
+            const vipList = document.getElementById('vipCustomersList');
+            if (stats.top_customers.length > 0) {
+                vipList.innerHTML = stats.top_customers.map(c => `
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center" style="max-width: 70%;">
+                            <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; font-size: 12px; font-weight: bold;">
+                                ${c.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div class="text-truncate">
+                                <div class="fw-medium" style="font-size: 14px;">${c.name}</div>
+                                <div class="text-muted small">${c.order_count} orders · GHS ${parseFloat(c.total_spent).toFixed(0)}</div>
+                            </div>
+                        </div>
+                        <span class="badge rounded-pill bg-primary" style="font-size: 10px;">VIP</span>
+                    </div>
+                `).join('');
+            } else {
+                vipList.innerHTML = '<div class="text-center py-5 text-muted small"><p>No VIP customers yet.</p></div>';
+            }
+
             // Recent Orders
             const ordersBody = document.getElementById('recentOrdersBody');
             if (stats.recent_orders.length > 0) {
@@ -295,7 +328,6 @@ async function loadDashboard() {
                         <tr>
                             <td class="ps-4 fw-medium">#${o.tracking_number}</td>
                             <td>${o.customer_name || 'Guest'}</td>
-                            <td class="text-muted">${date}</td>
                             <td>GHS ${parseFloat(o.total_amount).toFixed(2)}</td>
                             <td><span class="badge ${statusClass}" style="text-transform: capitalize;">${o.status}</span></td>
                             <td class="pe-4 text-end">
@@ -307,7 +339,7 @@ async function loadDashboard() {
                     `;
                 }).join('');
             } else {
-                ordersBody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted">No recent orders.</td></tr>';
+                ordersBody.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-muted">No recent orders.</td></tr>';
             }
 
             // Chart
