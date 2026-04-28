@@ -394,6 +394,53 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 setTimeout(() => toast.remove(), 300);
             }, 4000);
         }
+
+        async function updateNotifications() {
+            try {
+                const res = await fetch(apiBase + '/dashboard/notifications', {
+                    headers: getAuthHeaders()
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    const stats = data.data;
+                    
+                    // Topbar Badge
+                    const notifBadge = document.getElementById('notifBadge');
+                    if (stats.total > 0) {
+                        notifBadge.innerText = stats.total;
+                        notifBadge.classList.remove('d-none');
+                    } else {
+                        notifBadge.classList.add('d-none');
+                    }
+
+                    // Dropdown Texts
+                    document.getElementById('notifOrdersText').innerText = stats.new_orders + ' New Orders';
+                    document.getElementById('notifReviewsText').innerText = stats.new_reviews + ' New Reviews';
+
+                    // Sidebar Badges
+                    const orderBadge = document.getElementById('sidebarOrderBadge');
+                    if (stats.new_orders > 0) {
+                        orderBadge.innerText = stats.new_orders;
+                        orderBadge.classList.remove('d-none');
+                    } else {
+                        orderBadge.classList.add('d-none');
+                    }
+
+                    const reviewBadge = document.getElementById('sidebarReviewBadge');
+                    if (stats.new_reviews > 0) {
+                        reviewBadge.innerText = stats.new_reviews;
+                        reviewBadge.classList.remove('d-none');
+                    } else {
+                        reviewBadge.classList.add('d-none');
+                    }
+                }
+            } catch (e) { console.error('Error fetching notifications', e); }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNotifications();
+            setInterval(updateNotifications, 30000); // Update every 30 seconds
+        });
     </script>
 </head>
 <body class="<?php echo isset($hideSidebar) && $hideSidebar ? 'no-sidebar' : ''; ?>">
@@ -411,6 +458,34 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </div>
 
         <div class="topbar-actions">
+            <div class="dropdown">
+                <button class="icon-btn position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white d-none" style="font-size: 10px; padding: 4px 6px;">
+                        0
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2" style="min-width: 280px; border-radius: 12px;">
+                    <li class="px-4 py-2 border-bottom mb-2"><h6 class="mb-0 fw-bold">Notifications</h6></li>
+                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="/ohemaadetergents/admin/orders/index">
+                        <div class="rounded-circle bg-primary-subtle p-2 me-3"><span class="material-symbols-outlined text-primary">shopping_cart</span></div>
+                        <div>
+                            <div class="fw-bold small" id="notifOrdersText">0 New Orders</div>
+                            <div class="text-muted" style="font-size: 11px;">Awaiting fulfillment</div>
+                        </div>
+                    </a></li>
+                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="/ohemaadetergents/admin/reviews/index">
+                        <div class="rounded-circle bg-warning-subtle p-2 me-3"><span class="material-symbols-outlined text-warning">reviews</span></div>
+                        <div>
+                            <div class="fw-bold small" id="notifReviewsText">0 New Reviews</div>
+                            <div class="text-muted" style="font-size: 11px;">Pending moderation</div>
+                        </div>
+                    </a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-center small text-primary fw-bold py-2" href="/ohemaadetergents/admin/index">View Dashboard</a></li>
+                </ul>
+            </div>
+
             <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">
                 <span class="material-symbols-outlined" id="themeIcon">
                     <script>document.write(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light_mode' : 'dark_mode');</script>
@@ -433,14 +508,20 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <a href="/ohemaadetergents/admin/products/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/products/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">inventory_2</span> Products
             </a>
-            <a href="/ohemaadetergents/admin/reviews/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/reviews/') !== false ? 'active' : ''; ?>">
-                <span class="material-symbols-outlined">reviews</span> Reviews
+            <a href="/ohemaadetergents/admin/reviews/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/reviews/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <span class="material-symbols-outlined">reviews</span> Reviews
+                </div>
+                <span id="sidebarReviewBadge" class="badge rounded-pill bg-warning text-dark d-none" style="font-size: 10px;">0</span>
             </a>
             <a href="/ohemaadetergents/admin/categories/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/categories/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">category</span> Categories
             </a>
-            <a href="/ohemaadetergents/admin/orders/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/orders/') !== false ? 'active' : ''; ?>">
-                <span class="material-symbols-outlined">local_shipping</span> Orders
+            <a href="/ohemaadetergents/admin/orders/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/orders/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <span class="material-symbols-outlined">local_shipping</span> Orders
+                </div>
+                <span id="sidebarOrderBadge" class="badge rounded-pill bg-danger d-none" style="font-size: 10px;">0</span>
             </a>
             <a href="/ohemaadetergents/admin/expenditure" class="<?php echo $currentPage == 'expenditure.php' || $currentPage == 'expenditure' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">payments</span> Expenditure
