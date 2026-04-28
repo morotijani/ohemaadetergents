@@ -17,7 +17,10 @@ $admin = Auth::requireAdmin();
 
 try {
     $db = Database::getInstance()->getConnection();
-    $stmt = $db->query("SELECT id, HEX(product_id) as uuid, name, slug, description, price, stock, image_url, is_featured, created_at FROM products ORDER BY created_at DESC");
+    $stmt = $db->query("SELECT p.id, HEX(p.product_id) as uuid, p.name, p.slug, p.description, p.price, p.stock, p.image_url, p.is_featured, p.category_id, c.name as category_name, p.created_at 
+                        FROM products p 
+                        LEFT JOIN categories c ON p.category_id = c.id 
+                        ORDER BY p.created_at DESC");
     $products = $stmt->fetchAll();
     
     $stmtImg = $db->query("SELECT product_id, image_url FROM product_images ORDER BY id ASC");

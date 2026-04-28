@@ -15,6 +15,7 @@
                 <tr>
                     <th class="border-top-0 text-muted" style="font-weight: 500;">Image</th>
                     <th class="border-top-0 text-muted" style="font-weight: 500;">Name</th>
+                    <th class="border-top-0 text-muted" style="font-weight: 500;">Category</th>
                     <th class="border-top-0 text-muted" style="font-weight: 500;">Price</th>
                     <th class="border-top-0 text-muted" style="font-weight: 500;">Stock</th>
                     <th class="border-top-0 text-muted text-end" style="font-weight: 500;">Actions</th>
@@ -47,6 +48,12 @@
             <div class="form-floating mb-3">
                 <textarea class="form-control" id="productDescription" style="height: 100px"></textarea>
                 <label>Description</label>
+            </div>
+            <div class="form-floating mb-3">
+                <select class="form-select" id="productCategory">
+                    <option value="">No Category</option>
+                </select>
+                <label>Category</label>
             </div>
             <div class="row">
                 <div class="col-md-6">
@@ -92,8 +99,27 @@ let pendingFiles = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     productModalInstance = new bootstrap.Modal(document.getElementById('productModal'));
+    loadCategories();
     loadProducts();
 });
+
+async function loadCategories() {
+    try {
+        const response = await fetch(apiBase + '/categories/read', {
+            headers: getAuthHeaders()
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            const select = document.getElementById('productCategory');
+            data.data.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.innerText = c.name;
+                select.appendChild(opt);
+            });
+        }
+    } catch (err) { console.error('Error loading categories', err); }
+}
 
 document.getElementById('productImages').addEventListener('change', function(e) {
     if (currentExistingImages.length + pendingFiles.length + this.files.length > 4) {
@@ -188,6 +214,7 @@ function renderTable(filter = '') {
         tr.innerHTML = `
             <td style="padding: 16px 24px;"><img src="${imgUrl}" alt="img" width="48" height="48" class="rounded object-fit-cover shadow-sm border" style="border-color: var(--card-border) !important;"></td>
             <td class="fw-medium text-dark" style="font-size: 15px;">${p.name}</td>
+            <td class="text-muted">${p.category_name || '-'}</td>
             <td class="text-muted">GHS ${parseFloat(p.price).toFixed(2)}</td>
             <td class="text-muted">${p.stock} in stock</td>
             <td class="text-end" style="padding-right: 24px;">
@@ -230,6 +257,7 @@ function openEditModal(id) {
     document.getElementById('productDescription').value = p.description;
     document.getElementById('productPrice').value = p.price;
     document.getElementById('productStock').value = p.stock;
+    document.getElementById('productCategory').value = p.category_id || '';
     document.getElementById('productIsFeatured').checked = p.is_featured == 1;
     
     currentExistingImages = p.images ? [...p.images] : [];
@@ -251,6 +279,7 @@ async function saveProduct() {
     formData.append('description', document.getElementById('productDescription').value);
     formData.append('price', document.getElementById('productPrice').value);
     formData.append('stock', document.getElementById('productStock').value);
+    formData.append('category_id', document.getElementById('productCategory').value);
     formData.append('is_featured', document.getElementById('productIsFeatured').checked ? 1 : 0);
     
     currentExistingImages.forEach(img => formData.append('existing_images[]', img));

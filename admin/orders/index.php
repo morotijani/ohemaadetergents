@@ -63,7 +63,14 @@ let orderModalInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     orderModalInstance = new bootstrap.Modal(document.getElementById('orderModal'));
-    loadOrders();
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('id');
+    
+    loadOrders().then(() => {
+        if (orderId) {
+            viewOrder(orderId);
+        }
+    });
 });
 
 async function loadOrders() {

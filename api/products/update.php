@@ -25,6 +25,7 @@ $description = trim($_POST['description'] ?? '');
 $price = (float)($_POST['price'] ?? 0);
 $stock = (int)($_POST['stock'] ?? 0);
 $isFeatured = isset($_POST['is_featured']) && $_POST['is_featured'] ? 1 : 0;
+$categoryId = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : null;
 
 if (empty($name) || empty($price)) {
     Helpers::jsonResponse(400, 'Name and price are required');
@@ -96,8 +97,8 @@ $primaryImageUrl = $finalImages[0] ?? null;
 try {
     $db->beginTransaction();
     
-    $stmt = $db->prepare("UPDATE products SET name=?, slug=?, description=?, price=?, stock=?, image_url=?, is_featured=? WHERE id=?");
-    $stmt->execute([$name, $slug, $description, $price, $stock, $primaryImageUrl, $isFeatured, $id]);
+    $stmt = $db->prepare("UPDATE products SET name=?, slug=?, description=?, price=?, stock=?, image_url=?, is_featured=?, category_id=? WHERE id=?");
+    $stmt->execute([$name, $slug, $description, $price, $stock, $primaryImageUrl, $isFeatured, $categoryId, $id]);
     
     $stmt = $db->prepare("DELETE FROM product_images WHERE product_id=?");
     $stmt->execute([$id]);

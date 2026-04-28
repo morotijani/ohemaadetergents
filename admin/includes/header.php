@@ -11,6 +11,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
         // Apply theme early to prevent flash
@@ -425,6 +426,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
             <a href="/ohemaadetergents/admin/products/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/products/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">inventory_2</span> Products
+            </a>
+            <a href="/ohemaadetergents/admin/categories/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/categories/') !== false ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">category</span> Categories
             </a>
             <a href="/ohemaadetergents/admin/orders/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/orders/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">local_shipping</span> Orders
