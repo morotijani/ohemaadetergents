@@ -90,9 +90,14 @@
                             <input type="number" step="0.01" class="form-control" id="productPrice" placeholder="0.00" required>
                             <label>Price (GHS)</label>
                         </div>
-                        <div class="form-floating mb-0">
+                        <div class="form-floating mb-3">
                             <input type="number" class="form-control" id="productStock" placeholder="0" required>
                             <label>Stock Quantity</label>
+                        </div>
+                        <div class="form-floating mb-0">
+                            <input type="number" class="form-control" id="productThreshold" placeholder="5">
+                            <label>Low Stock Threshold</label>
+                            <div class="text-muted" style="font-size: 10px;">Default is 5. Turns red when stock hits this.</div>
                         </div>
                     </div>
 
@@ -258,10 +263,12 @@ function renderTable(filter = '') {
         const imgUrl = p.image_url ? `/ohemaadetergents/${p.image_url}` : 'https://via.placeholder.com/40';
         tr.innerHTML = `
             <td style="padding: 16px 24px;"><img src="${imgUrl}" alt="img" width="48" height="48" class="rounded object-fit-cover shadow-sm border" style="border-color: var(--card-border) !important;"></td>
-            <td class="fw-medium text-dark" style="font-size: 15px;">${p.name}</td>
+            <td class="fw-medium text-dark" style="font-size: 15px;">
+                <a href="/ohemaadetergents/admin/products/view?id=${p.id}" class="text-decoration-none text-dark hover-primary">${p.name}</a>
+            </td>
             <td class="text-muted">${p.category_name || '-'}</td>
             <td class="text-muted">GHS ${parseFloat(p.price).toFixed(2)}</td>
-            <td class="text-muted">${p.stock} in stock</td>
+            <td class="${parseInt(p.stock) <= (parseInt(p.stock_threshold) || 5) ? 'text-danger fw-bold' : 'text-muted'}">${p.stock} in stock</td>
             <td class="text-end" style="padding-right: 24px;">
                 <button class="icon-btn d-inline-flex" onclick="openEditModal(${p.id})" title="Edit">
                     <span class="material-symbols-outlined" style="font-size: 20px;">edit</span>
@@ -303,6 +310,7 @@ function openEditModal(id) {
     document.getElementById('productPrice').value = p.price;
     document.getElementById('productStock').value = p.stock;
     document.getElementById('productCategory').value = p.category_id || '';
+    document.getElementById('productThreshold').value = p.stock_threshold || '';
     document.getElementById('productIsFeatured').checked = p.is_featured == 1;
     
     currentExistingImages = p.images ? [...p.images] : [];
@@ -324,6 +332,7 @@ async function saveProduct() {
     formData.append('description', document.getElementById('productDescription').value);
     formData.append('price', document.getElementById('productPrice').value);
     formData.append('stock', document.getElementById('productStock').value);
+    formData.append('stock_threshold', document.getElementById('productThreshold').value);
     formData.append('category_id', document.getElementById('productCategory').value);
     formData.append('is_featured', document.getElementById('productIsFeatured').checked ? 1 : 0);
     

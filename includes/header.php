@@ -42,6 +42,9 @@ $cartCount = $cartObj->count();
                 <li class="nav-item">
                     <a class="nav-link px-lg-4" href="/ohemaadetergents/shop">Shop</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-4" href="/ohemaadetergents/contact">Contact</a>
+                </li>
                 <li class="nav-item d-lg-none">
                     <a class="nav-link px-lg-4" href="/ohemaadetergents/track_order">Track Order</a>
                 </li>

@@ -1,0 +1,30 @@
+<?php
+require_once __DIR__ . '/../../src/Database.php';
+require_once __DIR__ . '/../../src/Helpers.php';
+require_once __DIR__ . '/../../src/Auth.php';
+
+use App\Database;
+use App\Helpers;
+use App\Auth;
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') exit;
+
+Auth::requireAdmin();
+
+try {
+    $db = Database::getInstance()->getConnection();
+    $stmt = $db->query("SELECT id, HEX(message_id) as uuid, name, email, subject, message, status, created_at FROM contact_messages ORDER BY created_at DESC");
+    $messages = $stmt->fetchAll();
+
+    foreach ($messages as &$msg) {
+        $msg['uuid'] = Helpers::uuidBinToStr(hex2bin($msg['uuid']));
+    }
+
+    Helpers::jsonResponse(200, 'Messages fetched', $messages);
+} catch (\Exception $e) {
+    Helpers::jsonResponse(500, 'Server error: ' . $e->getMessage());
+}

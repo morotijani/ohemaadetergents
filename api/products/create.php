@@ -21,6 +21,7 @@ $name = trim($_POST['name'] ?? '');
 $description = trim($_POST['description'] ?? '');
 $price = (float)($_POST['price'] ?? 0);
 $stock = (int)($_POST['stock'] ?? 0);
+$stockThreshold = isset($_POST['stock_threshold']) && $_POST['stock_threshold'] !== '' ? (int)$_POST['stock_threshold'] : 5;
 $isFeatured = isset($_POST['is_featured']) && $_POST['is_featured'] ? 1 : 0;
 $categoryId = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : null;
 
@@ -67,7 +68,7 @@ $imageUrl = $uploadedImages[0] ?? null;
 
 try {
     $db->beginTransaction();
-    $stmt = $db->prepare("INSERT INTO products (product_id, category_id, name, slug, description, price, stock, image_url, is_featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO products (product_id, category_id, name, slug, description, price, stock, stock_threshold, image_url, is_featured) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $productIdBin = Helpers::generateUuidV7Binary();
     $stmt->execute([
         $productIdBin,
@@ -77,6 +78,7 @@ try {
         $description,
         $price,
         $stock,
+        $stockThreshold,
         $imageUrl,
         $isFeatured
     ]);

@@ -17,7 +17,7 @@ $admin = Auth::requireAdmin();
 
 try {
     $db = Database::getInstance()->getConnection();
-    $stmt = $db->query("SELECT p.id, HEX(p.product_id) as uuid, p.name, p.slug, p.description, p.price, p.stock, p.image_url, p.is_featured, p.category_id, c.name as category_name, p.created_at 
+    $stmt = $db->query("SELECT p.id, HEX(p.product_id) as uuid, p.name, p.slug, p.description, p.price, p.stock, p.stock_threshold, p.image_url, p.is_featured, p.category_id, c.name as category_name, p.created_at 
                         FROM products p 
                         LEFT JOIN categories c ON p.category_id = c.id 
                         WHERE p.is_deleted = 0
@@ -41,5 +41,5 @@ try {
 
     Helpers::jsonResponse(200, 'Products fetched', $products);
 } catch (\Exception $e) {
-    Helpers::jsonResponse(500, 'Server error');
+    Helpers::jsonResponse(500, 'Server error: ' . $e->getMessage());
 }

@@ -416,6 +416,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     // Dropdown Texts
                     document.getElementById('notifOrdersText').innerText = stats.new_orders + ' New Orders';
                     document.getElementById('notifReviewsText').innerText = stats.new_reviews + ' New Reviews';
+                    document.getElementById('notifStockText').innerText = stats.low_stock + ' Low Stock Items';
+                    document.getElementById('notifMessagesText').innerText = stats.new_messages + ' New Messages';
 
                     // Sidebar Badges
                     const orderBadge = document.getElementById('sidebarOrderBadge');
@@ -432,6 +434,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         reviewBadge.classList.remove('d-none');
                     } else {
                         reviewBadge.classList.add('d-none');
+                    }
+
+                    const messageBadge = document.getElementById('sidebarMessageBadge');
+                    if (stats.new_messages > 0) {
+                        messageBadge.innerText = stats.new_messages;
+                        messageBadge.classList.remove('d-none');
+                    } else {
+                        messageBadge.classList.add('d-none');
                     }
                 }
             } catch (e) { console.error('Error fetching notifications', e); }
@@ -481,6 +491,20 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             <div class="text-muted" style="font-size: 11px;">Pending moderation</div>
                         </div>
                     </a></li>
+                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="/ohemaadetergents/admin/products/index">
+                        <div class="rounded-circle bg-danger-subtle p-2 me-3"><span class="material-symbols-outlined text-danger">inventory_2</span></div>
+                        <div>
+                            <div class="fw-bold small" id="notifStockText">0 Low Stock Items</div>
+                            <div class="text-muted" style="font-size: 11px;">Inventory alert</div>
+                        </div>
+                    </a></li>
+                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="/ohemaadetergents/admin/contact/index">
+                        <div class="rounded-circle bg-info-subtle p-2 me-3"><span class="material-symbols-outlined text-info">mail</span></div>
+                        <div>
+                            <div class="fw-bold small" id="notifMessagesText">0 New Messages</div>
+                            <div class="text-muted" style="font-size: 11px;">Customer inquiry</div>
+                        </div>
+                    </a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-center small text-primary fw-bold py-2" href="/ohemaadetergents/admin/index">View Dashboard</a></li>
                 </ul>
@@ -525,6 +549,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
             <a href="/ohemaadetergents/admin/expenditure" class="<?php echo $currentPage == 'expenditure.php' || $currentPage == 'expenditure' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">payments</span> Expenditure
+            </a>
+            <a href="/ohemaadetergents/admin/contact/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/contact/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <span class="material-symbols-outlined">mail</span> Messages
+                </div>
+                <span id="sidebarMessageBadge" class="badge rounded-pill bg-info text-white d-none" style="font-size: 10px;">0</span>
             </a>
             <a href="/ohemaadetergents/admin/customers/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/customers/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">group</span> Customers

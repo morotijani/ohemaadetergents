@@ -26,10 +26,20 @@ try {
     $stmt = $db->query("SELECT COUNT(*) FROM product_reviews WHERE status = 'pending'");
     $newReviews = $stmt->fetchColumn();
 
+    // Low Stock Alerts
+    $stmt = $db->query("SELECT COUNT(*) FROM products WHERE stock <= stock_threshold AND is_deleted = 0");
+    $lowStock = $stmt->fetchColumn();
+
+    // New Contact Messages (Unread)
+    $stmt = $db->query("SELECT COUNT(*) FROM contact_messages WHERE status = 'unread'");
+    $newMessages = $stmt->fetchColumn();
+
     Helpers::jsonResponse(200, 'Notifications fetched', [
         'new_orders' => (int)$newOrders,
         'new_reviews' => (int)$newReviews,
-        'total' => (int)$newOrders + (int)$newReviews
+        'low_stock' => (int)$lowStock,
+        'new_messages' => (int)$newMessages,
+        'total' => (int)$newOrders + (int)$newReviews + (int)$lowStock + (int)$newMessages
     ]);
 } catch (\Exception $e) {
     Helpers::jsonResponse(500, 'Server error');
