@@ -168,6 +168,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             padding-top: 12px; 
             transition: background-color 0.2s;
             flex-shrink: 0;
+            position: fixed;
+            top: 64px;
+            bottom: 0;
+            overflow-y: auto;
+            border-right: 1px solid var(--card-border);
+            scrollbar-width: thin;
         }
         
         .sidebar a { 
@@ -201,8 +207,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         .main-content { 
             flex-grow: 1; 
             padding: 24px 40px; 
-            max-width: 1040px;
-            margin: 0 auto;
+            margin-left: 256px;
+            width: calc(100% - 256px);
         }
         .no-sidebar .main-content { margin-left: 0; max-width: 100%; }
 
@@ -421,7 +427,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
     <div class="layout-container">
         <div class="sidebar">
-            <a href="/ohemaadetergents/admin/index" class="<?php echo $currentPage == 'index.php' || $currentPage == 'index' ? 'active' : ''; ?>">
+            <a href="/ohemaadetergents/admin/index" class="<?php echo $_SERVER['SCRIPT_NAME'] == '/ohemaadetergents/admin/index.php' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">home</span> Home
             </a>
             <a href="/ohemaadetergents/admin/products/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/products/') !== false ? 'active' : ''; ?>">
@@ -449,7 +455,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 <span class="material-symbols-outlined">admin_panel_settings</span> Admins
             </a>
             <a href="/ohemaadetergents/admin/logs/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/logs/') !== false ? 'active' : ''; ?>">
-                <span class="material-symbols-outlined">historyed</span> Activity Logs
+                <span class="material-symbols-outlined">history</span> Activity Logs
+            </a>
+            <a href="/ohemaadetergents/admin/help" class="<?php echo $currentPage == 'help.php' || $currentPage == 'help' ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">help_center</span> Help Center
             </a>
             <hr class="mx-3" style="border-color: var(--card-border);">
             <a href="/ohemaadetergents/admin/profile" class="<?php echo $currentPage == 'profile.php' || $currentPage == 'profile' ? 'active' : ''; ?>">
