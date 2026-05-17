@@ -41,9 +41,6 @@ try {
 include 'includes/header.php';
 ?>
 
-include 'includes/header.php';
-?>
-
 <div class="container py-5 mt-5">
     <div class="row pt-4">
         <div class="col-12">

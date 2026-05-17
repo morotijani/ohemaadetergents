@@ -37,8 +37,6 @@ if (!empty($cartItems)) {
 
 include 'includes/header.php';
 ?>
-include 'includes/header.php';
-?>
 
 <div class="bg-gold-soft py-5 mt-5">
     <div class="container py-4 text-center">
