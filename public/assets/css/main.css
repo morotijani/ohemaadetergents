@@ -279,4 +279,9 @@ footer {
 @media (max-width: 768px) {
     .hero-title { font-size: 3rem; }
     .hero-section { min-height: 60vh; padding: 80px 0; }
+    .btn-link-dark {
+        font-size: 0.55rem;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+    }
 }

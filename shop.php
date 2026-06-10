@@ -103,7 +103,7 @@ include 'includes/header.php';
                     </div>
                 <?php else: ?>
                     <?php foreach ($products as $index => $product): ?>
-                        <div class="col-12 col-md-6 col-lg-4 reveal border-end border-bottom border-light">
+                        <div class="col-6 col-md-6 col-lg-4 reveal border-end border-bottom border-light">
                             <div class="product-card h-100">
                                 <?php 
                                 $img = $product['image_url'] ? $product['image_url'] : 'https://via.placeholder.com/600x600?text=Ohemaa';

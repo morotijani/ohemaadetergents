@@ -5,6 +5,7 @@ $cartCount = $cartObj->count();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,77 +13,90 @@ $cartCount = $cartObj->count();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/ohemaadetergents/public/assets/css/main.css">
+    <link rel="icon" href="/ohemaadetergents/public/assets/img/logo.png" type="image/png">
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container-fluid px-4 px-lg-5">
-        
-        <!-- Mobile toggler -->
-        <button class="navbar-toggler border-0 shadow-none p-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <i class="bi bi-list fs-2"></i>
-        </button>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid px-4 px-lg-5">
 
-        <!-- Brand -->
-        <a class="navbar-brand mx-auto mx-lg-0 absolute-center-mobile" href="/ohemaadetergents/index">
-            OHEMAA
-        </a>
-        
-        <!-- Mobile Cart -->
-        <a href="/ohemaadetergents/cart" class="nav-link d-lg-none position-relative">
-            BAG (<span id="cartBadgeMobile"><?php echo $cartCount; ?></span>)
-        </a>
+            <!-- Mobile toggler -->
+            <button class="navbar-toggler border-0 shadow-none p-0 d-lg-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <i class="bi bi-list fs-2"></i>
+            </button>
 
-        <!-- Desktop Menu -->
-        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <ul class="navbar-nav gap-2 gap-lg-4 mt-4 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/ohemaadetergents/index">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/ohemaadetergents/shop">Shop</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/ohemaadetergents/contact">Contact</a>
-                </li>
-            </ul>
-            
-            <div class="d-none d-lg-flex align-items-center gap-4">
-                <a href="/ohemaadetergents/track_order" class="nav-link">Track Order</a>
-                <a href="/ohemaadetergents/cart" class="nav-link">
-                    BAG (<span id="cartBadge"><?php echo $cartCount; ?></span>)
-                </a>
+            <!-- Brand -->
+            <a class="navbar-brand mx-auto mx-lg-0 absolute-center-mobile d-flex align-items-center gap-2"
+                href="/ohemaadetergents/index">
+                <img src="/ohemaadetergents/public/assets/img/logo.png" alt="Ohemaa Detergents"
+                    style="height: 45px; width: auto; object-fit: contain;">
+                <span class="d-none d-md-block font-serif text-black mb-0"
+                    style="font-size: 1.15rem; letter-spacing: 0.02em;">Ohemaa Detergents</span>
+            </a>
+
+            <!-- Mobile Cart -->
+            <a href="/ohemaadetergents/cart" class="nav-link d-lg-none position-relative">
+                BAG (<span id="cartBadgeMobile"><?php echo $cartCount; ?></span>)
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <ul class="navbar-nav gap-2 gap-lg-4 mt-4 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ohemaadetergents/index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ohemaadetergents/shop">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ohemaadetergents/stockists">Stockists</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ohemaadetergents/about">Our Heritage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ohemaadetergents/contact">Contact</a>
+                    </li>
+                </ul>
+
+                <div class="d-none d-lg-flex align-items-center gap-4">
+                    <a href="/ohemaadetergents/track_order" class="nav-link">Track Order</a>
+                    <a href="/ohemaadetergents/cart" class="nav-link">
+                        BAG (<span id="cartBadge"><?php echo $cartCount; ?></span>)
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<style>
-/* Center brand on mobile */
-@media (max-width: 991.98px) {
-    .absolute-center-mobile {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-}
-</style>
-
-<script>
-async function addToCart(productId, qty = 1) {
-    try {
-        const res = await fetch('/ohemaadetergents/cart_action', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({action: 'add', product_id: productId, qty: qty})
-        });
-        const data = await res.json();
-        if (data.status === 'success') {
-            document.getElementById('cartBadge').innerText = data.data.count;
-            if(document.getElementById('cartBadgeMobile')) {
-                document.getElementById('cartBadgeMobile').innerText = data.data.count;
+    <style>
+        /* Center brand on mobile */
+        @media (max-width: 991.98px) {
+            .absolute-center-mobile {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
             }
         }
-    } catch(e) { console.error(e); }
-}
-</script>
+    </style>
+
+    <script>
+        async function addToCart(productId, qty = 1) {
+            try {
+                const res = await fetch('/ohemaadetergents/cart_action', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'add', product_id: productId, qty: qty })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    document.getElementById('cartBadge').innerText = data.data.count;
+                    if (document.getElementById('cartBadgeMobile')) {
+                        document.getElementById('cartBadgeMobile').innerText = data.data.count;
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+    </script>
