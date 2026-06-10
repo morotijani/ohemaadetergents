@@ -38,102 +38,83 @@ if (!empty($cartItems)) {
 include 'includes/header.php';
 ?>
 
-<div class="bg-gold-soft py-5 mt-5">
-    <div class="container py-4 text-center">
-        <h1 class="display-4 fw-800 mb-0">Your Shopping Bag</h1>
+<div class="container-fluid px-4 px-lg-5 pt-5 mt-5">
+    <div class="row pt-5 mb-5 pb-5 border-bottom border-light">
+        <div class="col-lg-12 text-center">
+            <h1 class="font-serif text-black" style="font-size: 3.5rem;">Shopping Bag</h1>
+        </div>
     </div>
 </div>
 
-<div class="container py-5 mb-5">
+<div class="container-fluid px-4 px-lg-5 mb-5 pb-5">
     <?php if (empty($products)): ?>
-        <div class="text-center py-5 reveal">
-            <div class="bg-white p-5 rounded-lg shadow-sm border d-inline-block">
-                <i class="bi bi-bag-x fs-1 text-muted mb-4 d-block"></i>
-                <h2 class="fw-bold mb-3">Your bag is empty</h2>
-                <p class="text-muted mb-4">Looks like you haven't added any royal brightness to your bag yet.</p>
-                <a href="shop" class="btn btn-gold btn-lg px-5 rounded-pill">Start Shopping</a>
-            </div>
+        <div class="text-center py-5">
+            <p class="font-sans text-muted text-uppercase letter-spacing-wide mb-4" style="font-size: 0.75rem;">Your bag is currently empty.</p>
+            <a href="shop" class="btn btn-black">Continue Shopping</a>
         </div>
     <?php else: ?>
-        <div class="row g-5">
-            <div class="col-lg-8 reveal">
-                <div class="table-responsive glass rounded-lg p-4">
-                    <table class="table align-middle border-transparent">
+        <div class="row">
+            <div class="col-lg-8 pe-lg-5 mb-5 mb-lg-0 border-end border-light">
+                <div class="table-responsive">
+                    <table class="table align-middle" style="border-collapse: collapse;">
                         <thead>
-                            <tr class="text-muted small text-uppercase letter-spacing-1">
-                                <th class="border-0 pb-4">Product</th>
-                                <th class="border-0 pb-4">Price</th>
-                                <th class="border-0 pb-4">Quantity</th>
-                                <th class="border-0 pb-4 text-end">Subtotal</th>
-                                <th class="border-0 pb-4"></th>
+                            <tr class="font-sans text-muted text-uppercase letter-spacing-widest" style="font-size: 0.65rem;">
+                                <th class="border-top-0 border-bottom border-black pb-3 fw-600">Product</th>
+                                <th class="border-top-0 border-bottom border-black pb-3 fw-600">Price</th>
+                                <th class="border-top-0 border-bottom border-black pb-3 fw-600">Quantity</th>
+                                <th class="border-top-0 border-bottom border-black pb-3 fw-600 text-end">Total</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($products as $p): ?>
                                 <tr>
-                                    <td class="py-4 border-0">
+                                    <td class="py-4 border-bottom border-light">
                                         <div class="d-flex align-items-center">
-                                            <div class="rounded-md overflow-hidden bg-light me-3" style="width: 80px; height: 80px; flex-shrink: 0;">
-                                                <img src="<?php echo $p['image_url'] ? htmlspecialchars($p['image_url']) : 'https://via.placeholder.com/300?text=Ohemaa'; ?>" class="w-100 h-100 object-fit-cover">
+                                            <div class="bg-off-white me-4" style="width: 80px; height: 100px; flex-shrink: 0; padding: 0.5rem;">
+                                                <img src="<?php echo $p['image_url'] ? htmlspecialchars($p['image_url']) : 'https://via.placeholder.com/300?text=Ohemaa'; ?>" class="w-100 h-100" style="object-fit: contain;">
                                             </div>
                                             <div>
-                                                <span class="fw-bold d-block text-primary"><?php echo htmlspecialchars($p['name']); ?></span>
-                                                <span class="text-muted small">Premium Quality</span>
+                                                <a href="product?slug=<?php echo urlencode($p['name']); ?>" class="font-serif text-black text-decoration-none" style="font-size: 1.1rem;"><?php echo htmlspecialchars($p['name']); ?></a>
+                                                <br>
+                                                <button class="btn btn-link text-muted p-0 text-decoration-none font-sans text-uppercase mt-2" style="font-size: 0.65rem; letter-spacing: 0.05em;" onclick="removeFromCart(<?php echo $p['id']; ?>)">Remove</button>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="py-4 border-0 fw-bold">GHS <?php echo number_format($p['price'], 2); ?></td>
-                                    <td class="py-4 border-0">
-                                        <div class="input-group glass p-1 rounded-pill" style="width: 120px;">
-                                            <input type="number" class="form-control bg-transparent border-0 text-center fw-bold" value="<?php echo $p['qty']; ?>" min="1" max="<?php echo $p['stock']; ?>" onchange="updateCart(<?php echo $p['id']; ?>, this.value)" style="box-shadow: none;">
+                                    <td class="py-4 border-bottom border-light font-sans text-black" style="font-size: 0.85rem;">GHS <?php echo number_format($p['price'], 2); ?></td>
+                                    <td class="py-4 border-bottom border-light">
+                                        <div class="d-flex border border-black" style="width: fit-content;">
+                                            <input type="number" class="form-control border-0 text-center rounded-0 font-sans fw-600 px-0 bg-transparent" value="<?php echo $p['qty']; ?>" min="1" max="<?php echo $p['stock']; ?>" onchange="updateCart(<?php echo $p['id']; ?>, this.value)" style="width: 60px; box-shadow: none;">
                                         </div>
                                     </td>
-                                    <td class="py-4 border-0 text-end fw-bold text-gold">GHS <?php echo number_format($p['subtotal'], 2); ?></td>
-                                    <td class="py-4 border-0 text-end">
-                                        <button class="btn btn-link text-danger p-0 px-2" onclick="removeFromCart(<?php echo $p['id']; ?>)">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </td>
+                                    <td class="py-4 border-bottom border-light text-end font-sans text-black" style="font-size: 0.85rem;">GHS <?php echo number_format($p['subtotal'], 2); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
-                
-                <div class="mt-4 d-flex justify-content-between">
-                    <a href="shop" class="btn btn-link text-muted text-decoration-none p-0">
-                        <i class="bi bi-arrow-left me-2"></i> Continue Shopping
-                    </a>
-                </div>
             </div>
 
-            <div class="col-lg-4 reveal" style="animation-delay: 0.2s;">
-                <div class="glass p-4 rounded-lg sticky-top" style="top: 100px; border-radius: var(--radius-lg);">
-                    <h4 class="fw-bold mb-4">Summary</h4>
+            <div class="col-lg-4 ps-lg-5">
+                <div class="sticky-top" style="top: 100px;">
+                    <h4 class="font-sans text-uppercase letter-spacing-widest text-black mb-4 fw-600" style="font-size: 0.75rem;">Order Summary</h4>
                     
-                    <div class="d-flex justify-content-between mb-3 text-muted">
-                        <span>Bag Subtotal</span>
-                        <span class="fw-bold">GHS <?php echo number_format($total, 2); ?></span>
+                    <div class="d-flex justify-content-between mb-3 font-sans" style="font-size: 0.85rem;">
+                        <span class="text-muted">Subtotal</span>
+                        <span class="text-black">GHS <?php echo number_format($total, 2); ?></span>
                     </div>
-                    <div class="d-flex justify-content-between mb-3 text-muted">
-                        <span>Estimated Shipping</span>
-                        <span class="small italic">Calculated at checkout</span>
-                    </div>
-                    
-                    <hr class="my-4 opacity-10">
-                    
-                    <div class="d-flex justify-content-between mb-5">
-                        <span class="fs-5 fw-bold">Total</span>
-                        <span class="fs-4 fw-800 text-primary">GHS <?php echo number_format($total, 2); ?></span>
+                    <div class="d-flex justify-content-between mb-4 font-sans" style="font-size: 0.85rem;">
+                        <span class="text-muted">Shipping</span>
+                        <span class="text-muted italic">Calculated at checkout</span>
                     </div>
                     
-                    <a href="checkout" class="btn btn-gold w-100 py-3 rounded-pill mb-3">
-                        Proceed to Checkout <i class="bi bi-lock-fill ms-2"></i>
+                    <div class="d-flex justify-content-between mb-5 border-top border-black pt-3">
+                        <span class="font-sans text-uppercase letter-spacing-wide fw-600" style="font-size: 0.75rem;">Total</span>
+                        <span class="font-sans fw-600 text-black">GHS <?php echo number_format($total, 2); ?></span>
+                    </div>
+                    
+                    <a href="checkout" class="btn btn-black w-100 py-3 mb-3">
+                        Checkout
                     </a>
-                    
-                    <div class="text-center">
-                        <p class="small text-muted mb-0"><i class="bi bi-shield-lock me-1 text-success"></i> Secure Checkout Guaranteed</p>
-                    </div>
                 </div>
             </div>
         </div>

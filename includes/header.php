@@ -16,54 +16,57 @@ $cartCount = $cartObj->count();
 <body>
 
 <nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="/ohemaadetergents/index">
-            <span class="fw-900">OHEMAA</span>
-            <span class="ms-2 small fw-bold text-gold d-none d-sm-inline" style="font-family: 'Montserrat'; letter-spacing: 4px; font-size: 0.6rem; vertical-align: middle;">PREMIUM</span>
+    <div class="container-fluid px-4 px-lg-5">
+        
+        <!-- Mobile toggler -->
+        <button class="navbar-toggler border-0 shadow-none p-0 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="bi bi-list fs-2"></i>
+        </button>
+
+        <!-- Brand -->
+        <a class="navbar-brand mx-auto mx-lg-0 absolute-center-mobile" href="/ohemaadetergents/index">
+            OHEMAA
         </a>
         
-        <div class="d-flex align-items-center d-lg-none">
-            <a href="/ohemaadetergents/cart" class="nav-link position-relative me-3">
-                <i class="bi bi-bag-heart fs-4"></i>
-                <span id="cartBadgeMobile" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                    <?php echo $cartCount; ?>
-                </span>
-            </a>
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <i class="bi bi-list fs-2 text-primary"></i>
-            </button>
-        </div>
+        <!-- Mobile Cart -->
+        <a href="/ohemaadetergents/cart" class="nav-link d-lg-none position-relative">
+            BAG (<span id="cartBadgeMobile"><?php echo $cartCount; ?></span>)
+        </a>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
+        <!-- Desktop Menu -->
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+            <ul class="navbar-nav gap-2 gap-lg-4 mt-4 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link px-lg-4" href="/ohemaadetergents/index">Home</a>
+                    <a class="nav-link" href="/ohemaadetergents/index">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-lg-4" href="/ohemaadetergents/shop">Shop</a>
+                    <a class="nav-link" href="/ohemaadetergents/shop">Shop</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-lg-4" href="/ohemaadetergents/contact">Contact</a>
-                </li>
-                <li class="nav-item d-lg-none">
-                    <a class="nav-link px-lg-4" href="/ohemaadetergents/track_order">Track Order</a>
+                    <a class="nav-link" href="/ohemaadetergents/contact">Contact</a>
                 </li>
             </ul>
             
-            <div class="d-none d-lg-flex align-items-center gap-3">
-                <a href="/ohemaadetergents/track_order" class="nav-link text-muted small me-2">Track Order</a>
-                <a href="/ohemaadetergents/cart" class="nav-link position-relative p-0 me-2">
-                    <div class="bg-gold-soft p-2 rounded-circle border border-gold">
-                        <i class="bi bi-bag-heart fs-5 text-gold"></i>
-                    </div>
-                    <span id="cartBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
-                        <?php echo $cartCount; ?>
-                    </span>
+            <div class="d-none d-lg-flex align-items-center gap-4">
+                <a href="/ohemaadetergents/track_order" class="nav-link">Track Order</a>
+                <a href="/ohemaadetergents/cart" class="nav-link">
+                    BAG (<span id="cartBadge"><?php echo $cartCount; ?></span>)
                 </a>
             </div>
         </div>
     </div>
 </nav>
+
+<style>
+/* Center brand on mobile */
+@media (max-width: 991.98px) {
+    .absolute-center-mobile {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+</style>
 
 <script>
 async function addToCart(productId, qty = 1) {
@@ -76,7 +79,9 @@ async function addToCart(productId, qty = 1) {
         const data = await res.json();
         if (data.status === 'success') {
             document.getElementById('cartBadge').innerText = data.data.count;
-            // Optionally show a toast here
+            if(document.getElementById('cartBadgeMobile')) {
+                document.getElementById('cartBadgeMobile').innerText = data.data.count;
+            }
         }
     } catch(e) { console.error(e); }
 }
