@@ -20,32 +20,31 @@ include 'includes/header.php';
 ?>
 
 <!-- Editorial Hero Section -->
-<section class="hero-section">
-    <div class="container-fluid px-4 px-lg-5">
-        <div class="row align-items-center g-0">
-            <div class="col-lg-5 order-2 order-lg-1 pe-lg-5 text-center text-lg-start reveal mt-5 mt-lg-0">
-                <span class="font-sans text-uppercase letter-spacing-widest text-muted d-block mb-4"
-                    style="font-size: 0.7rem;">The Signature Collection</span>
-                <h1 class="hero-title font-serif text-black">
-                    Purity.<br>
-                    <span class="italic text-muted">Redefined.</span>
-                </h1>
-                <p class="font-sans text-muted mb-5 fw-300"
-                    style="max-width: 400px; font-size: 1rem; margin: 0 auto 0 0;">
-                    A delicate balance of clinical efficacy and organic luxury. Formulated for the most uncompromising
-                    fabrics.
-                </p>
-                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
-                    <a href="shop" class="btn btn-black">
-                        Shop Collection
-                    </a>
-                </div>
-            </div>
+<section class="hero-section position-relative d-flex align-items-center"
+    style="min-height: 100vh; background: url('public/assets/img/hero_cinematic.png') center/cover no-repeat;">
+    <!-- Dark overlay for stark contrast and readability -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0,0,0,0.3);"></div>
 
-            <div class="col-lg-7 order-1 order-lg-2 reveal ps-lg-5">
-                <div class="hero-image-container text-center w-100">
-                    <img src="public/assets/img/hero.jpg" class="img-fluid" alt="Ohemaa Premium Clean"
-                        style="object-fit: cover; width: 100%; max-height: 80vh;">
+    <div class="container-fluid px-4 px-lg-5 position-relative" style="z-index: 1;">
+        <div class="row">
+            <div class="col-lg-7 col-xl-6 reveal text-center text-lg-start pt-5 mt-5">
+                <span class="font-sans text-uppercase letter-spacing-widest text-white-50 d-block mb-4 mt-5"
+                    style="font-size: 0.8rem;">The Signature Collection</span>
+                <h1 class="font-serif text-white mb-4" style="font-size: clamp(3.5rem, 8vw, 6rem); line-height: 1.05;">
+                    Sovereign<br>
+                    <span class="italic text-white-50" style="font-size: clamp(3rem, 7vw, 5rem);">Purity.</span>
+                </h1>
+                <p class="font-sans text-light mb-5 fw-300"
+                    style="max-width: 450px; font-size: 1.1rem; line-height: 1.8; margin: 0 auto 0 0;">
+                    A delicate balance of clinical efficacy and raw organic luxury. Formulated for the most
+                    uncompromising fabrics.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-4 justify-content-center justify-content-lg-start mt-4">
+                    <a href="shop"
+                        class="btn btn-outline-light rounded-0 px-5 py-3 font-sans text-uppercase letter-spacing-wide"
+                        style="font-size: 0.8rem; border-width: 1px;">
+                        Explore Collection
+                    </a>
                 </div>
             </div>
         </div>
@@ -80,7 +79,7 @@ include 'includes/header.php';
 </section>
 
 <!-- Featured Products (Borderless Grid) -->
-<section class="py-5 my-5 bg-off-white">
+<section class="py-5 my-5 mb-0 bg-off-white">
     <div class="container-fluid px-4 px-lg-5">
         <div class="text-center mb-5 reveal">
             <h2 class="font-serif text-black" style="font-size: 2.5rem;">Curated Objects</h2>
@@ -144,7 +143,7 @@ include 'includes/header.php';
                 </div>
             </div>
             <div class="col-lg-6 bg-light"
-                style="min-height: 50vh; background: url('https://images.unsplash.com/photo-1606105961732-615f795db2d6?q=80&w=2070&auto=format&fit=crop') center/cover;">
+                style="min-height: 50vh; background: url('public/assets/img/hero.jpg') center/cover;">
                 <!-- Lifestyle Image -->
             </div>
         </div>
