@@ -19,6 +19,13 @@
                     <li><a href="/ohemaadetergents/shop" class="footer-link">Collection</a></li>
                     <li><a href="/ohemaadetergents/stockists" class="footer-link">Stockists</a></li>
                     <li><a href="/ohemaadetergents/about" class="footer-link">Our Heritage</a></li>
+                    <?php if (isset($_SESSION['customer_id'])): ?>
+                        <li><a href="/ohemaadetergents/profile" class="footer-link">My Account</a></li>
+                        <li><a href="#" onclick="logoutUser()" class="footer-link">Logout</a></li>
+                    <?php else: ?>
+                        <li><a href="/ohemaadetergents/login" class="footer-link">Login</a></li>
+                        <li><a href="/ohemaadetergents/register" class="footer-link">Register</a></li>
+                    <?php endif; ?>
                 </ul>
             </div>
 

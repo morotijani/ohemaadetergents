@@ -25,5 +25,5 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 Helpers::jsonResponse(200, 'Logged out successfully', [
-    'redirect' => 'login.php'
+    'redirect' => 'login'
 ]);

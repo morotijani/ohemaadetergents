@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/src/Cart.php';
 require_once __DIR__ . '/src/Helpers.php';
+require_once __DIR__ . '/src/Database.php';
 
 use App\Cart;
 use App\Helpers;
+use App\Database;
 
 header('Content-Type: application/json');
 
@@ -22,19 +24,41 @@ if (!$action || !$productId) {
 
 $cart = new Cart();
 
-switch ($action) {
-    case 'add':
-        $cart->add($productId, $qty);
-        Helpers::jsonResponse(200, 'Added to cart', ['count' => $cart->count()]);
-        break;
-    case 'update':
-        $cart->update($productId, $qty);
-        Helpers::jsonResponse(200, 'Cart updated', ['count' => $cart->count()]);
-        break;
-    case 'remove':
-        $cart->remove($productId);
-        Helpers::jsonResponse(200, 'Removed from cart', ['count' => $cart->count()]);
-        break;
-    default:
-        Helpers::jsonResponse(400, 'Invalid action');
+try {
+    $db = Database::getInstance()->getConnection();
+    $stmt = $db->prepare("SELECT stock FROM products WHERE id = ?");
+    $stmt->execute([$productId]);
+    $product = $stmt->fetch();
+
+    if (!$product) {
+        Helpers::jsonResponse(404, 'Product not found');
+    }
+
+    $availableStock = (int)$product['stock'];
+    $currentCartQty = $cart->getItems()[$productId] ?? 0;
+
+    switch ($action) {
+        case 'add':
+            if ($currentCartQty + $qty > $availableStock) {
+                Helpers::jsonResponse(400, "Cannot add. Only $availableStock available in stock, and you already have $currentCartQty in your bag.");
+            }
+            $cart->add($productId, $qty);
+            Helpers::jsonResponse(200, 'Added to cart', ['count' => $cart->count()]);
+            break;
+        case 'update':
+            if ($qty > $availableStock) {
+                Helpers::jsonResponse(400, "Cannot update. Only $availableStock available in stock.");
+            }
+            $cart->update($productId, $qty);
+            Helpers::jsonResponse(200, 'Cart updated', ['count' => $cart->count()]);
+            break;
+        case 'remove':
+            $cart->remove($productId);
+            Helpers::jsonResponse(200, 'Removed from cart', ['count' => $cart->count()]);
+            break;
+        default:
+            Helpers::jsonResponse(400, 'Invalid action');
+    }
+} catch (Exception $e) {
+    Helpers::jsonResponse(500, 'Server error');
 }

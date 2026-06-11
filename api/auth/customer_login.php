@@ -45,7 +45,7 @@ try {
     $_SESSION['customer_name'] = $customer['first_name'] . ' ' . $customer['last_name'];
 
     Helpers::jsonResponse(200, 'Login successful', [
-        'redirect' => 'profile.php'
+        'redirect' => 'profile'
     ]);
 
 } catch (Exception $e) {

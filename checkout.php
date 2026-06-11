@@ -17,6 +17,18 @@ if (empty($cartItems)) {
     exit;
 }
 
+$loggedInCustomer = null;
+if (isset($_SESSION['customer_id'])) {
+    $stmt = $db->prepare("SELECT first_name, last_name, email, phone FROM customers WHERE id = ?");
+    $stmt->execute([$_SESSION['customer_id']]);
+    $loggedInCustomer = $stmt->fetch();
+}
+
+$defaultFirstName = $loggedInCustomer['first_name'] ?? '';
+$defaultLastName = $loggedInCustomer['last_name'] ?? '';
+$defaultEmail = $loggedInCustomer['email'] ?? '';
+$defaultPhone = $loggedInCustomer['phone'] ?? '';
+
 $total = 0;
 $products = [];
 $ids = array_keys($cartItems);
@@ -139,19 +151,19 @@ include 'includes/header.php';
                 <div class="row g-4 mb-5">
                     <div class="col-md-6">
                         <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">First Name</label>
-                        <input type="text" name="first_name" class="form-control rounded-0 border-black p-3" required>
+                        <input type="text" name="first_name" class="form-control rounded-0 border-black p-3" value="<?php echo htmlspecialchars($defaultFirstName); ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Last Name</label>
-                        <input type="text" name="last_name" class="form-control rounded-0 border-black p-3" required>
+                        <input type="text" name="last_name" class="form-control rounded-0 border-black p-3" value="<?php echo htmlspecialchars($defaultLastName); ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Email Address</label>
-                        <input type="email" name="email" class="form-control rounded-0 border-black p-3" required>
+                        <input type="email" name="email" class="form-control rounded-0 border-black p-3" value="<?php echo htmlspecialchars($defaultEmail); ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Phone Number</label>
-                        <input type="text" name="phone" class="form-control rounded-0 border-black p-3" required>
+                        <input type="text" name="phone" class="form-control rounded-0 border-black p-3" value="<?php echo htmlspecialchars($defaultPhone); ?>" required>
                     </div>
                     <div class="col-12">
                         <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Delivery Address</label>

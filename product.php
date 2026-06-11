@@ -108,7 +108,7 @@ include 'includes/header.php';
                     </div>
 
                     <?php if ($product['stock'] > 0): ?>
-                        <button class="btn btn-black w-100 py-3 mt-3" onclick="addToCart(<?php echo $product['id']; ?>, document.getElementById('qty').value)">
+                        <button class="btn btn-black w-100 py-3 mt-3" onclick="addToCart(<?php echo $product['id']; ?>, document.getElementById('qty').value, this)">
                             Add to bag
                         </button>
                     <?php else: ?>
@@ -262,6 +262,22 @@ function updateGallery(el, src) {
     el.classList.remove('border-light');
     el.classList.add('border-black');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const qtyInput = document.getElementById('qty');
+    if (qtyInput) {
+        const maxStock = parseInt(qtyInput.getAttribute('max'), 10);
+        qtyInput.addEventListener('input', function() {
+            let val = parseInt(this.value, 10);
+            if (isNaN(val) || val < 1) {
+                this.value = 1;
+            } else if (val > maxStock) {
+                this.value = maxStock;
+                alert('You cannot order more than ' + maxStock + ' items of this product.');
+            }
+        });
+    }
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>

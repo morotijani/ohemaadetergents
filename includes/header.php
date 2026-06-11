@@ -98,7 +98,12 @@ $cartCount = $cartObj->count();
     </style>
 
     <script>
-        async function addToCart(productId, qty = 1) {
+        async function addToCart(productId, qty = 1, btn = null) {
+            if (btn) {
+                btn.disabled = true;
+                btn.dataset.originalText = btn.innerHTML;
+                btn.innerHTML = 'Adding...';
+            }
             try {
                 const res = await fetch('/ohemaadetergents/cart_action', {
                     method: 'POST',
@@ -111,7 +116,37 @@ $cartCount = $cartObj->count();
                     if (document.getElementById('cartBadgeMobile')) {
                         document.getElementById('cartBadgeMobile').innerText = data.data.count;
                     }
+                    if (btn) {
+                        btn.innerHTML = 'Added to bag &#10003;';
+                        setTimeout(() => {
+                            btn.innerHTML = btn.dataset.originalText;
+                            btn.disabled = false;
+                        }, 2000);
+                    } else {
+                        alert(data.message || 'Added to bag successfully!');
+                    }
+                } else {
+                    if (btn) {
+                        btn.innerHTML = btn.dataset.originalText;
+                        btn.disabled = false;
+                    }
+                    alert(data.message || 'Failed to add to cart');
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { 
+                console.error(e); 
+                alert('Network error while adding to cart.');
+            }
+        }
+
+        async function logoutUser() {
+            try {
+                const res = await fetch('/ohemaadetergents/api/auth/customer_logout.php', { method: 'POST' });
+                const result = await res.json();
+                if (res.ok && result.status === 'success') {
+                    window.location.href = result.data.redirect;
+                }
+            } catch (e) {
+                console.error(e);
+            }
         }
     </script>
