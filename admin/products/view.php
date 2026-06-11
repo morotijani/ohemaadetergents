@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn-ohemaa-outline d-flex align-items-center" onclick="history.back()">
+            <button class="btn-ohemaa-outline d-flex align-items-center" onclick="editProduct()">
                 <span class="material-symbols-outlined me-2">edit</span> Edit Product
             </button>
         </div>
@@ -159,6 +159,10 @@
 
     if (!productId) {
         window.location.href = '/ohemaadetergents/admin/products/index';
+    }
+
+    function editProduct() {
+        window.location.href = '/ohemaadetergents/admin/products/index?edit_id=' + productId + '&source=view';
     }
 
     document.addEventListener('DOMContentLoaded', loadProductOverview);

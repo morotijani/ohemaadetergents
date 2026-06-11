@@ -13,17 +13,17 @@
     </div>
 </div>
 
-<div class="ohemaa-card">
+<div class="ohemaa-card p-0 overflow-hidden">
     <div class="table-responsive">
-        <table class="table align-middle">
+        <table class="table align-middle mb-0">
             <thead>
-                <tr>
-                    <th class="border-top-0 text-muted" style="font-weight: 500;">Image</th>
-                    <th class="border-top-0 text-muted" style="font-weight: 500;">Name</th>
-                    <th class="border-top-0 text-muted" style="font-weight: 500;">Category</th>
-                    <th class="border-top-0 text-muted" style="font-weight: 500;">Price</th>
-                    <th class="border-top-0 text-muted" style="font-weight: 500;">Stock</th>
-                    <th class="border-top-0 text-muted text-end" style="font-weight: 500;">Actions</th>
+                <tr style="background-color: var(--hover-bg);">
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Image</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Name</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Category</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Price</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Stock</th>
+                    <th class="border-0 px-4 py-3 text-end fw-medium" style="font-size: 14px; padding-right: 24px;">Actions</th>
                 </tr>
             </thead>
             <tbody id="productsTableBody">
@@ -79,7 +79,7 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Inventory & Media -->
+                <!-- Right Column: Inventory & Pricing -->
                 <div class="col-md-5">
                     <div class="p-4 rounded-4 bg-light border mb-4">
                         <h6 class="fw-bold mb-3 d-flex align-items-center">
@@ -139,9 +139,16 @@ let productModalInstance = null;
 let currentExistingImages = [];
 let pendingFiles = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     productModalInstance = new bootstrap.Modal(document.getElementById('productModal'));
-    loadCategories();
+    
+    document.getElementById('productModal').addEventListener('hidden.bs.modal', function () {
+        if (window.returnToViewOnClose) {
+            window.location.href = '/ohemaadetergents/admin/products/view?id=' + window.returnToViewOnClose;
+        }
+    });
+
+    await loadCategories();
     loadProducts();
 });
 
@@ -238,6 +245,19 @@ async function loadProducts() {
         if (data.status === 'success') {
             products = data.data;
             renderTable();
+            
+            // Check if we need to auto-open the edit modal
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('edit_id');
+            const source = urlParams.get('source');
+            if (editId) {
+                if (source === 'view') {
+                    window.returnToViewOnClose = editId;
+                }
+                openEditModal(editId);
+                // Clean the URL so refreshing doesn't reopen the modal
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
         }
     } catch (err) {
         console.error('Error fetching products', err);
@@ -251,7 +271,7 @@ function renderTable(filter = '') {
     const filteredProducts = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
     
     if (filteredProducts.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5"><span class="material-symbols-outlined fs-1 mb-2">search_off</span><br>No products found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5"><span class="material-symbols-outlined fs-1 mb-2">search_off</span><br>No products found.</td></tr>`;
         return;
     }
 
@@ -262,14 +282,14 @@ function renderTable(filter = '') {
         
         const imgUrl = p.image_url ? `/ohemaadetergents/${p.image_url}` : 'https://via.placeholder.com/40';
         tr.innerHTML = `
-            <td style="padding: 16px 24px;"><img src="${imgUrl}" alt="img" width="48" height="48" class="rounded object-fit-cover shadow-sm border" style="border-color: var(--card-border) !important;"></td>
-            <td class="fw-medium text-dark" style="font-size: 15px;">
+            <td class="px-4 py-3"><img src="${imgUrl}" alt="img" width="48" height="48" class="rounded object-fit-cover shadow-sm border" style="border-color: var(--card-border) !important;"></td>
+            <td class="px-4 py-3 fw-medium text-dark" style="font-size: 15px;">
                 <a href="/ohemaadetergents/admin/products/view?id=${p.id}" class="text-decoration-none text-dark hover-primary">${p.name}</a>
             </td>
-            <td class="text-muted">${p.category_name || '-'}</td>
-            <td class="text-muted">GHS ${parseFloat(p.price).toFixed(2)}</td>
-            <td class="${parseInt(p.stock) <= (parseInt(p.stock_threshold) || 5) ? 'text-danger fw-bold' : 'text-muted'}">${p.stock} in stock</td>
-            <td class="text-end" style="padding-right: 24px;">
+            <td class="px-4 py-3 text-muted">${p.category_name || '-'}</td>
+            <td class="px-4 py-3 text-muted">GHS ${parseFloat(p.price).toFixed(2)}</td>
+            <td class="px-4 py-3 ${parseInt(p.stock) <= (parseInt(p.stock_threshold) || 5) ? 'text-danger fw-bold' : 'text-muted'}">${p.stock} in stock</td>
+            <td class="px-4 py-3 text-end" style="padding-right: 24px;">
                 <button class="icon-btn d-inline-flex" onclick="openEditModal(${p.id})" title="Edit">
                     <span class="material-symbols-outlined" style="font-size: 20px;">edit</span>
                 </button>

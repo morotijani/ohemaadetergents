@@ -8,15 +8,15 @@
     </button>
 </div>
 
-<div class="ohemaa-card">
+<div class="ohemaa-card p-0 overflow-hidden">
     <div class="table-responsive">
-        <table class="table align-middle">
+        <table class="table align-middle mb-0">
             <thead>
-                <tr>
-                    <th class="border-top-0 text-muted" style="font-weight: 500;">Name</th>
-                    <th class="border-top-0 text-muted" style="font-weight: 500;">Slug</th>
-                    <th class="border-top-0 text-muted" style="font-weight: 500;">Description</th>
-                    <th class="border-top-0 text-muted text-end" style="font-weight: 500;">Actions</th>
+                <tr style="background-color: var(--hover-bg);">
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Name</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Slug</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Description</th>
+                    <th class="border-0 px-4 py-3 text-end fw-medium" style="font-size: 14px; padding-right: 24px;">Actions</th>
                 </tr>
             </thead>
             <tbody id="categoriesTableBody">
@@ -103,10 +103,10 @@ function renderTable(filter = '') {
         tr.style.display = 'table-row';
         
         tr.innerHTML = `
-            <td class="fw-medium text-dark" style="padding: 16px 24px; font-size: 15px;">${c.name}</td>
-            <td class="text-muted">${c.slug}</td>
-            <td class="text-muted">${c.description || '-'}</td>
-            <td class="text-end" style="padding-right: 24px;">
+            <td class="px-4 py-3 fw-medium">${c.name}</td>
+            <td class="px-4 py-3 text-muted">${c.slug}</td>
+            <td class="px-4 py-3 text-muted" style="max-width: 300px; white-space: normal;">${c.description || '-'}</td>
+            <td class="px-4 py-3 text-end" style="padding-right: 24px;">
                 <button class="icon-btn d-inline-flex" onclick="openEditModal(${c.id})" title="Edit">
                     <span class="material-symbols-outlined" style="font-size: 20px;">edit</span>
                 </button>

@@ -6,23 +6,23 @@
     <div class="text-muted small">Moderate customer feedback and ratings</div>
 </div>
 
-<div class="ohemaa-card">
+<div class="ohemaa-card p-0" style="overflow: visible;">
     <div class="p-4 border-bottom d-flex justify-content-between align-items-center" style="border-color: var(--card-border) !important;">
         <h5 class="mb-0" style="font-weight: 500;">Customer Reviews</h5>
         <button class="btn-ohemaa-outline d-flex align-items-center" onclick="loadReviews()" style="padding: 4px 12px; font-size: 13px;">
             <span class="material-symbols-outlined me-2" style="font-size: 16px;">refresh</span> Refresh
         </button>
     </div>
-    <div class="table-responsive">
+    <div style="overflow-x: auto; overflow-y: visible; min-height: 250px;">
         <table class="table align-middle mb-0">
             <thead>
-                <tr>
-                    <th class="ps-4 text-muted" style="font-weight: 500; font-size: 13px;">PRODUCT</th>
-                    <th class="text-muted" style="font-weight: 500; font-size: 13px;">CUSTOMER</th>
-                    <th class="text-muted" style="font-weight: 500; font-size: 13px;">RATING</th>
-                    <th class="text-muted" style="font-weight: 500; font-size: 13px;">COMMENT</th>
-                    <th class="text-muted" style="font-weight: 500; font-size: 13px;">STATUS</th>
-                    <th class="pe-4 text-end text-muted" style="font-weight: 500; font-size: 13px;">ACTION</th>
+                <tr style="background-color: var(--hover-bg);">
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Product</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Customer</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Rating</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Comment</th>
+                    <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Status</th>
+                    <th class="border-0 px-4 py-3 text-end fw-medium" style="font-size: 14px; padding-right: 24px;">Action</th>
                 </tr>
             </thead>
             <tbody id="reviewsTableBody">
@@ -78,12 +78,12 @@ function renderReviews(reviews) {
         if (r.status === 'rejected') statusClass = 'bg-danger';
 
         tr.innerHTML = `
-            <td class="ps-4 fw-medium">${r.product_name}</td>
-            <td>${r.customer_name}</td>
-            <td class="text-warning fw-bold">${stars}</td>
-            <td class="text-muted" style="font-size: 14px; max-width: 300px; white-space: normal;">${r.comment}</td>
-            <td><span class="badge ${statusClass}" style="text-transform: capitalize;">${r.status}</span></td>
-            <td class="pe-4 text-end">
+            <td class="px-4 py-3 fw-medium">${r.product_name}</td>
+            <td class="px-4 py-3">${r.customer_name}</td>
+            <td class="px-4 py-3 text-warning fw-bold">${stars}</td>
+            <td class="px-4 py-3 text-muted" style="font-size: 14px; max-width: 300px; white-space: normal;">${r.comment}</td>
+            <td class="px-4 py-3"><span class="badge ${statusClass}" style="text-transform: capitalize;">${r.status}</span></td>
+            <td class="px-4 py-3 text-end" style="padding-right: 24px;">
                 <div class="dropdown">
                     <button class="icon-btn" type="button" data-bs-toggle="dropdown">
                         <span class="material-symbols-outlined">more_vert</span>

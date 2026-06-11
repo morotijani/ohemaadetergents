@@ -26,6 +26,12 @@ try {
                         LIMIT 100");
     $logs = $stmt->fetchAll();
     
+    foreach ($logs as &$log) {
+        if (isset($log['log_id'])) {
+            $log['log_id'] = Helpers::uuidBinToStr($log['log_id']);
+        }
+    }
+    
     Helpers::jsonResponse(200, 'Audit logs fetched', $logs);
 } catch (\Exception $e) {
     Helpers::jsonResponse(500, 'Server error');
