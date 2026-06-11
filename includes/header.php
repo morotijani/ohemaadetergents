@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../src/Cart.php';
 $cartObj = new \App\Cart();
 $cartCount = $cartObj->count();
@@ -36,10 +39,17 @@ $cartCount = $cartObj->count();
                     style="font-size: 1.15rem; letter-spacing: 0.02em;">Ohemaa Detergents</span>
             </a>
 
-            <!-- Mobile Cart -->
-            <a href="/ohemaadetergents/cart" class="nav-link d-lg-none position-relative">
-                BAG (<span id="cartBadgeMobile"><?php echo $cartCount; ?></span>)
-            </a>
+            <!-- Mobile Cart & Auth -->
+            <div class="d-lg-none position-relative d-flex gap-3">
+                <?php if (isset($_SESSION['customer_id'])): ?>
+                    <a href="/ohemaadetergents/profile" class="nav-link">ACCOUNT</a>
+                <?php else: ?>
+                    <a href="/ohemaadetergents/login" class="nav-link">LOGIN</a>
+                <?php endif; ?>
+                <a href="/ohemaadetergents/cart" class="nav-link">
+                    BAG (<span id="cartBadgeMobile"><?php echo $cartCount; ?></span>)
+                </a>
+            </div>
 
             <!-- Desktop Menu -->
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
@@ -62,6 +72,11 @@ $cartCount = $cartObj->count();
                 </ul>
 
                 <div class="d-none d-lg-flex align-items-center gap-4">
+                    <?php if (isset($_SESSION['customer_id'])): ?>
+                        <a href="/ohemaadetergents/profile" class="nav-link">ACCOUNT</a>
+                    <?php else: ?>
+                        <a href="/ohemaadetergents/login" class="nav-link">LOGIN</a>
+                    <?php endif; ?>
                     <a href="/ohemaadetergents/track_order" class="nav-link">Track Order</a>
                     <a href="/ohemaadetergents/cart" class="nav-link">
                         BAG (<span id="cartBadge"><?php echo $cartCount; ?></span>)
