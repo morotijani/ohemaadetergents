@@ -7,8 +7,7 @@
                         style="height: 100px; width: auto; object-fit: contain;">
                 </div>
                 <p class="text-muted font-sans" style="font-size: 0.85rem; max-width: 300px;">
-                    Crafting premium cleaning solutions that bring absolute purity to your fabrics. We combine raw
-                    tradition with modern molecular science.
+                    Crafting premium, plant-based cleaning solutions that bring absolute purity to your home while actively supporting and protecting the environment.
                 </p>
             </div>
 

@@ -29,15 +29,14 @@ include 'includes/header.php';
         <div class="row">
             <div class="col-lg-7 col-xl-6 reveal text-center text-lg-start pt-5 mt-5">
                 <span class="font-sans text-uppercase letter-spacing-widest text-white-50 d-block mb-4 mt-5"
-                    style="font-size: 0.8rem;">The Signature Collection</span>
+                    style="font-size: 0.8rem;">The InHealth Collection</span>
                 <h1 class="font-serif text-white mb-4" style="font-size: clamp(3.5rem, 8vw, 6rem); line-height: 1.05;">
-                    Sovereign<br>
+                    Gentle<br>
                     <span class="italic text-white-50" style="font-size: clamp(3rem, 7vw, 5rem);">Purity.</span>
                 </h1>
                 <p class="font-sans text-light mb-5 fw-300"
                     style="max-width: 450px; font-size: 1.1rem; line-height: 1.8; margin: 0 auto 0 0;">
-                    A delicate balance of clinical efficacy and raw organic luxury. Formulated for the most
-                    uncompromising fabrics.
+                    Discover our dermatologist-tested baby bottle cleaner. Formulated with 100% plant-based ingredients to safely remove milk residue and protect what matters most.
                 </p>
                 <div class="d-flex flex-column flex-sm-row gap-4 justify-content-center justify-content-lg-start mt-4">
                     <a href="shop"
@@ -132,11 +131,9 @@ include 'includes/header.php';
                 <div class="p-5 p-lg-5 w-100 mx-auto" style="max-width: 600px;">
                     <span class="font-sans text-uppercase letter-spacing-widest text-white-50 d-block mb-4"
                         style="font-size: 0.7rem;">Journal</span>
-                    <h2 class="font-serif text-white mb-4" style="font-size: 3rem; line-height: 1;">The Art
-                        of<br>Maintenance</h2>
+                    <h2 class="font-serif text-white mb-4" style="font-size: 3rem; line-height: 1;">The Art of<br>Natural Care</h2>
                     <p class="font-sans fw-300 text-white-50 mb-5" style="font-size: 0.9rem;">
-                        Discover our philosophy on garment care. We believe that what you wear is an extension of
-                        yourself, and caring for it should be a ritual, not a chore.
+                        Discover our eco-friendly philosophy. We believe that caring for your home and fabrics shouldn't compromise the planet. Our plant-based formulations offer an elevated, completely safe cleaning ritual.
                     </p>
                     <a href="about" class="btn btn-outline-black" style="border-color: white; color: white;">Read
                         Philosophy</a>
