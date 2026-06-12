@@ -21,7 +21,7 @@ include 'includes/header.php';
 
 <!-- Editorial Hero Section -->
 <section class="hero-section position-relative d-flex align-items-center"
-    style="min-height: 100vh; background: url('public/assets/img/hero_cinematic.png') center/cover no-repeat;">
+    style="min-height: 100vh; background: url('public/assets/img/hero_baby_bottle.png') center/cover no-repeat;">
     <!-- Dark overlay for stark contrast and readability -->
     <div class="position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0,0,0,0.3);"></div>
 
@@ -51,28 +51,28 @@ include 'includes/header.php';
     </div>
 </section>
 
-<!-- Values Section (Minimalist) -->
+<!-- Values Section (Eco-Conscious) -->
 <section class="py-5 bg-white border-top border-bottom border-light">
     <div class="container-fluid px-4 px-lg-5 py-5">
         <div class="row g-5 text-center">
             <div class="col-md-4 reveal">
                 <h4 class="font-sans text-uppercase letter-spacing-wide mb-3 fw-600" style="font-size: 0.85rem;">
-                    Molecular Shield</h4>
+                    Plant-Based Surfactants</h4>
                 <p class="font-sans text-muted fw-300" style="font-size: 0.85rem; max-width: 250px; margin: 0 auto;">
-                    Advanced polymers wrap each fiber, significantly extending the life and texture of your garments.
+                    Derived from renewable resources like coconut and corn, making our detergents and floor cleaners far more environmentally friendly than traditional petroleum-based options.
                 </p>
             </div>
             <div class="col-md-4 reveal" style="animation-delay: 0.1s;">
                 <h4 class="font-sans text-uppercase letter-spacing-wide mb-3 fw-600" style="font-size: 0.85rem;">
-                    Clinical Extraction</h4>
+                    InHealth Product Line</h4>
                 <p class="font-sans text-muted fw-300" style="font-size: 0.85rem; max-width: 250px; margin: 0 auto;">
-                    Targeted bio-enzymes lift protein and lipid stains without compromising fabric integrity.</p>
+                    We use natural ingredients and enzymes, offering effective cleaning while remaining completely safe for both the environment and your family's health.</p>
             </div>
             <div class="col-md-4 reveal" style="animation-delay: 0.2s;">
                 <h4 class="font-sans text-uppercase letter-spacing-wide mb-3 fw-600" style="font-size: 0.85rem;">
-                    Botanical Notes</h4>
+                    Support The Planet</h4>
                 <p class="font-sans text-muted fw-300" style="font-size: 0.85rem; max-width: 250px; margin: 0 auto;">
-                    Subtle, lingering aromas derived from distilled essential oils. Never overpowering.</p>
+                    Backed by rigorous research, our biodegradable components actively reduce pollution and energy use. By choosing us, you are choosing to support the planet.</p>
             </div>
         </div>
     </div>

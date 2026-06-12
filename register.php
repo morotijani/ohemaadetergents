@@ -34,6 +34,11 @@
                     </div>
 
                     <div class="mb-4">
+                        <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.75rem;">Delivery Address (Optional)</label>
+                        <textarea name="address" class="form-control rounded-0 border-dark p-3 font-sans" rows="2"></textarea>
+                    </div>
+
+                    <div class="mb-4">
                         <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.75rem;">Password</label>
                         <input type="password" name="password" class="form-control rounded-0 border-dark p-3 font-sans" required minlength="8">
                         <div class="form-text font-sans text-muted" style="font-size: 0.7rem;">Minimum 8 characters</div>

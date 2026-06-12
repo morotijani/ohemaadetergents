@@ -80,6 +80,10 @@
                         <label class="text-muted small d-block">Category</label>
                         <span class="badge bg-light text-dark border" id="viewCategory">Uncategorized</span>
                     </div>
+                    <div class="mb-3">
+                        <label class="text-muted small d-block">Date Added</label>
+                        <span class="text-dark fw-medium" id="viewDateAdded"></span>
+                    </div>
                     <div class="mb-0">
                         <label class="text-muted small d-block">Description</label>
                         <p class="small text-muted mb-0" id="viewDescription"></p>
@@ -119,14 +123,14 @@
                         <!-- Orders Pane -->
                         <div class="tab-pane fade show active" id="orders-pane" role="tabpanel" tabindex="0">
                             <div class="table-responsive">
-                                <table class="table align-middle">
+                                <table class="table align-middle mb-0">
                                     <thead>
-                                        <tr>
-                                            <th class="border-0 text-muted small">Order #</th>
-                                            <th class="border-0 text-muted small">Date</th>
-                                            <th class="border-0 text-muted small">Qty</th>
-                                            <th class="border-0 text-muted small">Total</th>
-                                            <th class="border-0 text-muted small">Status</th>
+                                        <tr style="background-color: var(--hover-bg);">
+                                            <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Order #</th>
+                                            <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Date</th>
+                                            <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Qty</th>
+                                            <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Total</th>
+                                            <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody id="orderHistoryBody">
@@ -199,6 +203,7 @@
         // Populate Info
         document.getElementById('viewPrice').innerText = 'GHS ' + parseFloat(p.price).toFixed(2);
         document.getElementById('viewCategory').innerText = p.category_name || 'Uncategorized';
+        document.getElementById('viewDateAdded').innerText = new Date(p.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         document.getElementById('viewDescription').innerText = p.description || 'No description provided.';
 
         // Populate Media
@@ -227,12 +232,14 @@
         } else {
             data.orders.forEach(o => {
                 const tr = document.createElement('tr');
+                tr.className = 'ohemaa-list-item';
+                tr.style.display = 'table-row';
                 tr.innerHTML = `
-                    <td class="fw-bold text-primary">#${o.tracking_number}</td>
-                    <td class="small text-muted">${new Date(o.created_at).toLocaleDateString()}</td>
-                    <td>${o.quantity}</td>
-                    <td class="fw-medium">GHS ${parseFloat(o.total_amount).toFixed(2)}</td>
-                    <td><span class="badge rounded-pill bg-${getStatusColor(o.status)} small">${o.status}</span></td>
+                    <td class="px-4 py-3 fw-bold text-primary">#${o.tracking_number}</td>
+                    <td class="px-4 py-3 text-muted" style="font-size: 14px;">${new Date(o.created_at).toLocaleDateString()}</td>
+                    <td class="px-4 py-3">${o.quantity}</td>
+                    <td class="px-4 py-3 fw-medium">GHS ${parseFloat(o.total_amount).toFixed(2)}</td>
+                    <td class="px-4 py-3"><span class="badge rounded-pill bg-${getStatusColor(o.status)}" style="font-size: 11px; padding: 6px 12px; text-transform: capitalize;">${o.status}</span></td>
                 `;
                 orderBody.appendChild(tr);
             });

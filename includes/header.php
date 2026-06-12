@@ -40,14 +40,17 @@ $cartCount = $cartObj->count();
             </a>
 
             <!-- Mobile Cart & Auth -->
-            <div class="d-lg-none position-relative d-flex gap-3">
+            <div class="d-lg-none position-relative d-flex gap-3 align-items-center mt-1">
                 <?php if (isset($_SESSION['customer_id'])): ?>
-                    <a href="/ohemaadetergents/profile" class="nav-link">ACCOUNT</a>
+                    <a href="/ohemaadetergents/profile" class="nav-link text-dark" title="Account"><i class="bi bi-person fs-4"></i></a>
                 <?php else: ?>
-                    <a href="/ohemaadetergents/login" class="nav-link">LOGIN</a>
+                    <a href="/ohemaadetergents/login" class="nav-link text-dark" title="Login"><i class="bi bi-person fs-4"></i></a>
                 <?php endif; ?>
-                <a href="/ohemaadetergents/cart" class="nav-link">
-                    BAG (<span id="cartBadgeMobile"><?php echo $cartCount; ?></span>)
+                <a href="/ohemaadetergents/cart" class="nav-link text-dark position-relative" title="Bag">
+                    <i class="bi bi-bag fs-4"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size: 0.6rem; padding: 0.25em 0.4em; transform: translate(-30%, 10%) !important;">
+                        <span id="cartBadgeMobile"><?php echo $cartCount; ?></span>
+                    </span>
                 </a>
             </div>
 

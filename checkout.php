@@ -19,7 +19,7 @@ if (empty($cartItems)) {
 
 $loggedInCustomer = null;
 if (isset($_SESSION['customer_id'])) {
-    $stmt = $db->prepare("SELECT first_name, last_name, email, phone FROM customers WHERE id = ?");
+    $stmt = $db->prepare("SELECT first_name, last_name, email, phone, address FROM customers WHERE id = ?");
     $stmt->execute([$_SESSION['customer_id']]);
     $loggedInCustomer = $stmt->fetch();
 }
@@ -28,6 +28,7 @@ $defaultFirstName = $loggedInCustomer['first_name'] ?? '';
 $defaultLastName = $loggedInCustomer['last_name'] ?? '';
 $defaultEmail = $loggedInCustomer['email'] ?? '';
 $defaultPhone = $loggedInCustomer['phone'] ?? '';
+$defaultAddress = $loggedInCustomer['address'] ?? '';
 
 $total = 0;
 $products = [];
@@ -167,7 +168,7 @@ include 'includes/header.php';
                     </div>
                     <div class="col-12">
                         <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Delivery Address</label>
-                        <textarea name="address" class="form-control rounded-0 border-black p-3" rows="3" required></textarea>
+                        <textarea name="address" class="form-control rounded-0 border-black p-3" rows="3" required><?php echo htmlspecialchars($defaultAddress); ?></textarea>
                     </div>
                 </div>
 

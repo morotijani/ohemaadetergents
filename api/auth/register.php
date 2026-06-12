@@ -19,6 +19,7 @@ $lastName = trim($input['last_name'] ?? '');
 $email = trim($input['email'] ?? '');
 $password = $input['password'] ?? '';
 $phone = trim($input['phone'] ?? '');
+$address = trim($input['address'] ?? '');
 
 if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
     Helpers::jsonResponse(400, 'All fields are required');
@@ -46,8 +47,8 @@ try {
     $verificationToken = bin2hex(random_bytes(32));
     $customerUuid = Helpers::generateUuidV7Binary();
 
-    $stmt = $db->prepare("INSERT INTO customers (customer_id, first_name, last_name, email, password_hash, phone, is_verified, verification_token) VALUES (?, ?, ?, ?, ?, ?, 0, ?)");
-    $stmt->execute([$customerUuid, $firstName, $lastName, $email, $hashedPassword, $phone, $verificationToken]);
+    $stmt = $db->prepare("INSERT INTO customers (customer_id, first_name, last_name, email, password_hash, phone, address, is_verified, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?)");
+    $stmt->execute([$customerUuid, $firstName, $lastName, $email, $hashedPassword, $phone, $address, $verificationToken]);
 
     // Send verification email
     $verifyUrl = "http://" . $_SERVER['HTTP_HOST'] . "/ohemaadetergents/verify?token=" . $verificationToken;

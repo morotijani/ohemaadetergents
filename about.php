@@ -37,12 +37,12 @@
             </div>
         </div>
         <div class="col-lg-5 offset-lg-1 order-1 order-lg-2 mb-5 mb-lg-0">
-            <h2 class="font-serif fw-400 mb-4" style="font-size: 2.5rem;">Raw Tradition.<br>Molecular Science.</h2>
+            <h2 class="font-serif fw-400 mb-4" style="font-size: 2.5rem;">The InHealth<br>Product Line.</h2>
             <p class="font-sans fw-300 text-muted" style="font-size: 0.95rem; line-height: 1.8;">
-                We do not simply clean; we preserve. Ohemaa formulations are the result of rigorous modern molecular science combined with ancestral botanical wisdom. Our liquids penetrate deep into fibers to extract impurities without stripping away the fabric's natural integrity.
+                Our detergents and floor cleaners use plant-based surfactants, which are derived from renewable resources like coconut and corn. This makes our formulations vastly more environmentally friendly than traditional petroleum-based options.
             </p>
             <p class="font-sans fw-300 text-muted" style="font-size: 0.95rem; line-height: 1.8;">
-                The result is a collection of high-performance, minimalist elixirs that leave your garments impeccably pure, vibrantly preserved, and subtly scented with our signature bespoke fragrances.
+                We use natural ingredients and enzymes, offering effective cleaning while being safe for the environment and your health. Backed by research, these biodegradable components actively reduce pollution and energy use. By choosing the InHealth Product Line, you help support the planet without compromising on sovereign care.
             </p>
             <a href="shop" class="btn btn-dark rounded-0 px-4 py-3 mt-4 font-sans text-uppercase letter-spacing-wide" style="font-size: 0.75rem;">Explore The Collection</a>
         </div>

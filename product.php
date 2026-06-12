@@ -50,8 +50,8 @@ try {
 include 'includes/header.php';
 ?>
 
-<div class="container-fluid px-0 mt-5 pt-4">
-    <div class="row g-0">
+<div class="container-fluid px-0 mt-5 pt-5">
+    <div class="row g-0 mt-3 mt-lg-0">
         
         <!-- Gallery Section (Left) -->
         <div class="col-lg-7 border-end border-light">
