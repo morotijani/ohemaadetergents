@@ -32,7 +32,7 @@ loadEnv(__DIR__ . '/../.env');
 
 return [
     'app' => [
-        'url' => rtrim($_ENV['APP_URL'] ?? '/ohemaadetergents', '/'),
+        'url' => rtrim($_ENV['BASE_URL'] ?? '/ohemaadetergents', '/'),
     ],
     'db' => [
         'host' => $_ENV['DB_HOST'] ?? '127.0.0.1',
