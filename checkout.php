@@ -96,8 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([Helpers::generateUuidV7Binary(), $orderId, $p['id'], $p['qty'], $p['price']]);
             }
 
-            $db->commit();
-
+            // DB commit moved to after successful Paystack initialization
+            
             $amountInPesewas = $grandTotal * 100; 
             
             $postData = [
@@ -125,6 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = json_decode($response, true);
             
             if ($result && $result['status'] === true) {
+                $db->commit(); // Only commit if Paystack successfully initialized
                 $accessCode = $result['data']['access_code'];
                 $reference = $result['data']['reference'] ?? $trackingNumber;
                 $publicKey = $config['paystack']['public_key'];
@@ -147,7 +148,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 window.location.href = '{$verifyUrl}' + response.reference;
                             },
                             onClose: function() {
-                                window.location.href = '" . BASE_URL . "checkout';
+                                // User closed the popup without paying. Delete the pending order.
+                                fetch('" . BASE_URL . "cancel_order.php', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                    body: 'reference=' + encodeURIComponent('{$trackingNumber}')
+                                }).then(() => {
+                                    window.location.href = '" . BASE_URL . "checkout';
+                                });
                             }
                         });
                         handler.openIframe();
@@ -156,6 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "</body></html>";
                 exit;
             } else {
+                $db->rollBack(); // Rollback if Paystack failed to initialize
                 $error = 'Payment initialization failed. Ensure Paystack API keys are set. Error: ' . ($result['message'] ?? 'Unknown error');
             }
             
