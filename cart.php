@@ -44,7 +44,7 @@ include 'includes/header.php';
   </svg>
   <div class="wrap">
     <div class="breadcrumb"><a href="<?php echo BASE_URL; ?>index">Home</a><span>/</span><span>Cart</span></div>
-    <span class="eyebrow">3 items</span>
+    <span class="eyebrow"><?php echo $cartCount; ?> item<?php echo $cartCount === 1 ? '' : 's'; ?></span>
     <h1 style="font-size:2.2rem; margin-top:14px;">Your cart</h1>
   </div>
 </header>
@@ -104,7 +104,7 @@ include 'includes/header.php';
 <script>
 async function updateQty(productId, change) {
     try {
-        const res = await fetch(`${BASE_URL}api/cart_action.php`, {
+        const res = await fetch(`${BASE_URL}/cart_action.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'update_relative', product_id: productId, change: change })
@@ -124,7 +124,7 @@ async function updateQty(productId, change) {
 async function removeItem(productId) {
     if(!confirm('Remove this item from your bag?')) return;
     try {
-        const res = await fetch(`${BASE_URL}api/cart_action.php`, {
+        const res = await fetch(`${BASE_URL}/cart_action.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'remove', product_id: productId })

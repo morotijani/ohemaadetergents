@@ -52,6 +52,20 @@ try {
             $cart->update($productId, $qty);
             Helpers::jsonResponse(200, 'Cart updated', ['count' => $cart->count()]);
             break;
+        case 'update_relative':
+            $change = (int)($input['change'] ?? 0);
+            $newQty = $currentCartQty + $change;
+            if ($newQty < 1) {
+                $cart->remove($productId);
+                Helpers::jsonResponse(200, 'Item removed', ['count' => $cart->count()]);
+                break;
+            }
+            if ($newQty > $availableStock) {
+                Helpers::jsonResponse(400, "Cannot add more. Only $availableStock available in stock.");
+            }
+            $cart->update($productId, $newQty);
+            Helpers::jsonResponse(200, 'Cart updated', ['count' => $cart->count()]);
+            break;
         case 'remove':
             $cart->remove($productId);
             Helpers::jsonResponse(200, 'Removed from cart', ['count' => $cart->count()]);

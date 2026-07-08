@@ -1,10 +1,10 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 if (!defined('BASE_URL')) {
-    $config = require __DIR__ . '/../config/config.php';
-    define('BASE_URL', $config['app']['url'] . '/');
+  $config = require __DIR__ . '/../config/config.php';
+  define('BASE_URL', $config['app']['url'] . '/');
 }
 require_once __DIR__ . '/../src/Cart.php';
 $cartObj = new \App\Cart();
@@ -12,60 +12,76 @@ $cartCount = $cartObj->count();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ohemaa — Cleanliness Fit for a Queen</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<!-- Bootstrap CSS (Kept for inner pages compatibility) -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<!-- Custom Theme CSS -->
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>public/assets/css/main.css">
-<link rel="icon" href="<?php echo BASE_URL; ?>public/assets/img/logo.png" type="image/png">
-<script>const BASE_URL = '<?php echo rtrim(BASE_URL, '/'); ?>';</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ohemaa — Cleanliness Fit for a Queen</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <!-- Bootstrap CSS (Kept for inner pages compatibility) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <!-- Custom Theme CSS -->
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/assets/css/main.css">
+  <link rel="icon" href="<?php echo BASE_URL; ?>public/assets/img/logo.png" type="image/png">
+  <script>const BASE_URL = '<?php echo rtrim(BASE_URL, '/'); ?>';</script>
 </head>
+
 <body>
-<nav class="site-nav">
-  <div class="nav-inner">
-    <a href="#top" class="brand">
-      <svg class="seal" viewBox="0 0 60 60" fill="none">
-        <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
-        <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
-        <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
-        <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
-      </svg>
-      OHEMAA
-    </a>
-    <div class="nav-main">
-      <div class="nav-links" id="navLinks">
-        <a href="<?php echo BASE_URL; ?>about">Heritage</a>
-        <a href="<?php echo BASE_URL; ?>shop">Products</a>
-        <a href="<?php echo BASE_URL; ?>process">Process</a>
-        <a href="<?php echo BASE_URL; ?>stockists">Stockists</a>
-        <a href="#sustainability">Sustainability</a>
-        <a href="<?php echo BASE_URL; ?>contact">Contact</a>
-        <a href="<?php echo BASE_URL; ?>track_order">Track Order</a>
-        <a href="<?php echo BASE_URL; ?>become_stockist" class="nav-cta">Become a Stockist</a>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="index" class="brand">
+        <svg class="seal" viewBox="0 0 60 60" fill="none">
+          <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5" />
+          <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1" />
+          <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227" />
+          <circle cx="30" cy="30" r="4" fill="#2B1B4D" />
+        </svg>
+        OHEMAA
+      </a>
+      <div class="nav-main">
+        <div class="nav-links" id="navLinks">
+          <a href="<?php echo BASE_URL; ?>about">Heritage</a>
+          <a href="<?php echo BASE_URL; ?>shop">Products</a>
+          <a href="<?php echo BASE_URL; ?>process">Process</a>
+          <a href="<?php echo BASE_URL; ?>stockists">Stockists</a>
+          <a href="#sustainability">Sustainability</a>
+          <a href="<?php echo BASE_URL; ?>contact">Contact</a>
+          <a href="<?php echo BASE_URL; ?>track_order">Track Order</a>
+          <a href="<?php echo BASE_URL; ?>become_stockist" class="nav-cta"
+            style="padding: 0px 4px 0px 4px !important">Become a
+            Stockist</a>
+        </div>
+      </div>
+      <div class="nav-side">
+        <a href="<?php echo BASE_URL; ?>cart" class="icon-btn" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" />
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="18" cy="21" r="1" />
+          </svg>
+          <span class="badge js-cart-badge"><?php echo $cartCount; ?></span>
+        </a>
+        <?php if (isset($_SESSION['customer_id'])): ?>
+          <a href="<?php echo BASE_URL; ?>profile" class="icon-btn" aria-label="Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+            </svg>
+          </a>
+        <?php else: ?>
+          <a href="<?php echo BASE_URL; ?>login" class="icon-btn" aria-label="Login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+            </svg>
+          </a>
+        <?php endif; ?>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
-    <div class="nav-side">
-      <a href="<?php echo BASE_URL; ?>cart" class="icon-btn" aria-label="Cart">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
-        <span class="badge js-cart-badge"><?php echo $cartCount; ?></span>
-      </a>
-      <?php if (isset($_SESSION['customer_id'])): ?>
-      <a href="<?php echo BASE_URL; ?>profile" class="icon-btn" aria-label="Account">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-      </a>
-      <?php else: ?>
-      <a href="<?php echo BASE_URL; ?>login" class="icon-btn" aria-label="Login">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-      </a>
-      <?php endif; ?>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-</nav>
+  </nav>

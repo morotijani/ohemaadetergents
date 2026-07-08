@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/src/Database.php';
 use App\Database;
 
@@ -34,6 +37,38 @@ try {
     if (empty($allImages)) {
         $allImages[] = 'https://via.placeholder.com/600x600?text=No+Image';
     }
+    
+    $stmt = $db->prepare("SELECT r.rating, r.comment, r.created_at, c.first_name, c.last_name 
+                          FROM product_reviews r 
+                          JOIN customers c ON r.customer_id = c.id 
+                          WHERE r.product_id = ? AND r.status = 'approved' 
+                          ORDER BY r.created_at DESC");
+    $stmt->execute([$product['id']]);
+    $reviews = $stmt->fetchAll();
+    
+    $totalReviews = count($reviews);
+    $averageRating = 0;
+    if ($totalReviews > 0) {
+        $sum = array_sum(array_column($reviews, 'rating'));
+        $averageRating = round($sum / $totalReviews, 1);
+    }
+    
+    $loggedInUser = null;
+    if (isset($_SESSION['customer_id'])) {
+        $stmt = $db->prepare("SELECT first_name, last_name, email FROM customers WHERE id = ?");
+        $stmt->execute([$_SESSION['customer_id']]);
+        $loggedInUser = $stmt->fetch();
+    }
+    
+    $stmt = $db->prepare("
+        SELECT p.id, p.name, p.slug, p.description, p.price, p.image_url, c.name as category_name 
+        FROM products p 
+        LEFT JOIN categories c ON p.category_id = c.id 
+        WHERE p.id != ? AND p.is_deleted = 0 
+        ORDER BY RAND() LIMIT 3
+    ");
+    $stmt->execute([$product['id']]);
+    $relatedProducts = $stmt->fetchAll();
 
 } catch (Exception $e) {
     header("Location: shop");
@@ -49,7 +84,7 @@ include 'includes/header.php';
     <div class="breadcrumb pd-breadcrumb-inline" style="color:rgba(26,22,32,0.5);">
       <a href="<?php echo BASE_URL; ?>index" style="color:inherit;">Home</a><span>/</span>
       <a href="<?php echo BASE_URL; ?>shop" style="color:inherit;">Products</a><span>/</span>
-      <span style="color:var(--ink); font-weight:700;">Multi-Surface Cleaner</span>
+      <span style="color:var(--ink); font-weight:700;"><?php echo htmlspecialchars($product['name']); ?></span>
     </div>
   </div>
 </section>
@@ -59,39 +94,37 @@ include 'includes/header.php';
 
     <div class="reveal">
       <div class="pd-gallery-main">
-        <svg width="220" height="308" viewBox="0 0 220 308" fill="none">
-          <ellipse cx="110" cy="296" rx="66" ry="10" fill="#19102C" opacity="0.4"/>
-          <rect x="74" y="44" width="72" height="22" rx="6" fill="#8A6E1A"/>
-          <rect x="83" y="22" width="54" height="30" rx="8" fill="#C9A227"/>
-          <rect x="90" y="10" width="40" height="18" rx="5" fill="#E7C766"/>
-          <path d="M52 74 Q52 64 68 64 L152 64 Q168 64 168 74 L180 262 Q182 282 162 282 L58 282 Q38 282 40 262 Z" fill="#F7F3EA" stroke="#2B1B4D" stroke-width="2"/>
-          <path d="M58 96 Q58 86 72 86 L148 86 Q162 86 162 96 L172 246 Q174 262 158 262 L62 262 Q46 262 48 246 Z" fill="#E7C766" opacity="0.85"/>
-          <rect x="64" y="112" width="92" height="112" rx="12" fill="#2B1B4D"/>
-          <circle cx="110" cy="148" r="16" fill="none" stroke="#C9A227" stroke-width="1.4"/>
-          <path d="M110 140 L112 146 L118 146 L113 150 L115 156 L110 152 L105 156 L107 150 L102 146 L108 146 Z" fill="#C9A227"/>
-          <text x="110" y="180" text-anchor="middle" font-family="Fraunces, serif" font-size="16" font-weight="600" fill="#F7F3EA" letter-spacing="1.5">OHEMAA</text>
-          <text x="110" y="195" text-anchor="middle" font-family="Space Mono, monospace" font-size="7" fill="#E7C766" letter-spacing="2">MULTI-SURFACE</text>
-        </svg>
+        <?php 
+          $mainImg = $allImages[0];
+          $mainImgUrl = (strpos($mainImg, 'http') === 0) ? $mainImg : BASE_URL . $mainImg;
+        ?>
+        <img src="<?php echo htmlspecialchars($mainImgUrl); ?>" id="mainProductImage" style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px; background: #fff;" alt="<?php echo htmlspecialchars($product['name']); ?>">
       </div>
+      <?php if (count($allImages) > 1): ?>
       <div class="pd-thumbs">
-        <div class="pd-thumb active"><svg viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#C9A227"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#C9A227"/></svg></div>
-        <div class="pd-thumb"><svg viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#E7C766"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#1E6E63"/></svg></div>
-        <div class="pd-thumb"><svg viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#A63A3A"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#A63A3A"/></svg></div>
+        <?php foreach ($allImages as $index => $img): 
+            $thumbUrl = (strpos($img, 'http') === 0) ? $img : BASE_URL . $img;
+        ?>
+        <div class="pd-thumb <?php echo $index === 0 ? 'active' : ''; ?>" onclick="document.getElementById('mainProductImage').src='<?php echo htmlspecialchars($thumbUrl); ?>'; document.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active');">
+            <img src="<?php echo htmlspecialchars($thumbUrl); ?>" style="width: 100%; height: 100%; object-fit: contain; border-radius: 4px; background: #fff;" alt="Thumbnail">
+        </div>
+        <?php endforeach; ?>
       </div>
+      <?php endif; ?>
     </div>
 
     <div class="reveal">
-      <span class="product-tag" style="color:var(--teal);">Surface Care</span>
+      <span class="product-tag" style="color:var(--teal);"><?php echo htmlspecialchars($product['category_name'] ?? 'Product'); ?></span>
       <h1><?php echo htmlspecialchars($product['name']); ?></h1>
       <div class="rating-row">
-        <span class="stars">★★★★★</span>
-        <span>4.8 out of 5 · 214 reviews</span>
+        <span class="stars"><?php for($i=1; $i<=5; $i++) echo ($i <= round($averageRating)) ? '★' : '☆'; ?></span>
+        <span><?php echo number_format($averageRating, 1); ?> out of 5 · <?php echo $totalReviews; ?> review<?php echo $totalReviews === 1 ? '' : 's'; ?></span>
       </div>
       <div class="pd-price-row">
         <span class="price">GH₵ <?php echo number_format($product['price'], 2); ?></span>
         <span class="was-price">GH₵ 32.00</span>
       </div>
-      <p class="pd-desc">Lemon-fresh degreasing power for tiles, counters, and every hard surface in the house. Formulated to cut through grease in one wipe without leaving residue or overpowering fragrance behind.</p>
+      <p class="pd-desc"><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
 
       <span class="option-label">Size</span>
       <div class="option-row">
@@ -133,12 +166,11 @@ include 'includes/header.php';
       <button class="tab-nav-btn active" data-tab-target="tab-description">Description</button>
       <button class="tab-nav-btn" data-tab-target="tab-ingredients">Ingredients</button>
       <button class="tab-nav-btn" data-tab-target="tab-howto">How to use</button>
-      <button class="tab-nav-btn" data-tab-target="tab-reviews">Reviews (214)</button>
+      <button class="tab-nav-btn" data-tab-target="tab-reviews">Reviews (<?php echo $totalReviews; ?>)</button>
     </div>
 
     <div id="tab-description" class="tab-panel active">
-      <p>Ohemaa Multi-Surface Cleaner is formulated for daily use across kitchens, bathrooms, and living spaces. It cuts through grease and grime without leaving the streaky residue common in harsher degreasers, and the lemon fragrance clears rather than lingers.</p>
-      <p style="margin-top:14px;">Safe for use on tile, laminate, sealed granite, glass, and painted surfaces. Not recommended for unsealed stone or wood.</p>
+      <p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
     </div>
 
     <div id="tab-ingredients" class="tab-panel">
@@ -158,28 +190,55 @@ include 'includes/header.php';
 
     <div id="tab-reviews" class="tab-panel">
       <div class="rating-summary">
-        <span class="rating-big">4.8</span>
+        <span class="rating-big"><?php echo number_format($averageRating, 1); ?></span>
         <div>
-          <span class="stars">★★★★★</span>
-          <p style="font-size:0.85rem; color:rgba(26,22,32,0.55); margin-top:4px;">Based on 214 verified purchases</p>
+          <span class="stars"><?php for($i=1; $i<=5; $i++) echo ($i <= round($averageRating)) ? '★' : '☆'; ?></span>
+          <p style="font-size:0.85rem; color:rgba(26,22,32,0.55); margin-top:4px;">Based on <?php echo $totalReviews; ?> verified purchase<?php echo $totalReviews === 1 ? '' : 's'; ?></p>
         </div>
       </div>
 
-      <div class="review-card">
-        <div class="review-head"><span class="review-name">Efua Mensah</span><span class="review-date">Jun 2026</span></div>
-        <span class="stars">★★★★★</span>
-        <p class="review-body" style="margin-top:8px;">Cuts through kitchen grease faster than anything I've used before, and the smell isn't overpowering. Repurchased three times now.</p>
+      <?php if ($loggedInUser): ?>
+      <form id="reviewForm" style="margin-top: 30px; margin-bottom: 40px; padding: 24px; background: #fff; border-radius: 8px; border: 1px solid var(--line);">
+          <h3 style="font-size: 1.2rem; margin-bottom: 16px;">Leave a review</h3>
+          <input type="hidden" id="revProductId" value="<?php echo $product['id']; ?>">
+          <input type="hidden" id="revName" value="<?php echo htmlspecialchars($loggedInUser['first_name'] . ' ' . $loggedInUser['last_name']); ?>">
+          <input type="hidden" id="revEmail" value="<?php echo htmlspecialchars($loggedInUser['email']); ?>">
+          
+          <div style="margin-bottom: 16px;">
+              <label style="display:block; font-weight:600; margin-bottom:8px; font-size:0.9rem;">Rating</label>
+              <div class="star-rating" style="font-size: 1.8rem; color: #ccc; cursor: pointer; display:inline-block;">
+                  <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span><span data-val="4">★</span><span data-val="5">★</span>
+              </div>
+              <input type="hidden" id="revRating" value="0">
+          </div>
+          <div style="margin-bottom: 20px;">
+              <label style="display:block; font-weight:600; margin-bottom:8px; font-size:0.9rem;">Comment</label>
+              <textarea id="revComment" rows="4" placeholder="What did you think of this product?" required style="width:100%; border:1px solid var(--line); border-radius:4px; padding:12px; font-family:inherit; resize:vertical;"></textarea>
+          </div>
+          <button type="submit" class="btn btn-dark" style="padding:12px 24px;">Submit Review</button>
+          <div id="revMsg" style="margin-top:12px; font-size:0.9rem; font-weight:600;"></div>
+      </form>
+      <?php else: ?>
+      <div style="margin-top: 30px; margin-bottom: 40px; padding: 24px; background: #fdfbf7; border-radius: 8px; border: 1px dashed var(--line); text-align:center;">
+          <p style="margin-bottom:12px;">You must be logged in to leave a review.</p>
+          <a href="<?php echo BASE_URL; ?>login" class="btn btn-outline" style="padding:8px 20px;">Log In</a>
       </div>
-      <div class="review-card">
-        <div class="review-head"><span class="review-name">Kwabena Asante</span><span class="review-date">May 2026</span></div>
-        <span class="stars">★★★★★</span>
-        <p class="review-body" style="margin-top:8px;">Consistent every time I buy it — same scent, same cleaning power. That's rare with local brands.</p>
-      </div>
-      <div class="review-card">
-        <div class="review-head"><span class="review-name">Ama Yeboah</span><span class="review-date">Apr 2026</span></div>
-        <span class="stars">★★★★☆</span>
-        <p class="review-body" style="margin-top:8px;">Great on tile and counters. Wish it came in a bigger bottle for the price, but it lasts a long time.</p>
-      </div>
+      <?php endif; ?>
+
+      <?php if (empty($reviews)): ?>
+        <p style="text-align:center; padding: 40px 0; color: #666;">No reviews yet. Be the first to review this product!</p>
+      <?php else: ?>
+        <?php foreach ($reviews as $rev): ?>
+          <div class="review-card">
+            <div class="review-head">
+              <span class="review-name"><?php echo htmlspecialchars($rev['first_name'] . ' ' . $rev['last_name']); ?></span>
+              <span class="review-date"><?php echo date('M Y', strtotime($rev['created_at'])); ?></span>
+            </div>
+            <span class="stars"><?php for($i=1; $i<=5; $i++) echo ($i <= $rev['rating']) ? '★' : '☆'; ?></span>
+            <p class="review-body" style="margin-top:8px;"><?php echo nl2br(htmlspecialchars($rev['comment'])); ?></p>
+          </div>
+        <?php endforeach; ?>
+      <?php endif; ?>
     </div>
   </div>
 </section>
@@ -193,36 +252,20 @@ include 'includes/header.php';
       <h2>Complete the clean.</h2>
     </div>
     <div class="product-grid">
+      <?php foreach ($relatedProducts as $rp): 
+          $rpImg = $rp['image_url'] ? $rp['image_url'] : 'https://via.placeholder.com/600x600?text=No+Image';
+          $rpImgUrl = (strpos($rpImg, 'http') === 0) ? $rpImg : BASE_URL . $rpImg;
+      ?>
       <div class="product-card reveal">
-        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#A63A3A"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#A63A3A"/></svg>
-        <span class="product-tag">Laundry</span>
-        <h3>Liquid Detergent</h3>
-        <p>Deep-cleans fabric fibres while staying gentle on hands.</p>
-        <div class="product-card-foot">
-          <span class="price">GH₵ 34.00</span>
-          <button class="add-btn" data-product="Liquid Detergent">Add to cart</button>
+        <img src="<?php echo htmlspecialchars($rpImgUrl); ?>" alt="<?php echo htmlspecialchars($rp['name']); ?>" style="width: 100%; height: 220px; object-fit: contain; margin-bottom: 22px;">
+        <span class="product-tag"><?php echo htmlspecialchars($rp['category_name'] ?? 'Product'); ?></span>
+        <h3><a href="<?php echo BASE_URL; ?>product?slug=<?php echo urlencode($rp['slug']); ?>" style="color:inherit;"><?php echo htmlspecialchars($rp['name']); ?></a></h3>
+        <div class="product-card-foot" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+          <span class="price" style="font-family:'Fraunces', serif; color:var(--gold-light); font-weight:600;">GH₵ <?php echo number_format($rp['price'], 2); ?></span>
+          <button class="add-btn" onclick="addToCart(<?php echo $rp['id']; ?>, 1, this)">Add to cart</button>
         </div>
       </div>
-      <div class="product-card reveal">
-        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#1E6E63"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#1E6E63"/></svg>
-        <span class="product-tag">Kitchen</span>
-        <h3>Dishwashing Liquid</h3>
-        <p>Cuts through grease in one rinse, gentle on hands.</p>
-        <div class="product-card-foot">
-          <span class="price">GH₵ 19.00</span>
-          <button class="add-btn" data-product="Dishwashing Liquid">Add to cart</button>
-        </div>
-      </div>
-      <div class="product-card reveal">
-        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#E7C766"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#E7C766"/></svg>
-        <span class="product-tag">Laundry</span>
-        <h3>Fabric Softener</h3>
-        <p>Keeps clothes soft and fragranced through three washes.</p>
-        <div class="product-card-foot">
-          <span class="price">GH₵ 26.00</span>
-          <button class="add-btn" data-product="Fabric Softener">Add to cart</button>
-        </div>
-      </div>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>
@@ -242,5 +285,63 @@ function updateGallery(el, src) {
     });
     el.classList.add('active');
 }
+
+document.querySelectorAll('.star-rating span').forEach(star => {
+    star.addEventListener('click', function() {
+        const rating = this.getAttribute('data-val');
+        document.getElementById('revRating').value = rating;
+        const stars = this.parentElement.children;
+        for (let i = 0; i < stars.length; i++) {
+            stars[i].style.color = (i < rating) ? '#E7C766' : '#ccc';
+        }
+    });
+});
+
+document.getElementById('reviewForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const msg = document.getElementById('revMsg');
+    
+    const data = {
+        product_id: document.getElementById('revProductId').value,
+        name: document.getElementById('revName').value,
+        email: document.getElementById('revEmail').value,
+        rating: document.getElementById('revRating').value,
+        comment: document.getElementById('revComment').value
+    };
+    
+    if(data.rating == 0) {
+        msg.textContent = 'Please select a star rating.';
+        msg.style.color = '#c00';
+        return;
+    }
+    
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    
+    try {
+        const res = await fetch(`${BASE_URL}/api/reviews/create.php`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {'Content-Type': 'application/json'}
+        });
+        const out = await res.json();
+        if(out.status === 'success') {
+            msg.textContent = out.message;
+            msg.style.color = '#0c0';
+            e.target.reset();
+            document.querySelectorAll('.star-rating span').forEach(s => s.style.color = '#ccc');
+            document.getElementById('revRating').value = 0;
+        } else {
+            msg.textContent = out.message || 'Error submitting review';
+            msg.style.color = '#c00';
+        }
+    } catch(err) {
+        msg.textContent = 'Network error';
+        msg.style.color = '#c00';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Submit Review';
+});
 </script>
 <?php include 'includes/footer.php'; ?>
