@@ -55,7 +55,7 @@ document.getElementById('loginForm').addEventListener('submit', async function h
             localStorage.setItem('admin_token', data.data.token);
             localStorage.setItem('admin_user', JSON.stringify(data.data.user));
             showToast('Login successful!');
-            setTimeout(() => window.location.href = `${BASE_URL}/admin/index', 1000);
+            setTimeout(() => window.location.href = `${BASE_URL}/admin/index`, 1000);
         } else {
             const errorAlert = document.getElementById('errorAlert');
             errorAlert.innerText = data.message || 'Login failed';

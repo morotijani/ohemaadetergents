@@ -2,8 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-$config = require_once __DIR__ . '/../config/config.php';
 if (!defined('BASE_URL')) {
+    $config = require __DIR__ . '/../config/config.php';
     define('BASE_URL', $config['app']['url'] . '/');
 }
 require_once __DIR__ . '/../src/Cart.php';
@@ -113,7 +113,7 @@ $cartCount = $cartObj->count();
                 btn.innerHTML = 'Adding...';
             }
             try {
-                const res = await fetch(`${BASE_URL}/cart_action', {
+                const res = await fetch(`${BASE_URL}/cart_action`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'add', product_id: productId, qty: qty })
@@ -148,7 +148,7 @@ $cartCount = $cartObj->count();
 
         async function logoutUser() {
             try {
-                const res = await fetch(`${BASE_URL}/api/auth/customer_logout.php', { method: 'POST' });
+                const res = await fetch(`${BASE_URL}/api/auth/customer_logout.php`, { method: 'POST' });
                 const result = await res.json();
                 if (res.ok && result.status === 'success') {
                     window.location.href = result.data.redirect;

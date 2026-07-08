@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'email' => $email,
                 'amount' => $amountInPesewas,
                 'reference' => $trackingNumber,
-                'callback_url' => 'http://' . $_SERVER['HTTP_HOST'] . `${BASE_URL}/verify_payment.php',
+                'callback_url' => BASE_URL . 'verify_payment.php',
                 'metadata' => ['custom_fields' => [['display_name' => "Order ID", 'variable_name' => "order_id", 'value' => $trackingNumber]]]
             ];
 

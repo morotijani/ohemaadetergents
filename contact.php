@@ -99,7 +99,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     };
 
     try {
-        const res = await fetch(`${BASE_URL}/api/contact/submit', {
+        const res = await fetch(`${BASE_URL}/api/contact/submit`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(formData)

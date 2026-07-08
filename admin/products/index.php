@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     document.getElementById('productModal').addEventListener('hidden.bs.modal', function () {
         if (window.returnToViewOnClose) {
-            window.location.href = `${BASE_URL}/admin/products/view?id=' + window.returnToViewOnClose;
+            window.location.href = `${BASE_URL}/admin/products/view?id=` + window.returnToViewOnClose;
         }
     });
 

@@ -162,11 +162,11 @@
     const productId = urlParams.get('id');
 
     if (!productId) {
-        window.location.href = `${BASE_URL}/admin/products/index';
+        window.location.href = `${BASE_URL}/admin/products/index`;
     }
 
     function editProduct() {
-        window.location.href = `${BASE_URL}/admin/products/index?edit_id=' + productId + '&source=view';
+        window.location.href = `${BASE_URL}/admin/products/index?edit_id=` + productId + '&source=view';
     }
 
     document.addEventListener('DOMContentLoaded', loadProductOverview);

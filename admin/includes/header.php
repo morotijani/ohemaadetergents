@@ -1,6 +1,6 @@
 <?php
-$config = require_once __DIR__ . '/../../config/config.php';
 if (!defined('BASE_URL')) {
+    $config = require __DIR__ . '/../../config/config.php';
     define('BASE_URL', $config['app']['url'] . '/');
 }
 $apiBase = BASE_URL . 'api';
@@ -355,14 +355,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
         function checkAuth() {
             if (!localStorage.getItem('admin_token')) {
-                window.location.href = `${BASE_URL}/admin/login';
+                window.location.href = `${BASE_URL}/admin/login`;
             }
         }
         
         function logout() {
             localStorage.removeItem('admin_token');
             localStorage.removeItem('admin_user');
-            window.location.href = `${BASE_URL}/admin/login';
+            window.location.href = `${BASE_URL}/admin/login`;
         }
 
         function toggleTheme() {
@@ -531,7 +531,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
     <div class="layout-container">
         <div class="sidebar">
-            <a href="<?php echo BASE_URL; ?>admin/index" class="<?php echo $_SERVER['SCRIPT_NAME'] == `${BASE_URL}/admin/index.php' ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/index" class="<?php echo $_SERVER['SCRIPT_NAME'] == BASE_URL . 'admin/index.php' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">home</span> Home
             </a>
             <a href="<?php echo BASE_URL; ?>admin/products/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/products/') !== false ? 'active' : ''; ?>">
