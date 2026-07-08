@@ -106,7 +106,7 @@ include 'includes/header.php';
           <span class="qty-val">1</span>
           <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>
         </div>
-        <button class="add-btn" data-product="Multi-Surface Cleaner">Add to cart</button>
+        <button class="add-btn" data-product="Multi-Surface Cleaner" onclick="const qty = parseInt(this.parentElement.querySelector('.qty-val')?.textContent || '1'); addToCart(<?php echo $product['id']; ?>, qty, this)">Add to cart</button>
       </div>
 
       <div class="pd-trust">

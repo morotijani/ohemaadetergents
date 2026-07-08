@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 $db = Database::getInstance()->getConnection();
-                $stmt = $db->prepare("SELECT id, password_hash, is_verified FROM customers WHERE email = ? AND is_deleted = 0");
+                $stmt = $db->prepare("SELECT id, password_hash, is_verified FROM customers WHERE email = ?");
                 $stmt->execute([$email]);
                 $user = $stmt->fetch();
 

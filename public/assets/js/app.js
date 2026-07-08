@@ -107,8 +107,9 @@ if(directorySearch){
     if(noResults) noResults.classList.toggle('show', visibleCount === 0);
   });
 }
-if(filterChips.length && document.querySelector('.stockist-card')){
-  filterChips.forEach(chip => {
+const directoryFilterChips = document.querySelectorAll('.filter-chip');
+if(directoryFilterChips.length && document.querySelector('.stockist-card')){
+  directoryFilterChips.forEach(chip => {
     chip.addEventListener('click', () => {
       if(directorySearch) directorySearch.dispatchEvent(new Event('input'));
     });
@@ -219,13 +220,58 @@ if(filterChips.length){
       filterChips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       const cat = chip.dataset.filter;
+      let visibleCount = 0;
       document.querySelectorAll('[data-category]').forEach(card => {
         const show = cat === 'all' || card.dataset.category === cat;
         card.style.display = show ? '' : 'none';
+        if(show) visibleCount++;
       });
+      const noResults = document.querySelector('.no-results');
+      if(noResults && !document.getElementById('directorySearch')) noResults.classList.toggle('show', visibleCount === 0);
     });
   });
 }
+
+// ---------- Password visibility toggle ----------
+document.querySelectorAll('.pw-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const field = toggle.closest('.pw-field').querySelector('input');
+    const showing = field.type === 'text';
+    field.type = showing ? 'password' : 'text';
+    toggle.textContent = showing ? 'Show' : 'Hide';
+  });
+});
+
+// ---------- Checkout payment options ----------
+document.querySelectorAll('.payment-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    opt.parentElement.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    const radio = opt.querySelector('input[type=radio]');
+    if(radio) radio.checked = true;
+  });
+});
+
+// ---------- Resend verification cooldown ----------
+document.querySelectorAll('.js-resend-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    let seconds = 30;
+    btn.disabled = true;
+    const original = btn.textContent;
+    const timerEl = document.querySelector('.resend-timer');
+    showToast('Verification email sent');
+    const interval = setInterval(() => {
+      if(timerEl) timerEl.textContent = `You can resend in ${seconds}s`;
+      seconds--;
+      if(seconds < 0){
+        clearInterval(interval);
+        btn.disabled = false;
+        btn.textContent = original;
+        if(timerEl) timerEl.textContent = '';
+      }
+    }, 1000);
+  });
+});
 
 // ---------- Track order demo ----------
 const trackForm = document.getElementById('trackForm');
@@ -238,4 +284,49 @@ if(trackForm){
       result.scrollIntoView({ behavior:'smooth', block:'start' });
     }
   });
+}
+
+// ---------- Add to Cart (Global) ----------
+async function addToCart(productId, qty = 1, btn = null) {
+  if (btn) {
+    btn.disabled = true;
+    btn.dataset.originalText = btn.textContent;
+    btn.textContent = 'Adding...';
+  }
+  try {
+    const res = await fetch(`${BASE_URL}/cart_action.php`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'add', product_id: productId, qty: qty })
+    });
+    const data = await res.json();
+    if (res.ok && data.status === 'success') {
+      if (btn) {
+        btn.textContent = 'Added ✓';
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = btn.dataset.originalText;
+        }, 2000);
+      }
+      // Update cart badges
+      document.querySelectorAll('.js-cart-badge').forEach(b => {
+        b.style.display = 'inline-block';
+        b.textContent = data.count || data.data?.count || 1;
+      });
+      if (typeof showToast === 'function') showToast('Added to bag');
+    } else {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = btn.dataset.originalText;
+      }
+      alert(data.message || 'Failed to add to cart');
+    }
+  } catch (e) {
+    console.error(e);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = btn.dataset.originalText;
+    }
+    alert('Network error adding to cart');
+  }
 }

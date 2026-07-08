@@ -10,12 +10,18 @@ use App\Database;
 
 try {
     $db = Database::getInstance()->getConnection();
-    // Assuming address and region are added to DB, but we fallback if not.
-    $stmt = $db->prepare("SELECT first_name, last_name, email, phone FROM customers WHERE id = ?");
+    $stmt = $db->prepare("SELECT first_name, last_name, email, phone, created_at FROM customers WHERE id = ?");
     $stmt->execute([$_SESSION['customer_id']]);
     $customer = $stmt->fetch();
+    
+    $statsStmt = $db->prepare("SELECT COUNT(id) as total_orders, COALESCE(SUM(total_amount), 0) as total_spent FROM orders WHERE customer_id = ? AND status != 'cancelled'");
+    $statsStmt->execute([$_SESSION['customer_id']]);
+    $stats = $statsStmt->fetch();
+    $memberSince = $customer['created_at'] ? date('Y', strtotime($customer['created_at'])) : date('Y');
 } catch (Exception $e) {
-    $customer = ['first_name' => '', 'last_name' => '', 'email' => '', 'phone' => ''];
+    $customer = ['first_name' => '', 'last_name' => '', 'email' => '', 'phone' => '', 'created_at' => date('Y-m-d')];
+    $stats = ['total_orders' => 0, 'total_spent' => 0];
+    $memberSince = date('Y');
 }
 
 include 'includes/header.php';
@@ -44,11 +50,11 @@ include 'includes/header.php';
         <span class="email"><?php echo htmlspecialchars($customer['email']); ?></span>
       </div>
       <nav class="account-nav">
-        <a href="profile" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Profile</a>
-        <a href="profile_orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/></svg>Orders</a>
-        <a href="profile_password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>Settings</a>
-        <a href="track_order"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="15" height="12" rx="1"/><path d="M16 10h4l3 3v5h-7z"/><circle cx="6" cy="20" r="2"/><circle cx="18" cy="20" r="2"/></svg>Track an order</a>
-        <a href="#" onclick="if(window.logoutUser) logoutUser(); return false;" class="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Log out</a>
+        <a href="profile" class="active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Profile</a>
+        <a href="profile_orders"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/></svg>Orders</a>
+        <a href="profile_password"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>Settings</a>
+        <a href="track_order"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="15" height="12" rx="1"/><path d="M16 10h4l3 3v5h-7z"/><circle cx="6" cy="20" r="2"/><circle cx="18" cy="20" r="2"/></svg>Track an order</a>
+        <a href="logout.php" class="logout"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Log out</a>
       </nav>
     </div>
 
@@ -114,9 +120,9 @@ include 'includes/header.php';
       <div class="settings-section">
         <h3>Account overview</h3>
         <div class="stat-cards" style="grid-template-columns:repeat(3,1fr);">
-          <div class="stat-card"><span class="num">12</span><span class="lbl">Orders placed</span></div>
-          <div class="stat-card"><span class="num">GH₵ 890</span><span class="lbl">Total spent</span></div>
-          <div class="stat-card"><span class="num">Since 2024</span><span class="lbl">Member</span></div>
+          <div class="stat-card"><span class="num"><?php echo htmlspecialchars($stats['total_orders'] ?? 0); ?></span><span class="lbl">Orders placed</span></div>
+          <div class="stat-card"><span class="num">GH₵ <?php echo number_format($stats['total_spent'] ?? 0, 2); ?></span><span class="lbl">Total spent</span></div>
+          <div class="stat-card"><span class="num">Since <?php echo htmlspecialchars($memberSince); ?></span><span class="lbl">Member</span></div>
         </div>
       </div>
 

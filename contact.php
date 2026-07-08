@@ -55,7 +55,7 @@
       <div class="form-card on-paper reveal">
         <h3>Send us a message</h3>
         <p class="sub">General enquiries, order issues, or feedback — this goes straight to our support team.</p>
-        <form onsubmit="event.preventDefault(); this.querySelector('.form-submit').textContent='Message sent ✓'; this.querySelector('.form-submit').disabled=true;">
+        <form id="contactForm">
           <div class="field-row">
             <div class="field">
               <label for="cName">Name</label>
@@ -111,5 +111,45 @@
     </div>
   </div>
 </section>
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const submitBtn = this.querySelector('.form-submit');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch(BASE_URL + '/api/contact/submit.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: document.getElementById('cName').value,
+                email: document.getElementById('cEmail').value,
+                subject: document.getElementById('cSubject').value,
+                message: document.getElementById('cMessage').value
+            })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+            submitBtn.textContent = 'Message sent ✓';
+            submitBtn.style.background = 'var(--teal)';
+            submitBtn.style.color = 'var(--ivory)';
+            submitBtn.style.borderColor = 'var(--teal)';
+            this.reset();
+        } else {
+            alert(result.error || 'Failed to send message.');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    } catch (err) {
+        alert('A network error occurred. Please try again.');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
+</script>
 
 <?php include 'includes/footer.php'; ?>

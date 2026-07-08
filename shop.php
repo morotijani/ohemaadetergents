@@ -48,7 +48,7 @@ include 'includes/header.php';
   <div class="kente-strip" style="margin-top:48px;"></div>
 </header>
 
-<section class="products" style="background:var(--paper); color:var(--ink); border-top:1px solid var(--line);">
+<section class="products">
   <div class="wrap">
 
     <div class="filter-bar reveal in">
@@ -75,44 +75,51 @@ include 'includes/header.php';
             <h3><a href="<?php echo BASE_URL; ?>product?slug=<?php echo urlencode($p['slug']); ?>" style="color:inherit;"><?php echo htmlspecialchars($p['name']); ?></a></h3>
             <div class="product-card-foot" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
               <span class="price" style="font-family:'Fraunces', serif; color:var(--gold-light); font-weight:600;">GH₵ <?php echo number_format($p['price'], 2); ?></span>
-              <button class="btn btn-ghost" style="padding: 8px 16px; font-size:0.8rem;" onclick="addToCart(<?php echo $p['id']; ?>, 1, this)">Add to cart</button>
+              <button class="add-btn" onclick="addToCart(<?php echo $p['id']; ?>, 1, this)">Add to cart</button>
             </div>
           </div>
           <?php endforeach; ?>
       <?php endif; ?>
+      
+      <div class="product-card reveal in" style="display:flex; flex-direction:column; justify-content:center; align-items:flex-start; background:transparent; border-style:dashed;">
+        <h3 style="margin-bottom:12px;">Need a custom formula?</h3>
+        <p>We produce private-label runs for salons, hotels, and cleaning services — your branding, our formulas.</p>
+        <a href="<?php echo BASE_URL; ?>contact" class="btn btn-primary" style="margin-top:8px;">Talk to our team</a>
+      </div>
 
     </div>
   </div>
 </section>
 
-<style>
-.products .product-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    color: var(--ink);
-}
-.products .product-card h3 { color: var(--indigo); }
-.products .product-card:hover {
-    background: var(--ivory);
-    border-color: var(--gold);
-}
-.products .product-card .btn-ghost {
-    border-color: var(--indigo);
-    color: var(--indigo);
-}
-.products .product-card .btn-ghost:hover {
-    background: var(--indigo);
-    color: var(--ivory);
-}
-.filter-chip {
-    padding: 8px 16px; border: 1px solid var(--line); border-radius: 100px;
-    background: transparent; color: var(--ink); text-decoration: none;
-    font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.2s;
-}
-.filter-chip:hover, .filter-chip.active {
-    background: var(--indigo); color: var(--ivory); border-color: var(--indigo);
-}
-.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
-</style>
+<section>
+  <div class="wrap">
+    <div class="center-head reveal">
+      <span class="eyebrow">Common questions</span>
+      <h2>Product FAQs</h2>
+    </div>
+    <div class="wrap-narrow" style="padding:0;">
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-trigger">Are Ohemaa products safe for sensitive skin? <span class="plus">+</span></button>
+          <div class="accordion-panel"><div class="accordion-panel-inner">Our dishwashing liquid and liquid detergent are formulated within dermatologically tested pH ranges. If you have a diagnosed skin condition, we recommend a patch test before regular use.</div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Can I buy Ohemaa products online for delivery? <span class="plus">+</span></button>
+          <div class="accordion-panel"><div class="accordion-panel-inner">Yes — add items to your cart and check out for delivery within Kumasi and select regions. You can also find a stockist near you for same-day pickup.</div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Do you offer bulk or wholesale pricing? <span class="plus">+</span></button>
+          <div class="accordion-panel"><div class="accordion-panel-inner">Shops, hotels, and cleaning services ordering in volume can apply for wholesale pricing through our stockist programme or by contacting our business team directly.</div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">What's the shelf life of an unopened bottle? <span class="plus">+</span></button>
+          <div class="accordion-panel"><div class="accordion-panel-inner">Unopened, all Ohemaa products are stable for 24 months from the batch date printed on the bottle. Store away from direct sunlight for best results.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
 <?php include 'includes/footer.php'; ?>
