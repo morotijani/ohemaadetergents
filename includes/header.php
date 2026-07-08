@@ -39,7 +39,10 @@ $cartCount = $cartObj->count();
           <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227" />
           <circle cx="30" cy="30" r="4" fill="#2B1B4D" />
         </svg>
-        OHEMAA
+        <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.1;">
+            <span style="font-weight: 800; font-size: 1em;">OHEMAA</span>
+            <span style="font-size: 0.4em; letter-spacing: 0.15em; opacity: 0.85; font-weight: 600;">DETERGENTS</span>
+        </div>
       </a>
       <div class="nav-main">
         <div class="nav-links" id="navLinks">
