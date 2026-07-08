@@ -44,6 +44,9 @@ foreach ($productsData as $p) {
     $products[] = ['id' => $p['id'], 'price' => $p['price'], 'qty' => $qty, 'name' => $p['name'], 'image_url' => $p['image_url']];
 }
 
+$deliveryFee = 15.00;
+$grandTotal = $total + $deliveryFee;
+
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -81,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $trackingNumber = 'ORD-' . strtoupper(substr(uniqid(), -6));
             
             $stmt = $db->prepare("INSERT INTO orders (order_id, tracking_number, customer_id, total_amount, shipping_address, status) VALUES (?, ?, ?, ?, ?, 'pending')");
-            $stmt->execute([$orderUuid, $trackingNumber, $customerId, $total, $address]);
+            $stmt->execute([$orderUuid, $trackingNumber, $customerId, $grandTotal, $address]);
             $orderId = $db->lastInsertId();
 
             $stmt = $db->prepare("INSERT INTO order_items (order_item_id, order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?, ?)");
@@ -91,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $db->commit();
 
-            $amountInPesewas = $total * 100; 
+            $amountInPesewas = $grandTotal * 100; 
             
             $postData = [
                 'email' => $email,
@@ -132,7 +135,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 include 'includes/header.php';
 ?>
-<button type="submit" class="btn btn-dark btn-full">Pay GH₵ <?php echo number_format($total, 2); ?></button>wrap">
+<section style="padding-top:44px;">
+  <div class="wrap">
     <div class="checkout-steps reveal">
       <span class="step done">✓ Cart</span>
       <span class="sep">—</span>
@@ -219,10 +223,25 @@ include 'includes/header.php';
       <div class="summary-card reveal">
         <h3>Order summary</h3>
         <div class="checkout-summary-items">
-          <div class="mini-line"><span>Multi-Surface Cleaner <span class="qty-tag">×2</span></span><span>GH₵ 56.00</span></div>
-          <div class="mini-line"><span>Dishwashing Liquid <span class="qty-tag">×1</span></span><span>GH₵ 19.00</span></div>
-          <div class="mini-line"><span>Fabric Softener <span class="qty-tag">×1</span></span><span>GH₵ 26.00</span></div>
+          <?php foreach ($products as $p): ?>
+          <div class="mini-line">
+            <span><?php echo htmlspecialchars($p['name']); ?> <span class="qty-tag">×<?php echo $p['qty']; ?></span></span>
+            <span>GH₵ <?php echo number_format($p['price'] * $p['qty'], 2); ?></span>
+          </div>
+          <?php endforeach; ?>
         </div>
-        <div class="order-summary-row"><span class="lbl">Subtotal</span><span class="val">GH₵ 101.00</span></div>
-        <div class="order-summary-row"><span class="lbl">Delivery</span><span class="val">GH₵ 15.00</span></div>
-        <div class="order-summary-row" style="border-top:1.5px solid var(--line); font-size:1.05rem;"><span class="lbl" style="font-weight:700; color:var(--ink);">Total</span><s<?php include 'includes/footer.php'; ?>
+        <div class="order-summary-row"><span class="lbl">Subtotal</span><span class="val">GH₵ <?php echo number_format($total, 2); ?></span></div>
+        <div class="order-summary-row"><span class="lbl">Delivery</span><span class="val">GH₵ <?php echo number_format($deliveryFee, 2); ?></span></div>
+        <div class="order-summary-row" style="border-top:1.5px solid var(--line); font-size:1.05rem;">
+          <span class="lbl" style="font-weight:700; color:var(--ink);">Total</span>
+          <span class="val" style="font-weight:700;">GH₵ <?php echo number_format($grandTotal, 2); ?></span>
+        </div>
+        <button class="form-submit btn-full" type="submit" style="margin-top:18px;">Place order</button>
+        <p class="form-note">By placing your order you agree to our Terms & delivery policy.</p>
+      </div>
+
+    </div></form>
+  </div>
+</section>
+
+<?php include 'includes/footer.php'; ?>
