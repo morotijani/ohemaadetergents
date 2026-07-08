@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — Ohemaa</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <svg class="seal" viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+        <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+        <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+        <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+      </svg>
+      OHEMAA
+    </a>
+    <div class="nav-main">
+      <div class="nav-links" id="navLinks">
+        <a href="heritage.html">Heritage</a>
+        <a href="products.html" class="active">Products</a>
+        <a href="process.html">Process</a>
+        <a href="stockists.html">Stockists</a>
+        <a href="index.html#sustainability">Sustainability</a>
+        <a href="contact.html">Contact</a>
+        <a href="track-order.html">Track Order</a>
+        <a href="become-a-stockist.html" class="nav-cta">Become a Stockist</a>
+      </div>
+    </div>
+    <div class="nav-side">
+      <a href="cart.html" class="icon-btn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <span class="badge js-cart-badge" style="display:none;">0</span>
+      </a>
+      <a href="login.html" class="icon-btn" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <svg class="page-hero-watermark" viewBox="0 0 60 60" fill="none">
+    <circle cx="30" cy="30" r="29" fill="none" stroke="#E7C766" stroke-width="1"/>
+    <circle cx="30" cy="30" r="22" fill="none" stroke="#E7C766" stroke-width="1"/>
+    <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#E7C766"/>
+  </svg>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Products</span></div>
+    <span class="eyebrow">The full range</span>
+    <h1>Six products. One royal standard.</h1>
+    <p class="lede">Every Ohemaa product is formulated, tested, and bottled in-house — nothing white-labelled, nothing outsourced.</p>
+  </div>
+  <div class="kente-strip" style="margin-top:48px;"></div>
+</header>
+
+<section class="products">
+  <div class="wrap">
+    <div class="filter-bar reveal">
+      <button class="filter-chip active" data-filter="all">All products</button>
+      <button class="filter-chip" data-filter="surface">Surface Care</button>
+      <button class="filter-chip" data-filter="laundry">Laundry</button>
+      <button class="filter-chip" data-filter="kitchen">Kitchen</button>
+      <button class="filter-chip" data-filter="disinfection">Disinfection</button>
+    </div>
+
+    <div class="product-grid">
+
+      <div class="product-card reveal" data-category="surface">
+        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#C9A227"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#C9A227"/></svg>
+        <span class="product-tag">Surface Care</span>
+        <h3><a href="product-detail.html" style="color:inherit;">Multi-Surface Cleaner</a></h3>
+        <p>Lemon-fresh degreasing power for tiles, counters, and every surface in between. 750ml.</p>
+        <div class="product-card-foot">
+          <span class="price">GH₵ 28.00</span>
+          <button class="add-btn" data-product="Multi-Surface Cleaner">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="laundry">
+        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#A63A3A"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#A63A3A"/></svg>
+        <span class="product-tag">Laundry</span>
+        <h3>Liquid Detergent</h3>
+        <p>Deep-cleans fabric fibres while staying gentle on hands during handwashing. 1L.</p>
+        <div class="product-card-foot">
+          <span class="price">GH₵ 34.00</span>
+          <button class="add-btn" data-product="Liquid Detergent">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="kitchen">
+        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#1E6E63"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#1E6E63"/></svg>
+        <span class="product-tag">Kitchen</span>
+        <h3>Dishwashing Liquid</h3>
+        <p>Cuts through grease in one rinse, formulated to protect skin with repeated use. 500ml.</p>
+        <div class="product-card-foot">
+          <span class="price">GH₵ 19.00</span>
+          <button class="add-btn" data-product="Dishwashing Liquid">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="laundry">
+        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#E7C766"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#E7C766"/></svg>
+        <span class="product-tag">Laundry</span>
+        <h3>Fabric Softener</h3>
+        <p>Keeps clothes soft and fragranced through three washes, not just the first. 750ml.</p>
+        <div class="product-card-foot">
+          <span class="price">GH₵ 26.00</span>
+          <button class="add-btn" data-product="Fabric Softener">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="disinfection">
+        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#C9A227"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#2B1B4D"/></svg>
+        <span class="product-tag">Disinfection</span>
+        <h3>Disinfectant Bleach</h3>
+        <p>Hospital-grade germ protection, diluted for safe everyday household use. 1L.</p>
+        <div class="product-card-foot">
+          <span class="price">GH₵ 22.00</span>
+          <button class="add-btn" data-product="Disinfectant Bleach">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="surface">
+        <svg class="cap-icon" viewBox="0 0 56 78"><rect x="10" y="14" width="36" height="6" rx="2" fill="#8A6E1A"/><path d="M6 26 Q6 20 14 20 L42 20 Q50 20 50 26 L54 70 Q55 78 46 78 L10 78 Q1 78 2 70 Z" fill="#F7F3EA"/><rect x="10" y="34" width="36" height="26" rx="4" fill="#1E6E63"/></svg>
+        <span class="product-tag">Bundle</span>
+        <h3>Household Starter Set</h3>
+        <p>One of each core product — multi-surface, detergent, dishwashing liquid, softener, and bleach.</p>
+        <div class="product-card-foot">
+          <span class="price">GH₵ 119.00</span>
+          <button class="add-btn" data-product="Household Starter Set">Add to cart</button>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-category="all" style="display:flex; flex-direction:column; justify-content:center; align-items:flex-start; background:transparent; border-style:dashed;">
+        <h3 style="margin-bottom:12px;">Need a custom formula?</h3>
+        <p>We produce private-label runs for salons, hotels, and cleaning services — your branding, our formulas.</p>
+        <a href="contact.html" class="btn btn-primary" style="margin-top:8px;">Talk to our team</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="center-head reveal">
+      <span class="eyebrow">Common questions</span>
+      <h2>Product FAQs</h2>
+    </div>
+    <div class="wrap-narrow" style="padding:0;">
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-trigger">Are Ohemaa products safe for sensitive skin? <span class="plus">+</span></button>
+          <div class="accordion-panel"><div class="accordion-panel-inner">Our dishwashing liquid and liquid detergent are formulated within dermatologically tested pH ranges. If you have a diagnosed skin condition, we recommend a patch test before regular use.</div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Can I buy Ohemaa products online for delivery? <span class="plus">+</span></button>
+          <div class="accordion-panel"><div class="accordion-panel-inner">Yes — add items to your cart and check out for delivery within Kumasi and select regions. You can also find a stockist near you for same-day pickup.</div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">Do you offer bulk or wholesale pricing? <span class="plus">+</span></button>
+          <div class="accordion-panel"><div class="accordion-panel-inner">Shops, hotels, and cleaning services ordering in volume can apply for wholesale pricing through our stockist programme or by contacting our business team directly.</div></div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger">What's the shelf life of an unopened bottle? <span class="plus">+</span></button>
+          <div class="accordion-panel"><div class="accordion-panel-inner">Unopened, all Ohemaa products are stable for 24 months from the batch date printed on the bottle. Store away from direct sunlight for best results.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <svg class="seal" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+            <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+            <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+            <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+          </svg>
+          OHEMAA
+        </div>
+        <p>Formulated and bottled in Kumasi, Ashanti Region. Cleanliness fit for a queen, since day one.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="heritage.html">Heritage</a>
+        <a href="products.html">Products</a>
+        <a href="process.html">Process</a>
+        <a href="stockists.html">Stockists</a>
+        <a href="index.html#sustainability">Sustainability</a>
+      </div>
+      <div class="foot-col">
+        <h4>Business</h4>
+        <a href="become-a-stockist.html">Become a stockist</a>
+        <a href="products.html">Private label</a>
+        <a href="contact.html">Wholesale pricing</a>
+      </div>
+      <div class="foot-col">
+        <h4>Account</h4>
+        <a href="track-order.html">Track an order</a>
+        <a href="cart.html">Your cart</a>
+        <a href="login.html">Log in / Sign up</a>
+        <a href="contact.html">Contact us</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Ohemaa Cleaning Agents. All rights reserved.</span>
+      <div class="kente-strip"></div>
+    </div>
+  </div>
+</footer>
+
+<script src="common.js"></script>
+</body>
+</html>

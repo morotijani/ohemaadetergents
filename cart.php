@@ -5,32 +5,29 @@ require_once __DIR__ . '/src/Cart.php';
 use App\Database;
 use App\Cart;
 
-$db = Database::getInstance()->getConnection();
-$cart = new Cart();
-$cartItems = $cart->getItems();
+$cartObj = new Cart();
+$cartItems = $cartObj->getItems();
 
-$products = [];
+$db = Database::getInstance()->getConnection();
 $total = 0;
+$products = [];
 
 if (!empty($cartItems)) {
     $ids = array_keys($cartItems);
     $inClause = implode(',', array_fill(0, count($ids), '?'));
-    $stmt = $db->prepare("SELECT id, name, price, image_url, stock FROM products WHERE id IN ($inClause)");
+    $stmt = $db->prepare("SELECT id, name, price, image_url FROM products WHERE id IN ($inClause)");
     $stmt->execute($ids);
     $productsData = $stmt->fetchAll();
 
     foreach ($productsData as $p) {
         $qty = $cartItems[$p['id']];
-        $subtotal = $qty * $p['price'];
-        $total += $subtotal;
+        $total += ($qty * $p['price']);
         $products[] = [
             'id' => $p['id'],
-            'name' => $p['name'],
             'price' => $p['price'],
-            'image_url' => $p['image_url'],
             'qty' => $qty,
-            'subtotal' => $subtotal,
-            'stock' => $p['stock']
+            'name' => $p['name'],
+            'image_url' => $p['image_url']
         ];
     }
 }
@@ -38,107 +35,110 @@ if (!empty($cartItems)) {
 include 'includes/header.php';
 ?>
 
-<div class="container-fluid px-4 px-lg-5 pt-5 mt-5">
-    <div class="row pt-5 mb-5 pb-5 border-bottom border-light">
-        <div class="col-lg-12 text-center">
-            <h1 class="font-serif text-black" style="font-size: 3.5rem;">Shopping Bag</h1>
+
+<header class="page-hero" style="padding:48px 0 40px;">
+  <svg class="page-hero-watermark" viewBox="0 0 60 60" fill="none">
+    <circle cx="30" cy="30" r="29" fill="none" stroke="#E7C766" stroke-width="1"/>
+    <circle cx="30" cy="30" r="22" fill="none" stroke="#E7C766" stroke-width="1"/>
+    <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#E7C766"/>
+  </svg>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="<?php echo BASE_URL; ?>index">Home</a><span>/</span><span>Cart</span></div>
+    <span class="eyebrow">3 items</span>
+    <h1 style="font-size:2.2rem; margin-top:14px;">Your cart</h1>
+  </div>
+</header>
+
+<section style="padding-top:56px;">
+  <div class="wrap">
+    <div class="cart-layout">
+
+      
+      <div class="js-cart-list" <?php if(empty($cartItems)) echo 'style="display:none;"'; ?>>
+        <?php foreach ($products as $p): ?>
+        <?php $imgUrl = $p['image_url'] ? BASE_URL . $p['image_url'] : 'https://via.placeholder.com/100'; ?>
+        <div class="cart-row">
+          <img src="<?php echo htmlspecialchars($imgUrl); ?>" alt="<?php echo htmlspecialchars($p['name']); ?>" style="width: 56px; height: 78px; object-fit: contain; background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 4px;">
+          <div>
+            <div class="cart-item-name"><?php echo htmlspecialchars($p['name']); ?></div>
+            <div class="cart-item-meta"></div>
+            <a href="#" class="cart-remove" onclick="removeItem(<?php echo $p['id']; ?>); return false;">Remove</a>
+          </div>
+          <div class="qty-stepper">
+            <button type="button" class="qty-minus" onclick="updateQty(<?php echo $p['id']; ?>, -1)">–</button>
+            <span class="qty-val"><?php echo $p['qty']; ?></span>
+            <button type="button" class="qty-plus" onclick="updateQty(<?php echo $p['id']; ?>, 1)">+</button>
+          </div>
+          <div class="cart-line-total">GH₵ <?php echo number_format($p['price'] * $p['qty'], 2); ?></div>
         </div>
+        <?php endforeach; ?>
+
+        <a href="<?php echo BASE_URL; ?>shop" class="btn btn-outline" style="margin-top:26px;">← Continue shopping</a>
+      </div>
+
+      <div class="js-cart-empty empty-state" <?php if(!empty($cartItems)) echo 'style="display:none;"'; ?>>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added anything yet.</p>
+        <a href="<?php echo BASE_URL; ?>shop" class="btn btn-primary">Browse products</a>
+      </div>
+
+
+      <?php if(!empty($cartItems)): ?><div class="summary-card">
+        <h3>Order summary</h3>
+        <div class="order-summary-row"><span class="lbl">Subtotal</span><span class="val">GH₵ <?php echo number_format($total, 2); ?></span></div>
+        <div class="order-summary-row"><span class="lbl">Delivery</span><span class="val">Calculated on Pay</span></div>
+        <div class="promo-row">
+          <input type="text" placeholder="Promo code">
+          <button class="btn btn-outline btn-sm" type="button">Apply</button>
+        </div>
+        <div class="order-summary-row" style="border-top:1.5px solid var(--line); font-size:1.05rem;"><span class="lbl" style="font-weight:700; color:var(--ink);">Total</span><span class="val" style="color:var(--gold-light);">GH₵ <?php echo number_format($total, 2); ?></span></div>
+        <a href="<?php echo BASE_URL; ?>checkout" class="btn btn-dark btn-full" style="margin-top:20px;">Checkout</a>
+        <p class="form-note">Delivery available in Kumasi and select regions.</p>
+      </div><?php endif; ?>
     </div>
-</div>
+  </div>
+</section>
 
-<div class="container-fluid px-4 px-lg-5 mb-5 pb-5">
-    <?php if (empty($products)): ?>
-        <div class="text-center py-5">
-            <p class="font-sans text-muted text-uppercase letter-spacing-wide mb-4" style="font-size: 0.75rem;">Your bag is currently empty.</p>
-            <a href="shop" class="btn btn-black">Continue Shopping</a>
-        </div>
-    <?php else: ?>
-        <div class="row">
-            <div class="col-lg-8 pe-lg-5 mb-5 mb-lg-0 border-end border-light">
-                <div class="table-responsive">
-                    <table class="table align-middle" style="border-collapse: collapse;">
-                        <thead>
-                            <tr class="font-sans text-muted text-uppercase letter-spacing-widest" style="font-size: 0.65rem;">
-                                <th class="border-top-0 border-bottom border-black pb-3 fw-600">Product</th>
-                                <th class="border-top-0 border-bottom border-black pb-3 fw-600">Price</th>
-                                <th class="border-top-0 border-bottom border-black pb-3 fw-600">Quantity</th>
-                                <th class="border-top-0 border-bottom border-black pb-3 fw-600 text-end">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($products as $p): ?>
-                                <tr>
-                                    <td class="py-4 border-bottom border-light">
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-off-white me-4" style="width: 80px; height: 100px; flex-shrink: 0; padding: 0.5rem;">
-                                                <img src="<?php echo $p['image_url'] ? htmlspecialchars($p['image_url']) : 'https://via.placeholder.com/300?text=Ohemaa'; ?>" class="w-100 h-100" style="object-fit: contain;">
-                                            </div>
-                                            <div>
-                                                <a href="product?slug=<?php echo urlencode($p['name']); ?>" class="font-serif text-black text-decoration-none" style="font-size: 1.1rem;"><?php echo htmlspecialchars($p['name']); ?></a>
-                                                <br>
-                                                <button class="btn btn-link text-muted p-0 text-decoration-none font-sans text-uppercase mt-2" style="font-size: 0.65rem; letter-spacing: 0.05em;" onclick="removeFromCart(<?php echo $p['id']; ?>)">Remove</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 border-bottom border-light font-sans text-black" style="font-size: 0.85rem;">GHS <?php echo number_format($p['price'], 2); ?></td>
-                                    <td class="py-4 border-bottom border-light">
-                                        <div class="d-flex border border-black" style="width: fit-content;">
-                                            <input type="number" class="form-control border-0 text-center rounded-0 font-sans fw-600 px-0 bg-transparent" value="<?php echo $p['qty']; ?>" min="1" max="<?php echo $p['stock']; ?>" onchange="updateCart(<?php echo $p['id']; ?>, this.value)" style="width: 60px; box-shadow: none;">
-                                        </div>
-                                    </td>
-                                    <td class="py-4 border-bottom border-light text-end font-sans text-black" style="font-size: 0.85rem;">GHS <?php echo number_format($p['subtotal'], 2); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="col-lg-4 ps-lg-5">
-                <div class="sticky-top" style="top: 100px;">
-                    <h4 class="font-sans text-uppercase letter-spacing-widest text-black mb-4 fw-600" style="font-size: 0.75rem;">Order Summary</h4>
-                    
-                    <div class="d-flex justify-content-between mb-3 font-sans" style="font-size: 0.85rem;">
-                        <span class="text-muted">Subtotal</span>
-                        <span class="text-black">GHS <?php echo number_format($total, 2); ?></span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-4 font-sans" style="font-size: 0.85rem;">
-                        <span class="text-muted">Shipping</span>
-                        <span class="text-muted italic">Calculated at checkout</span>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between mb-5 border-top border-black pt-3">
-                        <span class="font-sans text-uppercase letter-spacing-wide fw-600" style="font-size: 0.75rem;">Total</span>
-                        <span class="font-sans fw-600 text-black">GHS <?php echo number_format($total, 2); ?></span>
-                    </div>
-                    
-                    <a href="checkout" class="btn btn-black w-100 py-3 mb-3">
-                        Checkout
-                    </a>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
-</div>
 
 <script>
-async function updateCart(productId, qty) {
-    await fetch(`${BASE_URL}/cart_action`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({action: 'update', product_id: productId, qty: qty})
-    });
-    location.reload();
+async function updateQty(productId, change) {
+    try {
+        const res = await fetch(`${BASE_URL}api/cart_action.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'update_relative', product_id: productId, change: change })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            alert(data.message || 'Failed to update quantity');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Network error');
+    }
 }
 
-async function removeFromCart(productId) {
-    await fetch(`${BASE_URL}/cart_action`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({action: 'remove', product_id: productId})
-    });
-    location.reload();
+async function removeItem(productId) {
+    if(!confirm('Remove this item from your bag?')) return;
+    try {
+        const res = await fetch(`${BASE_URL}api/cart_action.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'remove', product_id: productId })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            alert(data.message || 'Failed to remove item');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Network error');
+    }
 }
 </script>
-
 <?php include 'includes/footer.php'; ?>

@@ -12,149 +12,60 @@ $cartCount = $cartObj->count();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ohemaa Detergents</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/assets/css/main.css">
-    <link rel="icon" href="<?php echo BASE_URL; ?>public/assets/img/logo.png" type="image/png">
-    <script>const BASE_URL = '<?php echo rtrim(BASE_URL, '/'); ?>';</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ohemaa — Cleanliness Fit for a Queen</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Bootstrap CSS (Kept for inner pages compatibility) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<!-- Custom Theme CSS -->
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>public/assets/css/main.css">
+<link rel="icon" href="<?php echo BASE_URL; ?>public/assets/img/logo.png" type="image/png">
+<script>const BASE_URL = '<?php echo rtrim(BASE_URL, '/'); ?>';</script>
 </head>
-
 <body>
-
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid px-4 px-lg-5">
-
-            <!-- Mobile toggler -->
-            <button class="navbar-toggler border-0 shadow-none p-0 d-lg-none" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
-                <i class="bi bi-list fs-2"></i>
-            </button>
-
-            <!-- Brand -->
-            <a class="navbar-brand mx-auto mx-lg-0 absolute-center-mobile d-flex align-items-center gap-2"
-                href="<?php echo BASE_URL; ?>index">
-                <img src="<?php echo BASE_URL; ?>public/assets/img/logo.png" alt="Ohemaa Detergents"
-                    style="height: 45px; width: auto; object-fit: contain;">
-                <span class="d-none d-md-block font-serif text-black mb-0"
-                    style="font-size: 1.15rem; letter-spacing: 0.02em;">Ohemaa Detergents</span>
-            </a>
-
-            <!-- Mobile Cart & Auth -->
-            <div class="d-lg-none position-relative d-flex gap-3 align-items-center mt-1">
-                <?php if (isset($_SESSION['customer_id'])): ?>
-                    <a href="<?php echo BASE_URL; ?>profile" class="nav-link text-dark" title="Account"><i class="bi bi-person fs-4"></i></a>
-                <?php else: ?>
-                    <a href="<?php echo BASE_URL; ?>login" class="nav-link text-dark" title="Login"><i class="bi bi-person fs-4"></i></a>
-                <?php endif; ?>
-                <a href="<?php echo BASE_URL; ?>cart" class="nav-link text-dark position-relative" title="Bag">
-                    <i class="bi bi-bag fs-4"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size: 0.6rem; padding: 0.25em 0.4em; transform: translate(-30%, 10%) !important;">
-                        <span id="cartBadgeMobile"><?php echo $cartCount; ?></span>
-                    </span>
-                </a>
-            </div>
-
-            <!-- Desktop Menu -->
-            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-                <ul class="navbar-nav gap-2 gap-lg-4 mt-4 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>shop">Shop</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>stockists">Stockists</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>about">Our Heritage</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>contact">Contact</a>
-                    </li>
-                </ul>
-
-                <div class="d-none d-lg-flex align-items-center gap-4">
-                    <?php if (isset($_SESSION['customer_id'])): ?>
-                        <a href="<?php echo BASE_URL; ?>profile" class="nav-link">ACCOUNT</a>
-                    <?php else: ?>
-                        <a href="<?php echo BASE_URL; ?>login" class="nav-link">LOGIN</a>
-                    <?php endif; ?>
-                    <a href="<?php echo BASE_URL; ?>track_order" class="nav-link">Track Order</a>
-                    <a href="<?php echo BASE_URL; ?>cart" class="nav-link">
-                        BAG (<span id="cartBadge"><?php echo $cartCount; ?></span>)
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <style>
-        /* Center brand on mobile */
-        @media (max-width: 991.98px) {
-            .absolute-center-mobile {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
-    </style>
-
-    <script>
-        async function addToCart(productId, qty = 1, btn = null) {
-            if (btn) {
-                btn.disabled = true;
-                btn.dataset.originalText = btn.innerHTML;
-                btn.innerHTML = 'Adding...';
-            }
-            try {
-                const res = await fetch(`${BASE_URL}/cart_action`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'add', product_id: productId, qty: qty })
-                });
-                const data = await res.json();
-                if (data.status === 'success') {
-                    document.getElementById('cartBadge').innerText = data.data.count;
-                    if (document.getElementById('cartBadgeMobile')) {
-                        document.getElementById('cartBadgeMobile').innerText = data.data.count;
-                    }
-                    if (btn) {
-                        btn.innerHTML = 'Added to bag &#10003;';
-                        setTimeout(() => {
-                            btn.innerHTML = btn.dataset.originalText;
-                            btn.disabled = false;
-                        }, 2000);
-                    } else {
-                        alert(data.message || 'Added to bag successfully!');
-                    }
-                } else {
-                    if (btn) {
-                        btn.innerHTML = btn.dataset.originalText;
-                        btn.disabled = false;
-                    }
-                    alert(data.message || 'Failed to add to cart');
-                }
-            } catch (e) { 
-                console.error(e); 
-                alert('Network error while adding to cart.');
-            }
-        }
-
-        async function logoutUser() {
-            try {
-                const res = await fetch(`${BASE_URL}/api/auth/customer_logout.php`, { method: 'POST' });
-                const result = await res.json();
-                if (res.ok && result.status === 'success') {
-                    window.location.href = result.data.redirect;
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        }
-    </script>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <svg class="seal" viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+        <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+        <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+        <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+      </svg>
+      OHEMAA
+    </a>
+    <div class="nav-main">
+      <div class="nav-links" id="navLinks">
+        <a href="<?php echo BASE_URL; ?>about">Heritage</a>
+        <a href="<?php echo BASE_URL; ?>shop">Products</a>
+        <a href="<?php echo BASE_URL; ?>process">Process</a>
+        <a href="<?php echo BASE_URL; ?>stockists">Stockists</a>
+        <a href="#sustainability">Sustainability</a>
+        <a href="<?php echo BASE_URL; ?>contact">Contact</a>
+        <a href="<?php echo BASE_URL; ?>track_order">Track Order</a>
+        <a href="<?php echo BASE_URL; ?>become_stockist" class="nav-cta">Become a Stockist</a>
+      </div>
+    </div>
+    <div class="nav-side">
+      <a href="<?php echo BASE_URL; ?>cart" class="icon-btn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <span class="badge js-cart-badge"><?php echo $cartCount; ?></span>
+      </a>
+      <?php if (isset($_SESSION['customer_id'])): ?>
+      <a href="<?php echo BASE_URL; ?>profile" class="icon-btn" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </a>
+      <?php else: ?>
+      <a href="<?php echo BASE_URL; ?>login" class="icon-btn" aria-label="Login">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </a>
+      <?php endif; ?>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>

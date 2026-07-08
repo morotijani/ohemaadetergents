@@ -1,54 +1,54 @@
-<?php
-require_once __DIR__ . '/src/Database.php';
-use App\Database;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Surface Cleaner — Ohemaa</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-$slug = $_GET['slug'] ?? '';
-if (empty($slug)) {
-    header("Location: shop");
-    exit;
-}
-
-try {
-    $db = Database::getInstance()->getConnection();
-    $stmt = $db->prepare("SELECT p.id, p.name, p.slug, p.description, p.price, p.image_url, p.stock, c.name as category_name 
-                          FROM products p 
-                          LEFT JOIN categories c ON p.category_id = c.id 
-                          WHERE p.slug = ? AND p.is_deleted = 0");
-    $stmt->execute([$slug]);
-    $product = $stmt->fetch();
-    
-    if (!$product) {
-        header("Location: shop");
-        exit;
-    }
-    
-    // Images
-    $stmt = $db->prepare("SELECT image_url FROM product_images WHERE product_id = ? ORDER BY id ASC");
-    $stmt->execute([$product['id']]);
-    $extraImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    $allImages = [];
-    if ($product['image_url']) {
-        $allImages[] = $product['image_url'];
-    }
-    $allImages = array_merge($allImages, $extraImages);
-    if (empty($allImages)) {
-        $allImages[] = 'https://via.placeholder.com/600x600?text=No+Image';
-    }
-
-} catch (Exception $e) {
-    header("Location: shop");
-    exit;
-}
-
-include 'includes/header.php';
-?>
-
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <svg class="seal" viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+        <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+        <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+        <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+      </svg>
+      OHEMAA
+    </a>
+    <div class="nav-main">
+      <div class="nav-links" id="navLinks">
+        <a href="heritage.html">Heritage</a>
+        <a href="products.html" class="active">Products</a>
+        <a href="process.html">Process</a>
+        <a href="stockists.html">Stockists</a>
+        <a href="index.html#sustainability">Sustainability</a>
+        <a href="contact.html">Contact</a>
+        <a href="track-order.html">Track Order</a>
+        <a href="become-a-stockist.html" class="nav-cta">Become a Stockist</a>
+      </div>
+    </div>
+    <div class="nav-side">
+      <a href="cart.html" class="icon-btn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <span class="badge js-cart-badge" style="display:none;">0</span>
+      </a>
+      <a href="login.html" class="icon-btn" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
 
 <section style="padding-top:36px; padding-bottom:0;">
   <div class="wrap">
     <div class="breadcrumb pd-breadcrumb-inline" style="color:rgba(26,22,32,0.5);">
-      <a href="<?php echo BASE_URL; ?>index" style="color:inherit;">Home</a><span>/</span>
-      <a href="<?php echo BASE_URL; ?>shop" style="color:inherit;">Products</a><span>/</span>
+      <a href="index.html" style="color:inherit;">Home</a><span>/</span>
+      <a href="products.html" style="color:inherit;">Products</a><span>/</span>
       <span style="color:var(--ink); font-weight:700;">Multi-Surface Cleaner</span>
     </div>
   </div>
@@ -82,13 +82,13 @@ include 'includes/header.php';
 
     <div class="reveal">
       <span class="product-tag" style="color:var(--teal);">Surface Care</span>
-      <h1><?php echo htmlspecialchars($product['name']); ?></h1>
+      <h1 class="pd-title" style="margin-top:10px;">Multi-Surface Cleaner</h1>
       <div class="rating-row">
         <span class="stars">★★★★★</span>
         <span>4.8 out of 5 · 214 reviews</span>
       </div>
       <div class="pd-price-row">
-        <span class="price">GH₵ <?php echo number_format($product['price'], 2); ?></span>
+        <span class="price">GH₵ 28.00</span>
         <span class="was-price">GH₵ 32.00</span>
       </div>
       <p class="pd-desc">Lemon-fresh degreasing power for tiles, counters, and every hard surface in the house. Formulated to cut through grease in one wipe without leaving residue or overpowering fragrance behind.</p>
@@ -189,7 +189,7 @@ include 'includes/header.php';
 <section class="products">
   <div class="wrap">
     <div class="section-head on-dark reveal">
-      <span class="eyebrow"><?php echo htmlspecialchars($product['category_name'] ?? 'Product'); ?></span>
+      <span class="eyebrow">You might also like</span>
       <h2>Complete the clean.</h2>
     </div>
     <div class="product-grid">
@@ -227,20 +227,50 @@ include 'includes/header.php';
   </div>
 </section>
 
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <svg class="seal" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+            <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+            <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+            <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+          </svg>
+          OHEMAA
+        </div>
+        <p>Formulated and bottled in Kumasi, Ashanti Region. Cleanliness fit for a queen, since day one.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="heritage.html">Heritage</a>
+        <a href="products.html">Products</a>
+        <a href="process.html">Process</a>
+        <a href="stockists.html">Stockists</a>
+        <a href="index.html#sustainability">Sustainability</a>
+      </div>
+      <div class="foot-col">
+        <h4>Business</h4>
+        <a href="become-a-stockist.html">Become a stockist</a>
+        <a href="products.html">Private label</a>
+        <a href="contact.html">Wholesale pricing</a>
+      </div>
+      <div class="foot-col">
+        <h4>Account</h4>
+        <a href="track-order.html">Track an order</a>
+        <a href="cart.html">Your cart</a>
+        <a href="login.html">Log in / Sign up</a>
+        <a href="contact.html">Contact us</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Ohemaa Cleaning Agents. All rights reserved.</span>
+      <div class="kente-strip"></div>
+    </div>
+  </div>
+</footer>
 
-<script>
-function updateGallery(el, src) {
-    const mainImg = document.getElementById('mainProductImage');
-    mainImg.style.opacity = '0';
-    setTimeout(() => {
-        mainImg.src = src;
-        mainImg.style.opacity = '1';
-    }, 200);
-    
-    document.querySelectorAll('.thumb').forEach(item => {
-        item.classList.remove('active');
-    });
-    el.classList.add('active');
-}
-</script>
-<?php include 'includes/footer.php'; ?>
+<script src="common.js"></script>
+</body>
+</html>

@@ -1,73 +1,54 @@
-<footer class="pt-5 pb-4 mt-0">
-    <div class="container-fluid px-4 px-lg-5">
-        <div class="row gx-5">
-            <div class="col-lg-4 mb-5 mb-lg-0 pe-lg-5">
-                <div class="mb-4">
-                    <img src="<?php echo BASE_URL; ?>public/assets/img/logo.png" alt="Ohemaa Detergents"
-                        style="height: 100px; width: auto; object-fit: contain;">
-                </div>
-                <p class="text-muted font-sans" style="font-size: 0.85rem; max-width: 300px;">
-                    Crafting premium, plant-based cleaning solutions that bring absolute purity to your home while actively supporting and protecting the environment.
-                </p>
-            </div>
-
-            <div class="col-lg-2 col-md-4 mb-5 mb-md-0">
-                <h5 class="footer-heading">Services</h5>
-                <ul class="list-unstyled">
-                    <li><a href="<?php echo BASE_URL; ?>index" class="footer-link">Home</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>shop" class="footer-link">Collection</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>stockists" class="footer-link">Stockists</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>about" class="footer-link">Our Heritage</a></li>
-                    <?php if (isset($_SESSION['customer_id'])): ?>
-                        <li><a href="<?php echo BASE_URL; ?>profile" class="footer-link">My Account</a></li>
-                        <li><a href="#" onclick="logoutUser()" class="footer-link">Logout</a></li>
-                    <?php else: ?>
-                        <li><a href="<?php echo BASE_URL; ?>login" class="footer-link">Login</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>register" class="footer-link">Register</a></li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-
-            <div class="col-lg-2 col-md-4 mb-5 mb-md-0">
-                <h5 class="footer-heading">Assistance</h5>
-                <ul class="list-unstyled">
-                    <li><a href="<?php echo BASE_URL; ?>track_order" class="footer-link">Track Order</a></li>
-                    <li><a href="#" class="footer-link">Shipping & Returns</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>contact" class="footer-link">Contact Us</a></li>
-                </ul>
-            </div>
-
-            <div class="col-lg-4 col-md-4">
-                <h5 class="footer-heading">Newsletter</h5>
-                <p class="text-muted font-sans mb-4" style="font-size: 0.85rem;">
-                    Subscribe to receive communication about new collections, exclusive access, and more.
-                </p>
-                <form class="d-flex border-bottom-black">
-                    <input type="email" class="form-control border-0 px-0 bg-transparent shadow-none font-sans"
-                        placeholder="Email Address" style="font-size: 0.85rem; border-radius: 0;">
-                    <button class="btn btn-link-dark px-2 text-decoration-none border-0" type="button"
-                        style="font-size: 0.75rem;">Join</button>
-                </form>
-            </div>
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <svg class="seal" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+            <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+            <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+            <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+          </svg>
+          OHEMAA
         </div>
-
-        <div class="row mt-5 pt-4 border-top">
-            <div class="col-md-6 text-center text-md-start">
-                <p class="font-sans text-muted mb-0" style="font-size: 0.75rem;">&copy; <?php echo date('Y'); ?> OHEMAA.
-                    ALL RIGHTS RESERVED.</p>
-            </div>
-            <div
-                class="col-md-6 text-center text-md-end mt-3 mt-md-0 d-flex justify-content-center justify-content-md-end gap-3 align-items-center">
-                <span class="font-sans text-muted" style="font-size: 0.7rem;">SECURE PAYMENTS</span>
-                <i class="bi bi-credit-card text-muted"></i>
-                <i class="bi bi-paypal text-muted"></i>
-            </div>
-        </div>
+        <p>Formulated and bottled in Kumasi, Ashanti Region. Cleanliness fit for a queen, since day one.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="<?php echo BASE_URL; ?>about">Heritage</a>
+        <a href="<?php echo BASE_URL; ?>shop">Products</a>
+        <a href="<?php echo BASE_URL; ?>process">Process</a>
+        <a href="<?php echo BASE_URL; ?>stockists">Stockists</a>
+        <a href="#sustainability">Sustainability</a>
+      
+        <?php if (isset($_SESSION['customer_id'])): ?>
+            <a href="<?php echo BASE_URL; ?>profile">My Account</a>
+            <a href="#" onclick="if(window.logoutUser) logoutUser();">Logout</a>
+        <?php else: ?>
+            <a href="<?php echo BASE_URL; ?>login">Login</a>
+            <a href="<?php echo BASE_URL; ?>register">Register</a>
+        <?php endif; ?></div>
+      <div class="foot-col">
+        <h4>Business</h4>
+        <a href="<?php echo BASE_URL; ?>become_stockist">Become a stockist</a>
+        <a href="<?php echo BASE_URL; ?>shop">Private label</a>
+        <a href="<?php echo BASE_URL; ?>contact">Wholesale pricing</a>
+      </div>
+      <div class="foot-col">
+        <h4>Account</h4>
+        <a href="<?php echo BASE_URL; ?>track_order">Track an order</a>
+        <a href="cart.html">Your cart</a>
+        <a href="login.html">Log in / Sign up</a>
+        <a href="<?php echo BASE_URL; ?>contact">Contact us</a>
+      </div>
     </div>
+    <div class="foot-bottom">
+      <span>© 2026 Ohemaa Cleaning Agents. All rights reserved.</span>
+      <div class="kente-strip"></div>
+    </div>
+  </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo BASE_URL; ?>public/assets/js/app.js"></script>
 </body>
-
 </html>

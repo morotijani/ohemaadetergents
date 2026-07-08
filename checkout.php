@@ -47,13 +47,16 @@ foreach ($productsData as $p) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $firstName = trim($_POST['first_name'] ?? '');
-    $lastName = trim($_POST['last_name'] ?? '');
+    $fullName = trim($_POST['first_name'] ?? '');
+    $parts = explode(' ', $fullName, 2);
+    $firstName = $parts[0] ?? '';
+    $lastName = $parts[1] ?? '';
+
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $address = trim($_POST['address'] ?? '');
 
-    if (empty($firstName) || empty($lastName) || empty($email) || empty($address)) {
+    if (empty($firstName) || empty($email) || empty($address)) {
         $error = 'Please fill in all required fields.';
     } else {
         try {
@@ -129,102 +132,97 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 include 'includes/header.php';
 ?>
-
-<div class="container-fluid px-4 px-lg-5 pt-5 mt-5">
-    <div class="row pt-5 mb-5 pb-5 border-bottom border-light">
-        <div class="col-lg-12 text-center">
-            <h1 class="font-serif text-black" style="font-size: 3.5rem;">Checkout</h1>
-        </div>
+<button type="submit" class="btn btn-dark btn-full">Pay GH₵ <?php echo number_format($total, 2); ?></button>wrap">
+    <div class="checkout-steps reveal">
+      <span class="step done">✓ Cart</span>
+      <span class="sep">—</span>
+      <span class="step current">② Checkout</span>
+      <span class="sep">—</span>
+      <span class="step">③ Confirmation</span>
     </div>
-</div>
 
-<div class="container-fluid px-4 px-lg-5 mb-5 pb-5">
-    <?php if ($error): ?>
-        <div class="alert bg-off-white text-danger border border-danger mb-5 rounded-0 font-sans p-3">
+    <form method="POST"><div class="checkout-layout">
+
+      
+      <?php if ($error): ?>
+        <div style="padding: 15px; background: #fee; border-left: 4px solid #c00; margin-bottom: 20px; font-size: 0.9rem; color: #c00;">
             <?php echo htmlspecialchars($error); ?>
         </div>
-    <?php endif; ?>
-    
-    <div class="row">
-        <div class="col-lg-7 pe-lg-5 border-end border-light mb-5 mb-lg-0">
-            <h4 class="font-sans text-uppercase letter-spacing-widest text-black mb-4 fw-600" style="font-size: 0.75rem;">Delivery Information</h4>
-            <form method="POST">
-                <div class="row g-4 mb-5">
-                    <div class="col-md-6">
-                        <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">First Name</label>
-                        <input type="text" name="first_name" class="form-control rounded-0 border-black p-3" value="<?php echo htmlspecialchars($defaultFirstName); ?>" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Last Name</label>
-                        <input type="text" name="last_name" class="form-control rounded-0 border-black p-3" value="<?php echo htmlspecialchars($defaultLastName); ?>" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Email Address</label>
-                        <input type="email" name="email" class="form-control rounded-0 border-black p-3" value="<?php echo htmlspecialchars($defaultEmail); ?>" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Phone Number</label>
-                        <input type="text" name="phone" class="form-control rounded-0 border-black p-3" value="<?php echo htmlspecialchars($defaultPhone); ?>" required>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.65rem;">Delivery Address</label>
-                        <textarea name="address" class="form-control rounded-0 border-black p-3" rows="3" required><?php echo htmlspecialchars($defaultAddress); ?></textarea>
-                    </div>
-                </div>
+      <?php endif; ?>
+      <div class="reveal">
 
-                <h4 class="font-sans text-uppercase letter-spacing-widest text-black mb-4 fw-600 border-top border-light pt-5" style="font-size: 0.75rem;">Payment</h4>
-                <div class="p-4 border border-black mb-4">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <input class="form-check-input rounded-0 mt-0 border-black me-3" type="radio" checked disabled>
-                            <span class="font-sans text-black fw-600" style="font-size: 0.85rem;">Paystack (Card / Mobile Money)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-black w-100 py-3 mt-4">
-                    Confirm & Pay GHS <?php echo number_format($total, 2); ?>
-                </button>
-            </form>
-        </div>
-        
-        <div class="col-lg-5 ps-lg-5">
-            <div class="sticky-top" style="top: 100px;">
-                <h4 class="font-sans text-uppercase letter-spacing-widest text-black mb-4 fw-600" style="font-size: 0.75rem;">Order Summary</h4>
-                
-                <div class="mb-4">
-                    <?php foreach ($products as $p): ?>
-                        <div class="d-flex align-items-center justify-content-between mb-3 border-bottom border-light pb-3">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-off-white me-3" style="width: 50px; height: 60px; padding: 0.25rem;">
-                                    <img src="<?php echo $p['image_url'] ? htmlspecialchars($p['image_url']) : 'https://via.placeholder.com/100?text=O'; ?>" class="w-100 h-100" style="object-fit: contain;">
-                                </div>
-                                <div>
-                                    <span class="font-serif text-black d-block mb-1" style="font-size: 0.95rem;"><?php echo htmlspecialchars($p['name']); ?></span>
-                                    <span class="font-sans text-muted" style="font-size: 0.7rem;">Qty: <?php echo $p['qty']; ?></span>
-                                </div>
-                            </div>
-                            <span class="font-sans text-black" style="font-size: 0.85rem;">GHS <?php echo number_format($p['qty'] * $p['price'], 2); ?></span>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                
-                <div class="d-flex justify-content-between mb-2 font-sans" style="font-size: 0.85rem;">
-                    <span class="text-muted">Subtotal</span>
-                    <span class="text-black">GHS <?php echo number_format($total, 2); ?></span>
-                </div>
-                <div class="d-flex justify-content-between mb-4 font-sans" style="font-size: 0.85rem;">
-                    <span class="text-muted">Shipping</span>
-                    <span class="text-muted italic">Calculated on Pay</span>
-                </div>
-                
-                <div class="d-flex justify-content-between border-top border-black pt-3 font-sans fw-600 text-black">
-                    <span class="text-uppercase letter-spacing-wide" style="font-size: 0.75rem;">Total</span>
-                    <span>GHS <?php echo number_format($total, 2); ?></span>
-                </div>
+        <div class="checkout-block">
+          <h3>Contact information</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="coName">Full name</label>
+              <input id="coName" name="first_name" type="text" value="<?php echo htmlspecialchars($defaultFirstName . ' ' . $defaultLastName); ?>" required>
             </div>
+            <div class="field">
+              <label for="coPhone">Phone number</label>
+              <input id="coPhone" name="phone" type="tel" value="<?php echo htmlspecialchars($defaultPhone); ?>" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="coEmail">Email</label>
+            <input id="coEmail" name="email" type="email" value="<?php echo htmlspecialchars($defaultEmail); ?>" required>
+          </div>
         </div>
-    </div>
-</div>
 
-<?php include 'includes/footer.php'; ?>
+        <div class="checkout-block">
+          <h3>Delivery address</h3>
+          <div class="field">
+            <label for="coAddr">Street address</label>
+            <input id="coAddr" name="address" type="text" value="<?php echo htmlspecialchars($defaultAddress); ?>" placeholder="e.g. 12 Bantama High Street" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="coCity">Town / area</label>
+              <input id="coCity" type="text" value="Bantama, Kumasi">
+            </div>
+            <div class="field">
+              <label for="coRegion">Region</label>
+              <select id="coRegion">
+                <option selected>Ashanti</option>
+                <option>Greater Accra</option>
+                <option>Eastern</option>
+                <option>Central</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="coNote">Delivery note (optional)</label>
+            <input id="coNote" type="text" placeholder="e.g. Gate code, nearby landmark">
+          </div>
+        </div>
+
+        <div class="checkout-block">
+          <h3>Payment method</h3>
+          <div class="payment-option active" onclick="">
+            <div class="radio-dot"></div>
+            <input type="radio" name="payment" style="display:none;" checked>
+            <div><div class="pm-name">Mobile Money</div><div class="pm-desc">Pay instantly with MTN, Vodafone, or AirtelTigo</div></div>
+          </div>
+          <div class="payment-option">
+            <div class="radio-dot"></div>
+            <input type="radio" name="payment" style="display:none;">
+            <div><div class="pm-name">Debit / Credit Card</div><div class="pm-desc">Visa, Mastercard accepted</div></div>
+          </div>
+          <div class="payment-option">
+            <div class="radio-dot"></div>
+            <input type="radio" name="payment" style="display:none;">
+            <div><div class="pm-name">Cash on Delivery</div><div class="pm-desc">Pay when your order arrives</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card reveal">
+        <h3>Order summary</h3>
+        <div class="checkout-summary-items">
+          <div class="mini-line"><span>Multi-Surface Cleaner <span class="qty-tag">×2</span></span><span>GH₵ 56.00</span></div>
+          <div class="mini-line"><span>Dishwashing Liquid <span class="qty-tag">×1</span></span><span>GH₵ 19.00</span></div>
+          <div class="mini-line"><span>Fabric Softener <span class="qty-tag">×1</span></span><span>GH₵ 26.00</span></div>
+        </div>
+        <div class="order-summary-row"><span class="lbl">Subtotal</span><span class="val">GH₵ 101.00</span></div>
+        <div class="order-summary-row"><span class="lbl">Delivery</span><span class="val">GH₵ 15.00</span></div>
+        <div class="order-summary-row" style="border-top:1.5px solid var(--line); font-size:1.05rem;"><span class="lbl" style="font-weight:700; color:var(--ink);">Total</span><s<?php include 'includes/footer.php'; ?>

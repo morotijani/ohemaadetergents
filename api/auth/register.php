@@ -3,6 +3,11 @@ require_once __DIR__ . '/../../src/Database.php';
 require_once __DIR__ . '/../../src/Helpers.php';
 require_once __DIR__ . '/../../includes/mailer.php';
 
+$config = require __DIR__ . '/../../config/config.php';
+if (!defined('BASE_URL')) {
+    define('BASE_URL', $config['app']['url'] . '/');
+}
+
 use App\Database;
 use App\Helpers;
 

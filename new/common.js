@@ -219,13 +219,58 @@ if(filterChips.length){
       filterChips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       const cat = chip.dataset.filter;
+      let visibleCount = 0;
       document.querySelectorAll('[data-category]').forEach(card => {
         const show = cat === 'all' || card.dataset.category === cat;
         card.style.display = show ? '' : 'none';
+        if(show) visibleCount++;
       });
+      const noResults = document.querySelector('.no-results');
+      if(noResults && !document.getElementById('directorySearch')) noResults.classList.toggle('show', visibleCount === 0);
     });
   });
 }
+
+// ---------- Password visibility toggle ----------
+document.querySelectorAll('.pw-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const field = toggle.closest('.pw-field').querySelector('input');
+    const showing = field.type === 'text';
+    field.type = showing ? 'password' : 'text';
+    toggle.textContent = showing ? 'Show' : 'Hide';
+  });
+});
+
+// ---------- Checkout payment options ----------
+document.querySelectorAll('.payment-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    opt.parentElement.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    const radio = opt.querySelector('input[type=radio]');
+    if(radio) radio.checked = true;
+  });
+});
+
+// ---------- Resend verification cooldown ----------
+document.querySelectorAll('.js-resend-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    let seconds = 30;
+    btn.disabled = true;
+    const original = btn.textContent;
+    const timerEl = document.querySelector('.resend-timer');
+    showToast('Verification email sent');
+    const interval = setInterval(() => {
+      if(timerEl) timerEl.textContent = `You can resend in ${seconds}s`;
+      seconds--;
+      if(seconds < 0){
+        clearInterval(interval);
+        btn.disabled = false;
+        btn.textContent = original;
+        if(timerEl) timerEl.textContent = '';
+      }
+    }, 1000);
+  });
+});
 
 // ---------- Track order demo ----------
 const trackForm = document.getElementById('trackForm');

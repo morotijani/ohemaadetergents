@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Ohemaa</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <svg class="seal" viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+        <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+        <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+        <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+      </svg>
+      OHEMAA
+    </a>
+    <div class="nav-side" style="margin-left:auto;">
+      <span style="font-size:0.85rem; color:rgba(26,22,32,0.55); font-weight:600;">🔒 Secure checkout</span>
+    </div>
+  </div>
+</nav>
+
+<section style="padding-top:44px;">
+  <div class="wrap">
+    <div class="checkout-steps reveal">
+      <span class="step done">✓ Cart</span>
+      <span class="sep">—</span>
+      <span class="step current">② Checkout</span>
+      <span class="sep">—</span>
+      <span class="step">③ Confirmation</span>
+    </div>
+
+    <div class="checkout-layout">
+
+      <div class="reveal">
+        <div class="checkout-block">
+          <h3>Contact information</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="coName">Full name</label>
+              <input id="coName" type="text" value="Efua Mensah">
+            </div>
+            <div class="field">
+              <label for="coPhone">Phone number</label>
+              <input id="coPhone" type="tel" value="024 771 2290">
+            </div>
+          </div>
+          <div class="field">
+            <label for="coEmail">Email</label>
+            <input id="coEmail" type="email" value="efua.mensah@email.com">
+          </div>
+        </div>
+
+        <div class="checkout-block">
+          <h3>Delivery address</h3>
+          <div class="field">
+            <label for="coAddr">Street address</label>
+            <input id="coAddr" type="text" value="12 Bantama High Street" placeholder="e.g. 12 Bantama High Street">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="coCity">Town / area</label>
+              <input id="coCity" type="text" value="Bantama, Kumasi">
+            </div>
+            <div class="field">
+              <label for="coRegion">Region</label>
+              <select id="coRegion">
+                <option selected>Ashanti</option>
+                <option>Greater Accra</option>
+                <option>Eastern</option>
+                <option>Central</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="coNote">Delivery note (optional)</label>
+            <input id="coNote" type="text" placeholder="e.g. Gate code, nearby landmark">
+          </div>
+        </div>
+
+        <div class="checkout-block">
+          <h3>Payment method</h3>
+          <div class="payment-option active" onclick="">
+            <div class="radio-dot"></div>
+            <input type="radio" name="payment" style="display:none;" checked>
+            <div><div class="pm-name">Mobile Money</div><div class="pm-desc">Pay instantly with MTN, Vodafone, or AirtelTigo</div></div>
+          </div>
+          <div class="payment-option">
+            <div class="radio-dot"></div>
+            <input type="radio" name="payment" style="display:none;">
+            <div><div class="pm-name">Debit / Credit Card</div><div class="pm-desc">Visa, Mastercard accepted</div></div>
+          </div>
+          <div class="payment-option">
+            <div class="radio-dot"></div>
+            <input type="radio" name="payment" style="display:none;">
+            <div><div class="pm-name">Cash on Delivery</div><div class="pm-desc">Pay when your order arrives</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card reveal">
+        <h3>Order summary</h3>
+        <div class="checkout-summary-items">
+          <div class="mini-line"><span>Multi-Surface Cleaner <span class="qty-tag">×2</span></span><span>GH₵ 56.00</span></div>
+          <div class="mini-line"><span>Dishwashing Liquid <span class="qty-tag">×1</span></span><span>GH₵ 19.00</span></div>
+          <div class="mini-line"><span>Fabric Softener <span class="qty-tag">×1</span></span><span>GH₵ 26.00</span></div>
+        </div>
+        <div class="order-summary-row"><span class="lbl">Subtotal</span><span class="val">GH₵ 101.00</span></div>
+        <div class="order-summary-row"><span class="lbl">Delivery</span><span class="val">GH₵ 15.00</span></div>
+        <div class="order-summary-row" style="border-top:1.5px solid var(--line); font-size:1.05rem;"><span class="lbl" style="font-weight:700; color:var(--ink);">Total</span><span class="val">GH₵ 116.00</span></div>
+        <button class="form-submit btn-full" type="button" id="placeOrderBtn" style="margin-top:18px;">Place order</button>
+        <p class="form-note">By placing your order you agree to our Terms & delivery policy.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer style="margin-top:30px;">
+  <div class="wrap">
+    <div class="foot-bottom" style="border-top:none; padding-top:0;">
+      <span>© 2026 Ohemaa Cleaning Agents. All rights reserved.</span>
+      <div class="kente-strip"></div>
+    </div>
+  </div>
+</footer>
+
+<script src="common.js"></script>
+<script>
+  document.getElementById('placeOrderBtn').addEventListener('click', function(){
+    this.textContent = 'Order placed ✓';
+    this.disabled = true;
+    showToast('Your order has been placed — redirecting to tracking');
+    setTimeout(() => { window.location.href = 'track-order.html'; }, 1400);
+  });
+</script>
+</body>
+</html>

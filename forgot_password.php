@@ -1,52 +1,76 @@
-<?php include 'includes/header.php'; ?>
+<?php
+session_start();
+if (isset($_SESSION['customer_id'])) {
+    header("Location: profile");
+    exit;
+}
+include 'includes/header.php';
+?>
 
-<section class="py-5 bg-off-white" style="min-height: 80vh; display: flex; align-items: center;">
-    <div class="container px-4 mt-5 pt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5 col-xl-4 bg-white p-5 border border-light">
-                <div class="text-center mb-4">
-                    <h2 class="font-serif" style="font-size: 2rem;">Forgot Password</h2>
-                    <p class="font-sans text-muted" style="font-size: 0.9rem;">Enter your email to receive a reset link</p>
-                </div>
 
-                <div id="forgotAlert" class="alert d-none font-sans" style="font-size: 0.85rem; border-radius: 0;"></div>
+<div class="auth-shell">
+  <div class="auth-visual">
+    <svg class="seal" width="56" height="56" viewBox="0 0 60 60" fill="none">
+      <circle cx="30" cy="30" r="29" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+      <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+      <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+      <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+    </svg>
+    <h2>Locked out happens.</h2>
+    <p>Enter the email tied to your account and we'll send a link to get you straight back in.</p>
+  </div>
 
-                <form id="forgotForm">
-                    <div class="mb-4">
-                        <label class="form-label font-sans text-uppercase letter-spacing-wide text-muted" style="font-size: 0.75rem;">Email Address</label>
-                        <input type="email" name="email" class="form-control rounded-0 border-dark p-3 font-sans" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-dark w-100 rounded-0 py-3 font-sans text-uppercase letter-spacing-wide mb-4" id="forgotBtn">
-                        Send Reset Link
-                    </button>
-                    <div class="text-center">
-                        <p class="font-sans text-muted mb-0" style="font-size: 0.85rem;">
-                            Remembered your password? <a href="login" class="text-dark fw-bold text-decoration-none">Sign In</a>
-                        </p>
-                    </div>
-                </form>
-            </div>
+  <div class="auth-form-side">
+    <div class="auth-box">
+
+      <div id="requestState">
+        <h3 style="font-size:1.4rem; margin-bottom:8px;">Forgot your password?</h3>
+        <p style="color:rgba(26,22,32,0.6); font-size:0.92rem; margin-bottom:28px;">No worries — we'll send reset instructions to your email.</p>
+        
+        <div id="fpAlert" style="padding: 15px; margin-bottom: 20px; font-size: 0.9rem; display: none;"></div>
+        <form id="forgotPasswordForm">
+          <div class="field">
+            <label for="fpEmail">Email address</label>
+            <input id="fpEmail" name="email" type="email" placeholder="you@email.com" required>
+          </div>
+          <button class="form-submit btn-full" type="submit">Send reset link</button>
+        </form>
+
+        <p class="auth-foot"><a href="login.html">← Back to log in</a></p>
+      </div>
+
+      <div id="sentState" style="display:none; text-align:center;">
+        <div class="status-icon-circle" style="margin:0 auto 24px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
         </div>
+        <h3 style="font-size:1.3rem; margin-bottom:10px;">Check your email</h3>
+        <p style="color:rgba(26,22,32,0.62); font-size:0.92rem; margin-bottom:26px;">We've sent password reset instructions to your email if an account exists with that address.</p>
+        <a href="reset_password.html" class="btn btn-dark btn-full">I have my reset link</a>
+        <p class="auth-foot">Didn't get it? <a href="resend_verification.html">Resend or check spam</a></p>
+      </div>
+
     </div>
-</section>
+  </div>
+</div>
+
 
 <script>
-document.getElementById('forgotForm').addEventListener('submit', async function(e) {
+document.getElementById('forgotPasswordForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const btn = document.getElementById('forgotBtn');
-    const alertBox = document.getElementById('forgotAlert');
+    const btn = this.querySelector('.form-submit');
+    const alertBox = document.getElementById('fpAlert');
+    const requestState = document.getElementById('requestState');
+    const sentState = document.getElementById('sentState');
     
     btn.disabled = true;
     btn.innerHTML = 'Sending...';
-    alertBox.classList.add('d-none');
-    alertBox.classList.remove('alert-danger', 'alert-success');
+    alertBox.style.display = 'none';
 
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const res = await fetch('api/auth/customer_forgot_password.php', {
+        const res = await fetch('api/auth/forgot_password.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -54,24 +78,25 @@ document.getElementById('forgotForm').addEventListener('submit', async function(
         const result = await res.json();
 
         if (res.ok && result.status === 'success') {
-            alertBox.classList.add('alert-success');
-            alertBox.innerHTML = result.message;
-            alertBox.classList.remove('d-none');
-            this.reset();
+            requestState.style.display = 'none';
+            sentState.style.display = 'block';
         } else {
-            alertBox.classList.add('alert-danger');
-            alertBox.innerText = result.message || 'Failed to send link';
-            alertBox.classList.remove('d-none');
+            alertBox.style.display = 'block';
+            alertBox.style.backgroundColor = '#fee';
+            alertBox.style.borderLeft = '4px solid #c00';
+            alertBox.style.color = '#c00';
+            alertBox.innerText = result.message || 'Failed to send reset link.';
         }
     } catch (error) {
-        alertBox.classList.add('alert-danger');
+        alertBox.style.display = 'block';
+        alertBox.style.backgroundColor = '#fee';
+        alertBox.style.borderLeft = '4px solid #c00';
+        alertBox.style.color = '#c00';
         alertBox.innerText = 'Network error. Please try again.';
-        alertBox.classList.remove('d-none');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = 'Send Reset Link';
+        btn.innerHTML = 'Send reset link';
     }
 });
 </script>
-
 <?php include 'includes/footer.php'; ?>

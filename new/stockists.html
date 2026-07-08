@@ -1,4 +1,48 @@
-<?php include 'includes/header.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find a Stockist — Ohemaa</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <svg class="seal" viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+        <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+        <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+        <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+      </svg>
+      OHEMAA
+    </a>
+    <div class="nav-main">
+      <div class="nav-links" id="navLinks">
+        <a href="heritage.html">Heritage</a>
+        <a href="products.html">Products</a>
+        <a href="process.html">Process</a>
+        <a href="stockists.html" class="active">Stockists</a>
+        <a href="index.html#sustainability">Sustainability</a>
+        <a href="contact.html">Contact</a>
+        <a href="track-order.html">Track Order</a>
+        <a href="become-a-stockist.html" class="nav-cta">Become a Stockist</a>
+      </div>
+    </div>
+    <div class="nav-side">
+      <a href="cart.html" class="icon-btn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <span class="badge js-cart-badge" style="display:none;">0</span>
+      </a>
+      <a href="login.html" class="icon-btn" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
 
 <header class="page-hero">
   <svg class="page-hero-watermark" viewBox="0 0 60 60" fill="none">
@@ -7,7 +51,7 @@
     <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#E7C766"/>
   </svg>
   <div class="wrap">
-    <div class="breadcrumb"><a href="<?php echo BASE_URL; ?>index">Home</a><span>/</span><span>Stockists</span></div>
+    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Stockists</span></div>
     <span class="eyebrow">200+ retail partners</span>
     <h1>Find Ohemaa near you.</h1>
     <p class="lede">From provision shops to hotels, here's where you can pick up the full Ohemaa range today.</p>
@@ -148,9 +192,55 @@
       <span class="eyebrow" style="justify-content:center;">Not on this list yet?</span>
       <h2>Bring Ohemaa to your shop.</h2>
       <p style="margin:16px auto 28px;">We're adding new retail partners every month. Apply and we'll route you to your nearest supply line.</p>
-      <a href="<?php echo BASE_URL; ?>become_stockist" class="btn btn-dark">Become a stockist</a>
+      <a href="become-a-stockist.html" class="btn btn-dark">Become a stockist</a>
     </div>
   </div>
 </section>
 
-<?php include 'includes/footer.php'; ?>
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <svg class="seal" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+            <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+            <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+            <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+          </svg>
+          OHEMAA
+        </div>
+        <p>Formulated and bottled in Kumasi, Ashanti Region. Cleanliness fit for a queen, since day one.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="heritage.html">Heritage</a>
+        <a href="products.html">Products</a>
+        <a href="process.html">Process</a>
+        <a href="stockists.html">Stockists</a>
+        <a href="index.html#sustainability">Sustainability</a>
+      </div>
+      <div class="foot-col">
+        <h4>Business</h4>
+        <a href="become-a-stockist.html">Become a stockist</a>
+        <a href="products.html">Private label</a>
+        <a href="contact.html">Wholesale pricing</a>
+      </div>
+      <div class="foot-col">
+        <h4>Account</h4>
+        <a href="track-order.html">Track an order</a>
+        <a href="cart.html">Your cart</a>
+        <a href="login.html">Log in / Sign up</a>
+        <a href="contact.html">Contact us</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Ohemaa Cleaning Agents. All rights reserved.</span>
+      <div class="kente-strip"></div>
+    </div>
+  </div>
+</footer>
+
+<script src="common.js"></script>
+</body>
+</html>

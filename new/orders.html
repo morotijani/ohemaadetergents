@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders — Ohemaa</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <svg class="seal" viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+        <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+        <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+        <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+      </svg>
+      OHEMAA
+    </a>
+    <div class="nav-main">
+      <div class="nav-links" id="navLinks">
+        <a href="heritage.html">Heritage</a>
+        <a href="products.html">Products</a>
+        <a href="process.html">Process</a>
+        <a href="stockists.html">Stockists</a>
+        <a href="index.html#sustainability">Sustainability</a>
+        <a href="contact.html">Contact</a>
+        <a href="track-order.html">Track Order</a>
+        <a href="become-a-stockist.html" class="nav-cta">Become a Stockist</a>
+      </div>
+    </div>
+    <div class="nav-side">
+      <a href="cart.html" class="icon-btn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+        <span class="badge js-cart-badge" style="display:none;">0</span>
+      </a>
+      <a href="profile.html" class="icon-btn active" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero" style="padding:48px 0 40px;">
+  <svg class="page-hero-watermark" viewBox="0 0 60 60" fill="none">
+    <circle cx="30" cy="30" r="29" fill="none" stroke="#E7C766" stroke-width="1"/>
+    <circle cx="30" cy="30" r="22" fill="none" stroke="#E7C766" stroke-width="1"/>
+    <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#E7C766"/>
+  </svg>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>My Account</span><span>/</span><span>Orders</span></div>
+    <h1 style="font-size:2rem; margin-top:14px;">Your orders</h1>
+  </div>
+</header>
+
+<section style="padding-top:50px;">
+  <div class="wrap account-shell">
+
+    <div class="account-sidebar reveal">
+      <div class="account-avatar">EM</div>
+      <div class="account-who">
+        <span class="name">Efua Mensah</span>
+        <span class="email">efua.mensah@email.com</span>
+      </div>
+      <nav class="account-nav">
+        <a href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Profile</a>
+        <a href="orders.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/></svg>Orders</a>
+        <a href="settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>Settings</a>
+        <a href="track-order.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="15" height="12" rx="1"/><path d="M16 10h4l3 3v5h-7z"/><circle cx="6" cy="20" r="2"/><circle cx="18" cy="20" r="2"/></svg>Track an order</a>
+        <a href="login.html" class="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Log out</a>
+      </nav>
+    </div>
+
+    <div class="account-content reveal">
+      <h2>Order history</h2>
+      <p class="sub">12 orders since 2024. Track any active delivery from the list below.</p>
+
+      <div class="filter-bar">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="processing">Processing</button>
+        <button class="filter-chip" data-filter="shipped">Shipped</button>
+        <button class="filter-chip" data-filter="delivered">Delivered</button>
+        <button class="filter-chip" data-filter="cancelled">Cancelled</button>
+      </div>
+
+      <div style="background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:6px 28px;">
+
+        <div class="order-hist-item" data-category="shipped">
+          <div>
+            <div class="order-hist-id">OHM-48213 · Jul 5, 2026</div>
+            <div class="order-hist-items">Multi-Surface Cleaner ×2, Dishwashing Liquid ×1</div>
+          </div>
+          <span class="status-badge status-shipped">Shipped</span>
+          <span class="order-hist-total">GH₵ 91.00</span>
+          <a href="track-order.html" class="btn btn-outline btn-sm">Track</a>
+        </div>
+
+        <div class="order-hist-item" data-category="delivered">
+          <div>
+            <div class="order-hist-id">OHM-47750 · Jun 22, 2026</div>
+            <div class="order-hist-items">Liquid Detergent ×1, Fabric Softener ×1</div>
+          </div>
+          <span class="status-badge status-delivered">Delivered</span>
+          <span class="order-hist-total">GH₵ 60.00</span>
+          <a href="product-detail.html" class="btn btn-outline btn-sm">Reorder</a>
+        </div>
+
+        <div class="order-hist-item" data-category="delivered">
+          <div>
+            <div class="order-hist-id">OHM-46980 · Jun 3, 2026</div>
+            <div class="order-hist-items">Household Starter Set ×1</div>
+          </div>
+          <span class="status-badge status-delivered">Delivered</span>
+          <span class="order-hist-total">GH₵ 119.00</span>
+          <a href="product-detail.html" class="btn btn-outline btn-sm">Reorder</a>
+        </div>
+
+        <div class="order-hist-item" data-category="processing">
+          <div>
+            <div class="order-hist-id">OHM-48490 · Jul 7, 2026</div>
+            <div class="order-hist-items">Disinfectant Bleach ×3</div>
+          </div>
+          <span class="status-badge status-processing">Processing</span>
+          <span class="order-hist-total">GH₵ 66.00</span>
+          <a href="track-order.html" class="btn btn-outline btn-sm">Track</a>
+        </div>
+
+        <div class="order-hist-item" data-category="cancelled">
+          <div>
+            <div class="order-hist-id">OHM-45102 · May 14, 2026</div>
+            <div class="order-hist-items">Dishwashing Liquid ×2</div>
+          </div>
+          <span class="status-badge status-cancelled">Cancelled</span>
+          <span class="order-hist-total">GH₵ 38.00</span>
+          <a href="contact.html" class="btn btn-outline btn-sm">Get help</a>
+        </div>
+
+      </div>
+
+      <div class="no-results reveal" style="margin-top:20px;">
+        <p>No orders match this filter.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand">
+          <svg class="seal" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/>
+            <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/>
+            <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/>
+            <circle cx="30" cy="30" r="4" fill="#2B1B4D"/>
+          </svg>
+          OHEMAA
+        </div>
+        <p>Formulated and bottled in Kumasi, Ashanti Region. Cleanliness fit for a queen, since day one.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="heritage.html">Heritage</a>
+        <a href="products.html">Products</a>
+        <a href="process.html">Process</a>
+        <a href="stockists.html">Stockists</a>
+        <a href="index.html#sustainability">Sustainability</a>
+      </div>
+      <div class="foot-col">
+        <h4>Business</h4>
+        <a href="become-a-stockist.html">Become a stockist</a>
+        <a href="products.html">Private label</a>
+        <a href="contact.html">Wholesale pricing</a>
+      </div>
+      <div class="foot-col">
+        <h4>Account</h4>
+        <a href="track-order.html">Track an order</a>
+        <a href="cart.html">Your cart</a>
+        <a href="login.html">Log in / Sign up</a>
+        <a href="contact.html">Contact us</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Ohemaa Cleaning Agents. All rights reserved.</span>
+      <div class="kente-strip"></div>
+    </div>
+  </div>
+</footer>
+
+<script src="common.js"></script>
+</body>
+</html>
