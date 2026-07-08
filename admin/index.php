@@ -130,7 +130,7 @@
                 <!-- Top products will be loaded here -->
             </div>
             <div class="mt-auto pt-3">
-                <a href="/ohemaadetergents/admin/products/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Review Catalog</a>
+                <a href="<?php echo BASE_URL; ?>admin/products/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Review Catalog</a>
             </div>
         </div>
     </div>
@@ -143,7 +143,7 @@
                 <!-- Top customers will be loaded here -->
             </div>
             <div class="mt-auto pt-3">
-                <a href="/ohemaadetergents/admin/customers/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Customer CRM</a>
+                <a href="<?php echo BASE_URL; ?>admin/customers/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Customer CRM</a>
             </div>
         </div>
     </div>
@@ -156,7 +156,7 @@
                 <!-- Low stock items will be loaded here -->
             </div>
             <div class="mt-auto pt-3">
-                <a href="/ohemaadetergents/admin/products/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">View Inventory</a>
+                <a href="<?php echo BASE_URL; ?>admin/products/index" class="btn-ohemaa-outline w-100 text-center text-decoration-none">View Inventory</a>
             </div>
         </div>
     </div>
@@ -168,7 +168,7 @@
         <div class="ohemaa-card p-0 overflow-hidden h-100">
             <div class="p-4 d-flex justify-content-between align-items-center border-bottom" style="border-color: var(--card-border) !important;">
                 <h4 class="mb-0" style="font-size: 18px; font-weight: 400;">Recent Orders</h4>
-                <a href="/ohemaadetergents/admin/orders/index" class="btn-ohemaa-outline text-decoration-none" style="padding: 4px 12px; font-size: 13px;">View All</a>
+                <a href="<?php echo BASE_URL; ?>admin/orders/index" class="btn-ohemaa-outline text-decoration-none" style="padding: 4px 12px; font-size: 13px;">View All</a>
             </div>
             <div class="table-responsive">
                 <table class="table align-middle mb-0">
@@ -199,7 +199,7 @@
                 <!-- Expenditures will be loaded here -->
             </div>
             <div class="mt-auto pt-3">
-                <a href="/ohemaadetergents/admin/expenditure" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Manage Finances</a>
+                <a href="<?php echo BASE_URL; ?>admin/expenditure" class="btn-ohemaa-outline w-100 text-center text-decoration-none">Manage Finances</a>
             </div>
         </div>
     </div>
@@ -274,7 +274,7 @@ async function loadDashboard() {
             const topList = document.getElementById('topPerformersList');
             if (stats.top_performers.length > 0) {
                 topList.innerHTML = stats.top_performers.map(p => {
-                    const imgUrl = p.image_url ? `/ohemaadetergents/${p.image_url}` : 'https://via.placeholder.com/40';
+                    const imgUrl = p.image_url ? `${BASE_URL}/${p.image_url}` : 'https://via.placeholder.com/40';
                     return `
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="d-flex align-items-center" style="max-width: 70%;">
@@ -331,7 +331,7 @@ async function loadDashboard() {
                             <td>GHS ${parseFloat(o.total_amount).toFixed(2)}</td>
                             <td><span class="badge ${statusClass}" style="text-transform: capitalize;">${o.status}</span></td>
                             <td class="pe-4 text-end">
-                                <a href="/ohemaadetergents/admin/orders/index?id=${o.id}&token=${token}" class="icon-btn d-inline-flex">
+                                <a href="<?php echo BASE_URL; ?>admin/orders/index?id=${o.id}&token=${token}" class="icon-btn d-inline-flex">
                                     <span class="material-symbols-outlined" style="font-size: 18px;">visibility</span>
                                 </a>
                             </td>

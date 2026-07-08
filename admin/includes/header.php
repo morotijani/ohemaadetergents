@@ -1,5 +1,9 @@
 <?php
-$apiBase = '/ohemaadetergents/api';
+$config = require_once __DIR__ . '/../../config/config.php';
+if (!defined('BASE_URL')) {
+    define('BASE_URL', $config['app']['url'] . '/');
+}
+$apiBase = BASE_URL . 'api';
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -14,6 +18,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
+        const BASE_URL = '<?php echo rtrim(BASE_URL, '/'); ?>';
         // Apply theme early to prevent flash
         const savedTheme = localStorage.getItem('admin_theme');
         if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -350,14 +355,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
         function checkAuth() {
             if (!localStorage.getItem('admin_token')) {
-                window.location.href = '/ohemaadetergents/admin/login';
+                window.location.href = `${BASE_URL}/admin/login';
             }
         }
         
         function logout() {
             localStorage.removeItem('admin_token');
             localStorage.removeItem('admin_user');
-            window.location.href = '/ohemaadetergents/admin/login';
+            window.location.href = `${BASE_URL}/admin/login';
         }
 
         function toggleTheme() {
@@ -458,7 +463,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 <?php if (!isset($hideSidebar) || !$hideSidebar): ?>
     <div class="topbar">
-        <a href="/ohemaadetergents/admin/index" class="logo-area">
+        <a href="<?php echo BASE_URL; ?>admin/index" class="logo-area">
             <span style="font-weight: 500;">Ohemaa Account</span>
         </a>
         
@@ -477,28 +482,28 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2 mt-2" style="min-width: 280px; border-radius: 12px;">
                     <li class="px-4 py-2 border-bottom mb-2"><h6 class="mb-0 fw-bold">Notifications</h6></li>
-                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="/ohemaadetergents/admin/orders/index">
+                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="<?php echo BASE_URL; ?>admin/orders/index">
                         <div class="rounded-circle bg-primary-subtle p-2 me-3"><span class="material-symbols-outlined text-primary">shopping_cart</span></div>
                         <div>
                             <div class="fw-bold small" id="notifOrdersText">0 New Orders</div>
                             <div class="text-muted" style="font-size: 11px;">Awaiting fulfillment</div>
                         </div>
                     </a></li>
-                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="/ohemaadetergents/admin/reviews/index">
+                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="<?php echo BASE_URL; ?>admin/reviews/index">
                         <div class="rounded-circle bg-warning-subtle p-2 me-3"><span class="material-symbols-outlined text-warning">reviews</span></div>
                         <div>
                             <div class="fw-bold small" id="notifReviewsText">0 New Reviews</div>
                             <div class="text-muted" style="font-size: 11px;">Pending moderation</div>
                         </div>
                     </a></li>
-                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="/ohemaadetergents/admin/products/index">
+                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="<?php echo BASE_URL; ?>admin/products/index">
                         <div class="rounded-circle bg-danger-subtle p-2 me-3"><span class="material-symbols-outlined text-danger">inventory_2</span></div>
                         <div>
                             <div class="fw-bold small" id="notifStockText">0 Low Stock Items</div>
                             <div class="text-muted" style="font-size: 11px;">Inventory alert</div>
                         </div>
                     </a></li>
-                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="/ohemaadetergents/admin/contact/index">
+                    <li><a class="dropdown-item d-flex align-items-center py-3 px-4" href="<?php echo BASE_URL; ?>admin/contact/index">
                         <div class="rounded-circle bg-info-subtle p-2 me-3"><span class="material-symbols-outlined text-info">mail</span></div>
                         <div>
                             <div class="fw-bold small" id="notifMessagesText">0 New Messages</div>
@@ -506,7 +511,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </div>
                     </a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-center small text-primary fw-bold py-2" href="/ohemaadetergents/admin/index">View Dashboard</a></li>
+                    <li><a class="dropdown-item text-center small text-primary fw-bold py-2" href="<?php echo BASE_URL; ?>admin/index">View Dashboard</a></li>
                 </ul>
             </div>
 
@@ -526,56 +531,56 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
     <div class="layout-container">
         <div class="sidebar">
-            <a href="/ohemaadetergents/admin/index" class="<?php echo $_SERVER['SCRIPT_NAME'] == '/ohemaadetergents/admin/index.php' ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/index" class="<?php echo $_SERVER['SCRIPT_NAME'] == `${BASE_URL}/admin/index.php' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">home</span> Home
             </a>
-            <a href="/ohemaadetergents/admin/products/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/products/') !== false ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/products/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/products/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">inventory_2</span> Products
             </a>
-            <a href="/ohemaadetergents/admin/reviews/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/reviews/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
+            <a href="<?php echo BASE_URL; ?>admin/reviews/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/reviews/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <span class="material-symbols-outlined">reviews</span> Reviews
                 </div>
                 <span id="sidebarReviewBadge" class="badge rounded-pill bg-warning text-dark d-none" style="font-size: 10px;">0</span>
             </a>
-            <a href="/ohemaadetergents/admin/categories/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/categories/') !== false ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/categories/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/categories/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">category</span> Categories
             </a>
-            <a href="/ohemaadetergents/admin/orders/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/orders/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
+            <a href="<?php echo BASE_URL; ?>admin/orders/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/orders/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <span class="material-symbols-outlined">local_shipping</span> Orders
                 </div>
                 <span id="sidebarOrderBadge" class="badge rounded-pill bg-danger d-none" style="font-size: 10px;">0</span>
             </a>
-            <a href="/ohemaadetergents/admin/expenditure" class="<?php echo $currentPage == 'expenditure.php' || $currentPage == 'expenditure' ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/expenditure" class="<?php echo $currentPage == 'expenditure.php' || $currentPage == 'expenditure' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">payments</span> Expenditure
             </a>
-            <a href="/ohemaadetergents/admin/contact/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/contact/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
+            <a href="<?php echo BASE_URL; ?>admin/contact/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/contact/') !== false ? 'active' : ''; ?> d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <span class="material-symbols-outlined">mail</span> Messages
                 </div>
                 <span id="sidebarMessageBadge" class="badge rounded-pill bg-info text-white d-none" style="font-size: 10px;">0</span>
             </a>
-            <a href="/ohemaadetergents/admin/customers/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/customers/') !== false ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/customers/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/customers/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">group</span> Customers
             </a>
-            <a href="/ohemaadetergents/admin/coupons/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/coupons/') !== false ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/coupons/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/coupons/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">sell</span> Coupons
             </a>
-            <a href="/ohemaadetergents/admin/admins/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/admins/') !== false ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/admins/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/admins/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">admin_panel_settings</span> Admins
             </a>
-            <a href="/ohemaadetergents/admin/logs/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/logs/') !== false ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/logs/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/logs/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">history</span> Activity Logs
             </a>
-            <a href="/ohemaadetergents/admin/help" class="<?php echo $currentPage == 'help.php' || $currentPage == 'help' ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/help" class="<?php echo $currentPage == 'help.php' || $currentPage == 'help' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">help_center</span> Help Center
             </a>
             <hr class="mx-3" style="border-color: var(--card-border);">
-            <a href="/ohemaadetergents/admin/profile" class="<?php echo $currentPage == 'profile.php' || $currentPage == 'profile' ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/profile" class="<?php echo $currentPage == 'profile.php' || $currentPage == 'profile' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">person</span> Profile
             </a>
-            <a href="/ohemaadetergents/admin/settings" class="<?php echo $currentPage == 'settings.php' || $currentPage == 'settings' ? 'active' : ''; ?>">
+            <a href="<?php echo BASE_URL; ?>admin/settings" class="<?php echo $currentPage == 'settings.php' || $currentPage == 'settings' ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">settings</span> Settings
             </a>
         </div>
@@ -596,7 +601,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === 'success' && data.data.profile_image) {
-                            const imgHtml = `<img src="/ohemaadetergents/${data.data.profile_image}" class="w-100 h-100 object-fit-cover rounded-circle">`;
+                            const imgHtml = `<img src="<?php echo BASE_URL; ?>${data.data.profile_image}" class="w-100 h-100 object-fit-cover rounded-circle">`;
                             if (avatar) avatar.innerHTML = imgHtml;
                         }
                     })

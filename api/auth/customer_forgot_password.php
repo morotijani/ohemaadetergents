@@ -33,7 +33,7 @@ try {
         $updateStmt = $db->prepare("UPDATE customers SET reset_token = ?, reset_token_expires_at = ? WHERE id = ?");
         $updateStmt->execute([$resetToken, $expiresAt, $customer['id']]);
 
-        $resetUrl = "http://" . $_SERVER['HTTP_HOST'] . "/ohemaadetergents/reset_password?token=" . $resetToken;
+        $resetUrl = BASE_URL . "reset_password?token=" . $resetToken;
         $subject = "Password Reset Request - Ohemaa Detergents";
         $body = "
         <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #000;'>

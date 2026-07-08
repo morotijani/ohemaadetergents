@@ -3,7 +3,7 @@
 
 <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
     <h2 class="mb-0" style="font-weight: 400; font-size: 28px;">Bulk Inventory Editor</h2>
-    <a href="/ohemaadetergents/admin/products/index" class="btn-ohemaa-outline d-flex align-items-center text-decoration-none">
+    <a href="<?php echo BASE_URL; ?>admin/products/index" class="btn-ohemaa-outline d-flex align-items-center text-decoration-none">
         <span class="material-symbols-outlined me-2" style="font-size: 20px;">inventory_2</span> Back to Products
     </a>
 </div>

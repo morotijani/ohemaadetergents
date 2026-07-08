@@ -2,6 +2,10 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+$config = require_once __DIR__ . '/../config/config.php';
+if (!defined('BASE_URL')) {
+    define('BASE_URL', $config['app']['url'] . '/');
+}
 require_once __DIR__ . '/../src/Cart.php';
 $cartObj = new \App\Cart();
 $cartCount = $cartObj->count();
@@ -15,8 +19,9 @@ $cartCount = $cartObj->count();
     <title>Ohemaa Detergents</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/ohemaadetergents/public/assets/css/main.css">
-    <link rel="icon" href="/ohemaadetergents/public/assets/img/logo.png" type="image/png">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/assets/css/main.css">
+    <link rel="icon" href="<?php echo BASE_URL; ?>public/assets/img/logo.png" type="image/png">
+    <script>const BASE_URL = '<?php echo rtrim(BASE_URL, '/'); ?>';</script>
 </head>
 
 <body>
@@ -32,8 +37,8 @@ $cartCount = $cartObj->count();
 
             <!-- Brand -->
             <a class="navbar-brand mx-auto mx-lg-0 absolute-center-mobile d-flex align-items-center gap-2"
-                href="/ohemaadetergents/index">
-                <img src="/ohemaadetergents/public/assets/img/logo.png" alt="Ohemaa Detergents"
+                href="<?php echo BASE_URL; ?>index">
+                <img src="<?php echo BASE_URL; ?>public/assets/img/logo.png" alt="Ohemaa Detergents"
                     style="height: 45px; width: auto; object-fit: contain;">
                 <span class="d-none d-md-block font-serif text-black mb-0"
                     style="font-size: 1.15rem; letter-spacing: 0.02em;">Ohemaa Detergents</span>
@@ -42,11 +47,11 @@ $cartCount = $cartObj->count();
             <!-- Mobile Cart & Auth -->
             <div class="d-lg-none position-relative d-flex gap-3 align-items-center mt-1">
                 <?php if (isset($_SESSION['customer_id'])): ?>
-                    <a href="/ohemaadetergents/profile" class="nav-link text-dark" title="Account"><i class="bi bi-person fs-4"></i></a>
+                    <a href="<?php echo BASE_URL; ?>profile" class="nav-link text-dark" title="Account"><i class="bi bi-person fs-4"></i></a>
                 <?php else: ?>
-                    <a href="/ohemaadetergents/login" class="nav-link text-dark" title="Login"><i class="bi bi-person fs-4"></i></a>
+                    <a href="<?php echo BASE_URL; ?>login" class="nav-link text-dark" title="Login"><i class="bi bi-person fs-4"></i></a>
                 <?php endif; ?>
-                <a href="/ohemaadetergents/cart" class="nav-link text-dark position-relative" title="Bag">
+                <a href="<?php echo BASE_URL; ?>cart" class="nav-link text-dark position-relative" title="Bag">
                     <i class="bi bi-bag fs-4"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size: 0.6rem; padding: 0.25em 0.4em; transform: translate(-30%, 10%) !important;">
                         <span id="cartBadgeMobile"><?php echo $cartCount; ?></span>
@@ -58,30 +63,30 @@ $cartCount = $cartObj->count();
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav gap-2 gap-lg-4 mt-4 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/ohemaadetergents/index">Home</a>
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/ohemaadetergents/shop">Shop</a>
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>shop">Shop</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/ohemaadetergents/stockists">Stockists</a>
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>stockists">Stockists</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/ohemaadetergents/about">Our Heritage</a>
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>about">Our Heritage</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/ohemaadetergents/contact">Contact</a>
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>contact">Contact</a>
                     </li>
                 </ul>
 
                 <div class="d-none d-lg-flex align-items-center gap-4">
                     <?php if (isset($_SESSION['customer_id'])): ?>
-                        <a href="/ohemaadetergents/profile" class="nav-link">ACCOUNT</a>
+                        <a href="<?php echo BASE_URL; ?>profile" class="nav-link">ACCOUNT</a>
                     <?php else: ?>
-                        <a href="/ohemaadetergents/login" class="nav-link">LOGIN</a>
+                        <a href="<?php echo BASE_URL; ?>login" class="nav-link">LOGIN</a>
                     <?php endif; ?>
-                    <a href="/ohemaadetergents/track_order" class="nav-link">Track Order</a>
-                    <a href="/ohemaadetergents/cart" class="nav-link">
+                    <a href="<?php echo BASE_URL; ?>track_order" class="nav-link">Track Order</a>
+                    <a href="<?php echo BASE_URL; ?>cart" class="nav-link">
                         BAG (<span id="cartBadge"><?php echo $cartCount; ?></span>)
                     </a>
                 </div>
@@ -108,7 +113,7 @@ $cartCount = $cartObj->count();
                 btn.innerHTML = 'Adding...';
             }
             try {
-                const res = await fetch('/ohemaadetergents/cart_action', {
+                const res = await fetch(`${BASE_URL}/cart_action', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'add', product_id: productId, qty: qty })
@@ -143,7 +148,7 @@ $cartCount = $cartObj->count();
 
         async function logoutUser() {
             try {
-                const res = await fetch('/ohemaadetergents/api/auth/customer_logout.php', { method: 'POST' });
+                const res = await fetch(`${BASE_URL}/api/auth/customer_logout.php', { method: 'POST' });
                 const result = await res.json();
                 if (res.ok && result.status === 'success') {
                     window.location.href = result.data.redirect;

@@ -4,7 +4,7 @@
 <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
     <h2 class="mb-0" style="font-weight: 400; font-size: 28px;">Products</h2>
     <div class="d-flex gap-2">
-        <a href="/ohemaadetergents/admin/products/bulk" class="btn-ohemaa-outline d-flex align-items-center text-decoration-none">
+        <a href="<?php echo BASE_URL; ?>admin/products/bulk" class="btn-ohemaa-outline d-flex align-items-center text-decoration-none">
             <span class="material-symbols-outlined me-2" style="font-size: 20px;">batch_prediction</span> Bulk Edit
         </a>
         <button class="btn-ohemaa d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreateModal()">
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     document.getElementById('productModal').addEventListener('hidden.bs.modal', function () {
         if (window.returnToViewOnClose) {
-            window.location.href = '/ohemaadetergents/admin/products/view?id=' + window.returnToViewOnClose;
+            window.location.href = `${BASE_URL}/admin/products/view?id=' + window.returnToViewOnClose;
         }
     });
 
@@ -203,7 +203,7 @@ function renderPreviews() {
         div.className = 'col-3 position-relative';
         div.innerHTML = `
             <div class="ratio ratio-1x1">
-                <img src="/ohemaadetergents/${imgUrl}" class="rounded-3 object-fit-cover shadow-sm border">
+                <img src="<?php echo BASE_URL; ?>${imgUrl}" class="rounded-3 object-fit-cover shadow-sm border">
             </div>
             <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center" style="width:20px; height:20px;" onclick="removeExistingImage(${index})">
                 <span class="material-symbols-outlined" style="font-size: 14px;">close</span>
@@ -280,11 +280,11 @@ function renderTable(filter = '') {
         tr.className = 'ohemaa-list-item';
         tr.style.display = 'table-row'; // Reset to table row behavior
         
-        const imgUrl = p.image_url ? `/ohemaadetergents/${p.image_url}` : 'https://via.placeholder.com/40';
+        const imgUrl = p.image_url ? `${BASE_URL}/${p.image_url}` : 'https://via.placeholder.com/40';
         tr.innerHTML = `
             <td class="px-4 py-3"><img src="${imgUrl}" alt="img" width="48" height="48" class="rounded object-fit-cover shadow-sm border" style="border-color: var(--card-border) !important;"></td>
             <td class="px-4 py-3 fw-medium text-dark" style="font-size: 15px;">
-                <a href="/ohemaadetergents/admin/products/view?id=${p.id}" class="text-decoration-none text-dark hover-primary">${p.name}</a>
+                <a href="<?php echo BASE_URL; ?>admin/products/view?id=${p.id}" class="text-decoration-none text-dark hover-primary">${p.name}</a>
             </td>
             <td class="px-4 py-3 text-muted">${p.category_name || '-'}</td>
             <td class="px-4 py-3 text-muted">GHS ${parseFloat(p.price).toFixed(2)}</td>

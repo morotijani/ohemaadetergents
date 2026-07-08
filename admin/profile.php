@@ -95,7 +95,7 @@ async function loadProfile() {
             
             const display = document.getElementById('profileImageDisplay');
             if (data.data.profile_image) {
-                display.innerHTML = `<img src="/ohemaadetergents/${data.data.profile_image}" class="w-100 h-100 object-fit-cover">`;
+                display.innerHTML = `<img src="<?php echo BASE_URL; ?>${data.data.profile_image}" class="w-100 h-100 object-fit-cover">`;
             } else {
                 display.innerText = data.data.name.charAt(0).toUpperCase();
             }
@@ -205,11 +205,11 @@ async function uploadProfileImage(input) {
         showToast(data.message, data.status === 'success' ? 'success' : 'error');
         
         if (data.status === 'success') {
-            display.innerHTML = `<img src="/ohemaadetergents/${data.data.image_url}" class="w-100 h-100 object-fit-cover">`;
+            display.innerHTML = `<img src="<?php echo BASE_URL; ?>${data.data.image_url}" class="w-100 h-100 object-fit-cover">`;
             // Update topbar avatar if possible
             const topbarAvatar = document.getElementById('userAvatar');
             if (topbarAvatar) {
-                topbarAvatar.innerHTML = `<img src="/ohemaadetergents/${data.data.image_url}" class="w-100 h-100 object-fit-cover">`;
+                topbarAvatar.innerHTML = `<img src="<?php echo BASE_URL; ?>${data.data.image_url}" class="w-100 h-100 object-fit-cover">`;
             }
         } else {
             display.innerHTML = originalContent;

@@ -37,7 +37,7 @@ try {
         $updateStmt = $db->prepare("UPDATE customers SET verification_token = ? WHERE id = ?");
         $updateStmt->execute([$verificationToken, $customer['id']]);
 
-        $verifyUrl = "http://" . $_SERVER['HTTP_HOST'] . "/ohemaadetergents/verify?token=" . $verificationToken;
+        $verifyUrl = BASE_URL . "verify?token=" . $verificationToken;
         $subject = "Verify Your Account - Ohemaa Detergents";
         $body = "
         <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #000;'>

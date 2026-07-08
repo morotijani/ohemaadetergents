@@ -31,6 +31,9 @@ if (!function_exists('loadEnv')) {
 loadEnv(__DIR__ . '/../.env');
 
 return [
+    'app' => [
+        'url' => rtrim($_ENV['APP_URL'] ?? '/ohemaadetergents', '/'),
+    ],
     'db' => [
         'host' => $_ENV['DB_HOST'] ?? '127.0.0.1',
         'port' => $_ENV['DB_PORT'] ?? '3306',

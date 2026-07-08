@@ -93,10 +93,11 @@ if ($result && $result['status'] === true && $result['data']['status'] === 'succ
             <p style='font-size: 14px; font-weight: 300; line-height: 1.6; margin-bottom: 30px;'>
                 " . nl2br(htmlspecialchars($orderData['shipping_address'])) . "
             </p>
-
-            <a href='http://" . $_SERVER['HTTP_HOST'] . "/ohemaadetergents/track_order?tracking_number=" . urlencode($reference) . "' style='display: inline-block; padding: 15px 30px; background-color: #000; color: #fff; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: 500;'>
-                Track Order
-            </a>
+            <div style='text-align: center; margin-top: 30px;'>
+                <a href='" . BASE_URL . "track_order?tracking_number=" . urlencode($reference) . "' style='display: inline-block; padding: 15px 30px; background-color: #000; color: #fff; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: 500;'>
+                    Track Your Order
+                </a>
+            </div>
             <hr style='border: none; border-top: 1px solid #eee; margin: 40px 0;'>
             <p style='font-size: 11px; color: #666;'>If you have any questions, please reply to this email.</p>
         </div>";

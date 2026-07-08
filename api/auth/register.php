@@ -51,7 +51,7 @@ try {
     $stmt->execute([$customerUuid, $firstName, $lastName, $email, $hashedPassword, $phone, $address, $verificationToken]);
 
     // Send verification email
-    $verifyUrl = "http://" . $_SERVER['HTTP_HOST'] . "/ohemaadetergents/verify?token=" . $verificationToken;
+    $verifyUrl = BASE_URL . "verify?token=" . $verificationToken;
     $subject = "Verify Your Account - Ohemaa Detergents";
     $body = "
     <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #000;'>

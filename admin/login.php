@@ -5,7 +5,7 @@ include 'includes/header.php';
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="ohemaa-card" style="width: 100%; max-width: 450px; padding: 48px 40px 36px;">
         <div class="text-center mb-4">
-            <img src="/ohemaadetergents/public/assets/img/logo.png" alt="Ohemaa Detergents" style="height: 40px; object-fit: contain; margin-bottom: 16px;">
+            <img src="<?php echo BASE_URL; ?>public/assets/img/logo.png" alt="Ohemaa Detergents" style="height: 40px; object-fit: contain; margin-bottom: 16px;">
             <h4 class="mb-2" style="font-family: 'Google Sans', sans-serif; font-weight: 400; color: var(--text-color); font-size: 24px;">Sign in</h4>
             <p class="mb-0" style="color: var(--text-color); font-size: 16px;">Use your Ohemaa Admin Account</p>
         </div>
@@ -55,7 +55,7 @@ document.getElementById('loginForm').addEventListener('submit', async function h
             localStorage.setItem('admin_token', data.data.token);
             localStorage.setItem('admin_user', JSON.stringify(data.data.user));
             showToast('Login successful!');
-            setTimeout(() => window.location.href = '/ohemaadetergents/admin/index', 1000);
+            setTimeout(() => window.location.href = `${BASE_URL}/admin/index', 1000);
         } else {
             const errorAlert = document.getElementById('errorAlert');
             errorAlert.innerText = data.message || 'Login failed';

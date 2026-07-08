@@ -221,7 +221,7 @@ document.getElementById('reviewForm').addEventListener('submit', async function(
     };
 
     try {
-        const res = await fetch('/ohemaadetergents/api/reviews/create.php', {
+        const res = await fetch(`${BASE_URL}/api/reviews/create.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)

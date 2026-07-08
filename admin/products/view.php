@@ -4,14 +4,14 @@
 <div id="overviewContent" class="d-none">
     <div class="d-flex justify-content-between align-items-center mt-2 mb-4">
         <div class="d-flex align-items-center">
-            <a href="/ohemaadetergents/admin/products/index" class="icon-btn me-3">
+            <a href="<?php echo BASE_URL; ?>admin/products/index" class="icon-btn me-3">
                 <span class="material-symbols-outlined">arrow_back</span>
             </a>
             <div>
                 <h2 class="mb-0 fw-light" id="viewProductName">Product Details</h2>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="/ohemaadetergents/admin/products/index" class="text-decoration-none">Products</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo BASE_URL; ?>admin/products/index" class="text-decoration-none">Products</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Overview</li>
                     </ol>
                 </nav>
@@ -162,11 +162,11 @@
     const productId = urlParams.get('id');
 
     if (!productId) {
-        window.location.href = '/ohemaadetergents/admin/products/index';
+        window.location.href = `${BASE_URL}/admin/products/index';
     }
 
     function editProduct() {
-        window.location.href = '/ohemaadetergents/admin/products/index?edit_id=' + productId + '&source=view';
+        window.location.href = `${BASE_URL}/admin/products/index?edit_id=' + productId + '&source=view';
     }
 
     document.addEventListener('DOMContentLoaded', loadProductOverview);
@@ -218,7 +218,7 @@
             col.className = 'col-6';
             col.innerHTML = `
                 <div class="ratio ratio-1x1 rounded-3 overflow-hidden border shadow-sm">
-                    <img src="/ohemaadetergents/${img}" class="object-fit-cover">
+                    <img src="<?php echo BASE_URL; ?>${img}" class="object-fit-cover">
                 </div>
             `;
             imageGrid.appendChild(col);

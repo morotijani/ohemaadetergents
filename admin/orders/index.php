@@ -260,7 +260,7 @@
 
         selectedOrderId = id;
         const token = localStorage.getItem('admin_token');
-        document.getElementById('invoiceBtn').href = `/ohemaadetergents/admin/orders/invoice?id=${id}&token=${token}`;
+        document.getElementById('invoiceBtn').href = `${BASE_URL}/admin/orders/invoice?id=${id}&token=${token}`;
 
         const detailsDiv = document.getElementById('orderDetails');
 

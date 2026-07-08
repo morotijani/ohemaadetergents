@@ -34,7 +34,7 @@ if (!empty($token)) {
                 <p style='font-size: 14px; font-weight: 300; line-height: 1.6; margin-bottom: 30px;'>
                     You can now log in to view your orders, update your profile, and shop our signature collection.
                 </p>
-                <a href='http://" . $_SERVER['HTTP_HOST'] . "/ohemaadetergents/login' style='display: inline-block; padding: 15px 30px; background-color: #000; color: #fff; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: 500;'>
+                <a href='" . BASE_URL . "login' style='display: inline-block; padding: 15px 30px; background-color: #000; color: #fff; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: 500;'>
                     Sign In Now
                 </a>
                 <hr style='border: none; border-top: 1px solid #eee; margin: 40px 0;'>

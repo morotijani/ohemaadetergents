@@ -24,7 +24,7 @@
         </div>
         <div class="col-lg-6 offset-lg-1 bg-light" style="min-height: 60vh;">
             <div class="w-100 h-100 position-relative" style="background-color: #f8f9fa;">
-                <img src="/ohemaadetergents/public/assets/img/about_fabric.png" class="img-fluid w-100 h-100" style="object-fit: cover; opacity: 0.9;" alt="White Silk Fabric">
+                <img src="<?php echo BASE_URL; ?>public/assets/img/about_fabric.png" class="img-fluid w-100 h-100" style="object-fit: cover; opacity: 0.9;" alt="White Silk Fabric">
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
     <div class="row gx-5 align-items-center mt-5 pt-5">
         <div class="col-lg-6 mb-5 mb-lg-0 order-2 order-lg-1 bg-black text-white" style="min-height: 60vh;">
              <div class="w-100 h-100 position-relative">
-                <img src="/ohemaadetergents/public/assets/img/about_liquid.png" class="img-fluid w-100 h-100" style="object-fit: cover; opacity: 0.8;" alt="Clear Liquid Detergent Science">
+                <img src="<?php echo BASE_URL; ?>public/assets/img/about_liquid.png" class="img-fluid w-100 h-100" style="object-fit: cover; opacity: 0.8;" alt="Clear Liquid Detergent Science">
             </div>
         </div>
         <div class="col-lg-5 offset-lg-1 order-1 order-lg-2 mb-5 mb-lg-0">

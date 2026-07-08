@@ -123,7 +123,7 @@ include 'includes/header.php';
 
 <script>
 async function updateCart(productId, qty) {
-    await fetch('/ohemaadetergents/cart_action', {
+    await fetch(`${BASE_URL}/cart_action', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({action: 'update', product_id: productId, qty: qty})
@@ -132,7 +132,7 @@ async function updateCart(productId, qty) {
 }
 
 async function removeFromCart(productId) {
-    await fetch('/ohemaadetergents/cart_action', {
+    await fetch(`${BASE_URL}/cart_action', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({action: 'remove', product_id: productId})
