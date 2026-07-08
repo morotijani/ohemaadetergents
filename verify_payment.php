@@ -6,6 +6,9 @@ use App\Database;
 use App\Cart;
 
 $config = require __DIR__ . '/config/config.php';
+if (!defined('BASE_URL')) {
+    define('BASE_URL', rtrim($config['app']['url'], '/') . '/');
+}
 
 $reference = $_GET['reference'] ?? '';
 if (!$reference) {
@@ -51,55 +54,67 @@ if ($result && $result['status'] === true && $result['data']['status'] === 'succ
         
         $subject = "Order Confirmation - {$reference}";
         $body = "
-        <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #000;'>
-            <h2 style='font-family: serif; font-size: 24px; font-weight: normal; margin-bottom: 20px;'>Thank you for your order, {$orderData['first_name']}!</h2>
-            <p style='font-size: 14px; font-weight: 300; line-height: 1.6; margin-bottom: 30px;'>
-                We have received your order <strong>{$reference}</strong> and it is now being processed.
-            </p>
+        <div style='font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #fdfbf7; padding: 40px 20px;'>
+            <div style='text-align: center; margin-bottom: 30px;'>
+                <h1 style='font-size: 24px; font-weight: 800; letter-spacing: 2px; margin: 0; color: #111;'>OHEMAA DETERGENTS</h1>
+            </div>
             
-            <h3 style='font-family: serif; font-size: 18px; margin-bottom: 15px;'>Order Details</h3>
-            <table style='width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px;'>
-                <thead>
-                    <tr style='border-bottom: 1px solid #000;'>
-                        <th style='text-align: left; padding: 10px 0; font-weight: normal; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;'>Item</th>
-                        <th style='text-align: center; padding: 10px 0; font-weight: normal; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;'>Qty</th>
-                        <th style='text-align: right; padding: 10px 0; font-weight: normal; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;'>Price</th>
-                    </tr>
-                </thead>
-                <tbody>";
+            <div style='background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);'>
+                <h2 style='font-size: 22px; font-weight: 600; margin-top: 0; margin-bottom: 12px; color: #111;'>Order Confirmed!</h2>
+                <p style='font-size: 15px; color: #555; line-height: 1.6; margin-bottom: 30px;'>
+                    Hi {$orderData['first_name']}, thank you for your purchase. We are getting your order ready for delivery.
+                </p>
+                
+                <div style='background: #fdfbf7; padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center;'>
+                    <div style='font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 5px;'>Tracking Number</div>
+                    <div style='font-size: 20px; font-weight: 700; color: #111; letter-spacing: 2px;'>{$reference}</div>
+                </div>
+                
+                <h3 style='font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #888; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px;'>Order Summary</h3>
+                <table style='width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px;'>
+                    <tbody>";
         
         foreach ($items as $item) {
             $priceFormatted = number_format($item['quantity'] * $item['unit_price'], 2);
             $body .= "
-                    <tr style='border-bottom: 1px solid #eee;'>
-                        <td style='padding: 15px 0;'>{$item['name']}</td>
-                        <td style='text-align: center; padding: 15px 0;'>{$item['quantity']}</td>
-                        <td style='text-align: right; padding: 15px 0;'>GHS {$priceFormatted}</td>
+                    <tr>
+                        <td style='padding: 12px 0; color: #333; border-bottom: 1px solid #f5f5f5;'>
+                            <strong>{$item['name']}</strong><br>
+                            <span style='color: #888; font-size: 13px;'>Qty: {$item['quantity']}</span>
+                        </td>
+                        <td style='text-align: right; padding: 12px 0; color: #111; border-bottom: 1px solid #f5f5f5;'>GHS {$priceFormatted}</td>
                     </tr>";
         }
         
         $totalFormatted = number_format($orderData['total_amount'], 2);
         $body .= "
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan='2' style='text-align: right; padding: 15px 0; font-weight: 600;'>Total:</td>
-                        <td style='text-align: right; padding: 15px 0; font-weight: 600;'>GHS {$totalFormatted}</td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td style='text-align: left; padding: 20px 0 0 0; font-weight: 700; font-size: 16px; color: #111;'>Total</td>
+                            <td style='text-align: right; padding: 20px 0 0 0; font-weight: 700; font-size: 16px; color: #111;'>GHS {$totalFormatted}</td>
+                        </tr>
+                        <tr>
+                            <td colspan='2' style='text-align: right; padding-top: 5px; font-size: 12px; color: #888; font-style: italic;'>(Delivery fee will be calculated upon arrival)</td>
+                        </tr>
+                    </tfoot>
+                </table>
 
-            <h3 style='font-family: serif; font-size: 18px; margin-bottom: 15px;'>Delivery Address</h3>
-            <p style='font-size: 14px; font-weight: 300; line-height: 1.6; margin-bottom: 30px;'>
-                " . nl2br(htmlspecialchars($orderData['shipping_address'])) . "
-            </p>
-            <div style='text-align: center; margin-top: 30px;'>
-                <a href='" . BASE_URL . "track_order?tracking_number=" . urlencode($reference) . "' style='display: inline-block; padding: 15px 30px; background-color: #000; color: #fff; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: 500;'>
-                    Track Your Order
-                </a>
+                <h3 style='font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #888; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px;'>Delivery Address</h3>
+                <p style='font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 30px;'>
+                    " . nl2br(htmlspecialchars($orderData['shipping_address'])) . "<br>
+                    " . htmlspecialchars($orderData['town_area']) . ", " . htmlspecialchars($orderData['region']) . "
+                </p>
+                
+                <div style='text-align: center; margin-top: 40px;'>
+                    <a href='" . BASE_URL . "track_order?tracking_number=" . urlencode($reference) . "' style='display: inline-block; padding: 16px 32px; background-color: #111; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; letter-spacing: 1px;'>TRACK ORDER</a>
+                </div>
             </div>
-            <hr style='border: none; border-top: 1px solid #eee; margin: 40px 0;'>
-            <p style='font-size: 11px; color: #666;'>If you have any questions, please reply to this email.</p>
+            
+            <div style='text-align: center; margin-top: 30px; font-size: 12px; color: #999;'>
+                <p>If you have any questions, please reply directly to this email.</p>
+                <p>&copy; " . date('Y') . " Ohemaa Detergents. All rights reserved.</p>
+            </div>
         </div>";
 
         sendMail($orderData['email'], $subject, $body);
@@ -112,32 +127,30 @@ if ($result && $result['status'] === true && $result['data']['status'] === 'succ
 include 'includes/header.php';
 ?>
 
-<section class="py-5 bg-off-white" style="min-height: 80vh; display: flex; align-items: center;">
-    <div class="container px-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6 bg-white p-5 border border-light text-center">
-                <?php if ($success): ?>
-                    <i class="bi bi-check-circle mb-4 text-black" style="font-size: 3rem;"></i>
-                    <h2 class="font-serif mb-3" style="font-size: 2.5rem;">Payment Successful</h2>
-                    <p class="font-sans text-muted mb-4" style="line-height: 1.8;">Thank you for your order. We are processing it right away and an email confirmation has been sent to you.</p>
-                    
-                    <div class="p-4 bg-off-white mb-5">
-                        <p class="font-sans text-uppercase letter-spacing-wide text-muted mb-2" style="font-size: 0.75rem;">Your Tracking Number</p>
-                        <p class="font-sans fw-600 text-black mb-0" style="font-size: 1.25rem; letter-spacing: 2px;"><?php echo htmlspecialchars($reference); ?></p>
-                    </div>
+<section style="padding-top: 80px; padding-bottom: 100px;">
+    <div class="wrap" style="display: flex; justify-content: center;">
+        <div class="summary-card reveal" style="max-width: 550px; width: 100%; text-align: center; padding: 50px 40px;">
+            <?php if ($success): ?>
+                <div style="font-size: 4rem; color: #111; margin-bottom: 15px; line-height: 1;">✓</div>
+                <h2 style="font-size: 2.2rem; font-weight: 700; margin-bottom: 16px;">Payment Successful</h2>
+                <p style="color: var(--text); margin-bottom: 35px; font-size: 1.05rem; line-height: 1.6;">Thank you for your order! We are processing it right away and an email confirmation has been sent to you.</p>
+                
+                <div style="background: var(--bg); padding: 24px; border-radius: 12px; margin-bottom: 40px;">
+                    <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text); margin-bottom: 8px;">Your Tracking Number</div>
+                    <div style="font-size: 1.6rem; font-weight: 700; color: var(--ink); letter-spacing: 2px;"><?php echo htmlspecialchars($reference); ?></div>
+                </div>
 
-                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                        <a href="track_order?tracking_number=<?php echo urlencode($reference); ?>" class="btn btn-dark rounded-0 px-5 py-3 font-sans text-uppercase letter-spacing-wide" style="font-size: 0.8rem;">Track Order</a>
-                        <a href="index" class="btn btn-outline-dark rounded-0 px-5 py-3 font-sans text-uppercase letter-spacing-wide" style="font-size: 0.8rem;">Back to Home</a>
-                    </div>
-                <?php else: ?>
-                    <i class="bi bi-x-circle mb-4 text-danger" style="font-size: 3rem;"></i>
-                    <h2 class="font-serif mb-3" style="font-size: 2.5rem;">Payment Failed</h2>
-                    <p class="font-sans text-muted mb-5" style="line-height: 1.8;">We could not verify your payment. Please try again or contact support.</p>
-                    
-                    <a href="cart" class="btn btn-dark rounded-0 px-5 py-3 font-sans text-uppercase letter-spacing-wide" style="font-size: 0.8rem;">Return to Bag</a>
-                <?php endif; ?>
-            </div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <a href="track_order?tracking_number=<?php echo urlencode($reference); ?>" class="btn btn-dark btn-full" style="padding: 16px;">Track Order</a>
+                    <a href="shop" class="btn btn-full" style="background: transparent; color: var(--ink); border: 1.5px solid var(--line); padding: 16px;">Continue Shopping</a>
+                </div>
+            <?php else: ?>
+                <div style="font-size: 4rem; color: #d00; margin-bottom: 15px; line-height: 1;">✗</div>
+                <h2 style="font-size: 2.2rem; font-weight: 700; margin-bottom: 16px;">Payment Failed</h2>
+                <p style="color: var(--text); margin-bottom: 35px; font-size: 1.05rem; line-height: 1.6;">We could not verify your payment. Please try again or contact support.</p>
+                
+                <a href="cart" class="btn btn-dark btn-full" style="padding: 16px;">Return to Cart</a>
+            <?php endif; ?>
         </div>
     </div>
 </section>

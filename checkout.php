@@ -8,6 +8,9 @@ use App\Cart;
 use App\Helpers;
 
 $config = require __DIR__ . '/config/config.php';
+if (!defined('BASE_URL')) {
+    define('BASE_URL', rtrim($config['app']['url'], '/') . '/');
+}
 $db = Database::getInstance()->getConnection();
 $cart = new Cart();
 $cartItems = $cart->getItems();
@@ -44,20 +47,21 @@ foreach ($productsData as $p) {
     $products[] = ['id' => $p['id'], 'price' => $p['price'], 'qty' => $qty, 'name' => $p['name'], 'image_url' => $p['image_url']];
 }
 
-$deliveryFee = 15.00;
-$grandTotal = $total + $deliveryFee;
+$deliveryFee = 0; // Will be calculated later
+$grandTotal = $total;
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $fullName = trim($_POST['first_name'] ?? '');
-    $parts = explode(' ', $fullName, 2);
-    $firstName = $parts[0] ?? '';
-    $lastName = $parts[1] ?? '';
+    $firstName = trim($_POST['first_name'] ?? '');
+    $lastName = trim($_POST['last_name'] ?? '');
 
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $address = trim($_POST['address'] ?? '');
+    $townArea = trim($_POST['town_area'] ?? '');
+    $region = trim($_POST['region'] ?? '');
+    $deliveryNote = trim($_POST['delivery_note'] ?? '');
 
     if (empty($firstName) || empty($email) || empty($address)) {
         $error = 'Please fill in all required fields.';
@@ -83,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $orderUuid = Helpers::generateUuidV7Binary();
             $trackingNumber = 'ORD-' . strtoupper(substr(uniqid(), -6));
             
-            $stmt = $db->prepare("INSERT INTO orders (order_id, tracking_number, customer_id, total_amount, shipping_address, status) VALUES (?, ?, ?, ?, ?, 'pending')");
-            $stmt->execute([$orderUuid, $trackingNumber, $customerId, $grandTotal, $address]);
+            $stmt = $db->prepare("INSERT INTO orders (order_id, tracking_number, customer_id, total_amount, shipping_address, town_area, region, delivery_note, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')");
+            $stmt->execute([$orderUuid, $trackingNumber, $customerId, $grandTotal, $address, $townArea, $region, $deliveryNote]);
             $orderId = $db->lastInsertId();
 
             $stmt = $db->prepare("INSERT INTO order_items (order_item_id, order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?, ?)");
@@ -99,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $postData = [
                 'email' => $email,
                 'amount' => $amountInPesewas,
+                'currency' => 'GHS',
                 'reference' => $trackingNumber,
                 'callback_url' => BASE_URL . 'verify_payment.php',
                 'metadata' => ['custom_fields' => [['display_name' => "Order ID", 'variable_name' => "order_id", 'value' => $trackingNumber]]]
@@ -120,7 +125,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = json_decode($response, true);
             
             if ($result && $result['status'] === true) {
-                header("Location: " . $result['data']['authorization_url']);
+                $accessCode = $result['data']['access_code'];
+                $reference = $result['data']['reference'] ?? $trackingNumber;
+                $publicKey = $config['paystack']['public_key'];
+                $verifyUrl = BASE_URL . 'verify_payment.php?reference=';
+                echo "<!DOCTYPE html><html><head><title>Processing Payment...</title>";
+                echo "<script src='https://js.paystack.co/v1/inline.js'></script>";
+                echo "<style>body{background:#fdfbf7; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; font-family:sans-serif;} .loader{border:4px solid #f3f3f3; border-top:4px solid #000; border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite;} @keyframes spin {0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);}}</style>";
+                echo "</head><body>";
+                echo "<div style='text-align:center;'><div class='loader' style='margin:0 auto 20px auto;'></div><h2>Securely opening Paystack...</h2><p>Please do not refresh the page.</p></div>";
+                echo "<script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var handler = PaystackPop.setup({
+                            key: '{$publicKey}',
+                            access_code: '{$accessCode}',
+                            email: '{$email}',
+                            amount: {$amountInPesewas},
+                            currency: 'GHS',
+                            ref: '{$reference}',
+                            callback: function(response) {
+                                window.location.href = '{$verifyUrl}' + response.reference;
+                            },
+                            onClose: function() {
+                                window.location.href = '" . BASE_URL . "checkout';
+                            }
+                        });
+                        handler.openIframe();
+                    });
+                </script>";
+                echo "</body></html>";
                 exit;
             } else {
                 $error = 'Payment initialization failed. Ensure Paystack API keys are set. Error: ' . ($result['message'] ?? 'Unknown error');
@@ -159,17 +192,23 @@ include 'includes/header.php';
           <h3>Contact information</h3>
           <div class="field-row">
             <div class="field">
-              <label for="coName">Full name</label>
-              <input id="coName" name="first_name" type="text" value="<?php echo htmlspecialchars($defaultFirstName . ' ' . $defaultLastName); ?>" required>
+              <label for="coFirstName">First name</label>
+              <input id="coFirstName" name="first_name" type="text" value="<?php echo htmlspecialchars($defaultFirstName); ?>" required>
             </div>
+            <div class="field">
+              <label for="coLastName">Last name</label>
+              <input id="coLastName" name="last_name" type="text" value="<?php echo htmlspecialchars($defaultLastName); ?>" required>
+            </div>
+          </div>
+          <div class="field-row">
             <div class="field">
               <label for="coPhone">Phone number</label>
               <input id="coPhone" name="phone" type="tel" value="<?php echo htmlspecialchars($defaultPhone); ?>" required>
             </div>
-          </div>
-          <div class="field">
-            <label for="coEmail">Email</label>
-            <input id="coEmail" name="email" type="email" value="<?php echo htmlspecialchars($defaultEmail); ?>" required>
+            <div class="field">
+              <label for="coEmail">Email</label>
+              <input id="coEmail" name="email" type="email" value="<?php echo htmlspecialchars($defaultEmail); ?>" required>
+            </div>
           </div>
         </div>
 
@@ -182,11 +221,11 @@ include 'includes/header.php';
           <div class="field-row">
             <div class="field">
               <label for="coCity">Town / area</label>
-              <input id="coCity" type="text" value="Bantama, Kumasi">
+              <input id="coCity" name="town_area" type="text" value="Bantama, Kumasi">
             </div>
             <div class="field">
               <label for="coRegion">Region</label>
-              <select id="coRegion">
+              <select id="coRegion" name="region">
                 <option selected>Ashanti</option>
                 <option>Greater Accra</option>
                 <option>Eastern</option>
@@ -196,7 +235,7 @@ include 'includes/header.php';
           </div>
           <div class="field">
             <label for="coNote">Delivery note (optional)</label>
-            <input id="coNote" type="text" placeholder="e.g. Gate code, nearby landmark">
+            <input id="coNote" name="delivery_note" type="text" placeholder="e.g. Gate code, nearby landmark">
           </div>
         </div>
 
@@ -231,7 +270,7 @@ include 'includes/header.php';
           <?php endforeach; ?>
         </div>
         <div class="order-summary-row"><span class="lbl">Subtotal</span><span class="val">GH₵ <?php echo number_format($total, 2); ?></span></div>
-        <div class="order-summary-row"><span class="lbl">Delivery</span><span class="val">GH₵ <?php echo number_format($deliveryFee, 2); ?></span></div>
+        <div class="order-summary-row"><span class="lbl">Delivery</span><span class="val" style="font-size:0.85rem; font-style:italic; opacity:0.8;">Will be charged after delivery</span></div>
         <div class="order-summary-row" style="border-top:1.5px solid var(--line); font-size:1.05rem;">
           <span class="lbl" style="font-weight:700; color:var(--ink);">Total</span>
           <span class="val" style="font-weight:700;">GH₵ <?php echo number_format($grandTotal, 2); ?></span>
