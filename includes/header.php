@@ -16,7 +16,32 @@ $cartCount = $cartObj->count();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ohemaa — Cleanliness Fit for a Queen</title>
+  <?php
+    $seoTitle = $pageTitle ?? 'Ohemaa Detergents — Cleanliness Fit for a Queen';
+    $seoDescription = $pageDescription ?? 'Ohemaa Cleaning Agents. Premium, highly effective liquid soaps, detergents, and cleaning products formulated and bottled in Kumasi, Ghana.';
+    $seoKeywords = $pageKeywords ?? 'Ohemaa, Detergents, Liquid Soap, Cleaning Products, Kumasi, Ghana, Home Care';
+    $seoImage = $pageImage ?? (BASE_URL . 'public/assets/img/logo.png');
+    $seoUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+  ?>
+  <title><?php echo htmlspecialchars($seoTitle); ?></title>
+  <meta name="description" content="<?php echo htmlspecialchars($seoDescription); ?>">
+  <meta name="keywords" content="<?php echo htmlspecialchars($seoKeywords); ?>">
+  <meta name="author" content="Ohemaa Detergents">
+  <link rel="canonical" href="<?php echo htmlspecialchars($seoUrl); ?>">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<?php echo htmlspecialchars($seoUrl); ?>">
+  <meta property="og:title" content="<?php echo htmlspecialchars($seoTitle); ?>">
+  <meta property="og:description" content="<?php echo htmlspecialchars($seoDescription); ?>">
+  <meta property="og:image" content="<?php echo htmlspecialchars($seoImage); ?>">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="<?php echo htmlspecialchars($seoUrl); ?>">
+  <meta property="twitter:title" content="<?php echo htmlspecialchars($seoTitle); ?>">
+  <meta property="twitter:description" content="<?php echo htmlspecialchars($seoDescription); ?>">
+  <meta property="twitter:image" content="<?php echo htmlspecialchars($seoImage); ?>">
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
     rel="stylesheet">
