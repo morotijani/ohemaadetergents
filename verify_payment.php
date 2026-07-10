@@ -31,23 +31,24 @@ if ($result && $result['status'] === true && $result['data']['status'] === 'succ
     $db = Database::getInstance()->getConnection();
     
     // Check if it's already processing to prevent duplicate emails on refresh
-    $stmt = $db->prepare("SELECT o.id as order_id, o.total_amount, o.status, c.email, c.first_name, c.last_name, o.shipping_address FROM orders o JOIN customers c ON o.customer_id = c.id WHERE o.tracking_number = ?");
+    $stmt = $db->prepare("SELECT o.id as order_id, o.total_amount, o.status, c.email, c.first_name, c.last_name, o.shipping_address, o.town_area, o.region FROM orders o JOIN customers c ON o.customer_id = c.id WHERE o.tracking_number = ?");
     $stmt->execute([$reference]);
     $orderData = $stmt->fetch();
     
-    if ($orderData && $orderData['status'] === 'pending') {
-        $success = true;
-        
-        $stmt = $db->prepare("UPDATE orders SET status = 'processing' WHERE tracking_number = ?");
-        $stmt->execute([$reference]);
-        
-        $cart = new Cart();
-        $cart->clear();
-
-        // Fetch order items for the email
+    if ($orderData) {
+        // Always fetch items so we can display them on the page
         $stmt = $db->prepare("SELECT oi.quantity, oi.unit_price, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?");
         $stmt->execute([$orderData['order_id']]);
         $items = $stmt->fetchAll();
+
+        if ($orderData['status'] === 'pending') {
+            $success = true;
+            
+            $stmt = $db->prepare("UPDATE orders SET status = 'processing' WHERE tracking_number = ?");
+            $stmt->execute([$reference]);
+            
+            $cart = new Cart();
+            $cart->clear();
 
         // Send Order Confirmation Email
         require_once __DIR__ . '/includes/mailer.php';
@@ -118,9 +119,10 @@ if ($result && $result['status'] === true && $result['data']['status'] === 'succ
         </div>";
 
         sendMail($orderData['email'], $subject, $body);
-    } elseif ($orderData && $orderData['status'] !== 'pending') {
-        // Already processed
-        $success = true;
+        } elseif ($orderData['status'] !== 'pending') {
+            // Already processed
+            $success = true;
+        }
     }
 }
 
@@ -135,9 +137,37 @@ include 'includes/header.php';
                 <h2 style="font-size: 2.2rem; font-weight: 700; margin-bottom: 16px;">Payment Successful</h2>
                 <p style="color: var(--text); margin-bottom: 35px; font-size: 1.05rem; line-height: 1.6;">Thank you for your order! We are processing it right away and an email confirmation has been sent to you.</p>
                 
-                <div style="background: var(--bg); padding: 24px; border-radius: 12px; margin-bottom: 40px;">
+                <div style="background: var(--bg); padding: 24px; border-radius: 12px; margin-bottom: 24px;">
                     <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text); margin-bottom: 8px;">Your Tracking Number</div>
                     <div style="font-size: 1.6rem; font-weight: 700; color: var(--ink); letter-spacing: 2px;"><?php echo htmlspecialchars($reference); ?></div>
+                </div>
+
+                <!-- Order Details -->
+                <div style="text-align: left; background: #fff; padding: 24px; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 24px;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 12px;">Order Summary</h3>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <?php foreach($items as $item): ?>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
+                            <span><?php echo htmlspecialchars($item['name']); ?> <span style="color: #888; font-size: 0.85rem;">×<?php echo $item['quantity']; ?></span></span>
+                            <span>GH₵ <?php echo number_format($item['quantity'] * $item['unit_price'], 2); ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; border-top: 1px solid var(--line); padding-top: 12px;">
+                        <span>Total</span>
+                        <span>GH₵ <?php echo number_format($orderData['total_amount'], 2); ?></span>
+                    </div>
+                </div>
+
+                <!-- Delivery Details -->
+                <div style="text-align: left; background: #fff; padding: 24px; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 40px;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 12px;">Delivery Address</h3>
+                    <p style="color: var(--text); font-size: 0.95rem; line-height: 1.6; margin: 0;">
+                        <?php echo nl2br(htmlspecialchars($orderData['shipping_address'])); ?><br>
+                        <?php echo htmlspecialchars($orderData['town_area']); ?>, <?php echo htmlspecialchars($orderData['region']); ?>
+                    </p>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">

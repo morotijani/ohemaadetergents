@@ -50,133 +50,9 @@ foreach ($productsData as $p) {
 $deliveryFee = 0; // Will be calculated later
 $grandTotal = $total;
 
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $firstName = trim($_POST['first_name'] ?? '');
-    $lastName = trim($_POST['last_name'] ?? '');
-
-    $email = trim($_POST['email'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $address = trim($_POST['address'] ?? '');
-    $townArea = trim($_POST['town_area'] ?? '');
-    $region = trim($_POST['region'] ?? '');
-    $deliveryNote = trim($_POST['delivery_note'] ?? '');
-
-    if (empty($firstName) || empty($email) || empty($address)) {
-        $error = 'Please fill in all required fields.';
-    } else {
-        try {
-            $db->beginTransaction();
-
-            $stmt = $db->prepare("SELECT id FROM customers WHERE email = ?");
-            $stmt->execute([$email]);
-            $customer = $stmt->fetch();
-
-            if ($customer) {
-                $customerId = $customer['id'];
-            } else {
-                $customerUuid = Helpers::generateUuidV7Binary();
-                $randomPassword = bin2hex(random_bytes(8));
-                $hash = password_hash($randomPassword, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("INSERT INTO customers (customer_id, first_name, last_name, email, phone, password_hash) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$customerUuid, $firstName, $lastName, $email, $phone, $hash]);
-                $customerId = $db->lastInsertId();
-            }
-
-            $orderUuid = Helpers::generateUuidV7Binary();
-            $trackingNumber = 'ORD-' . strtoupper(substr(uniqid(), -6));
-            
-            $stmt = $db->prepare("INSERT INTO orders (order_id, tracking_number, customer_id, total_amount, shipping_address, town_area, region, delivery_note, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')");
-            $stmt->execute([$orderUuid, $trackingNumber, $customerId, $grandTotal, $address, $townArea, $region, $deliveryNote]);
-            $orderId = $db->lastInsertId();
-
-            $stmt = $db->prepare("INSERT INTO order_items (order_item_id, order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?, ?)");
-            foreach ($products as $p) {
-                $stmt->execute([Helpers::generateUuidV7Binary(), $orderId, $p['id'], $p['qty'], $p['price']]);
-            }
-
-            // DB commit moved to after successful Paystack initialization
-            
-            $amountInPesewas = $grandTotal * 100; 
-            
-            $postData = [
-                'email' => $email,
-                'amount' => $amountInPesewas,
-                'currency' => 'GHS',
-                'reference' => $trackingNumber,
-                'callback_url' => BASE_URL . 'verify_payment.php',
-                'metadata' => ['custom_fields' => [['display_name' => "Order ID", 'variable_name' => "order_id", 'value' => $trackingNumber]]]
-            ];
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "https://api.paystack.co/transaction/initialize");
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $config['paystack']['secret_key'],
-                "Content-Type: application/json"
-            ]);
-            
-            $response = curl_exec($ch);
-            curl_close($ch);
-            
-            $result = json_decode($response, true);
-            
-            if ($result && $result['status'] === true) {
-                $db->commit(); // Only commit if Paystack successfully initialized
-                $accessCode = $result['data']['access_code'];
-                $reference = $result['data']['reference'] ?? $trackingNumber;
-                $publicKey = $config['paystack']['public_key'];
-                $verifyUrl = BASE_URL . 'verify_payment.php?reference=';
-                echo "<!DOCTYPE html><html><head><title>Processing Payment...</title>";
-                echo "<script src='https://js.paystack.co/v1/inline.js'></script>";
-                echo "<style>body{background:#fdfbf7; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; font-family:sans-serif;} .loader{border:4px solid #f3f3f3; border-top:4px solid #000; border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite;} @keyframes spin {0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);}}</style>";
-                echo "</head><body>";
-                echo "<div style='text-align:center;'><div class='loader' style='margin:0 auto 20px auto;'></div><h2>Securely opening Paystack...</h2><p>Please do not refresh the page.</p></div>";
-                echo "<script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var handler = PaystackPop.setup({
-                            key: '{$publicKey}',
-                            access_code: '{$accessCode}',
-                            email: '{$email}',
-                            amount: {$amountInPesewas},
-                            currency: 'GHS',
-                            ref: '{$reference}',
-                            callback: function(response) {
-                                window.location.href = '{$verifyUrl}' + response.reference;
-                            },
-                            onClose: function() {
-                                // User closed the popup without paying. Delete the pending order.
-                                fetch('" . BASE_URL . "cancel_order.php', {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                                    body: 'reference=' + encodeURIComponent('{$trackingNumber}')
-                                }).then(() => {
-                                    window.location.href = '" . BASE_URL . "checkout';
-                                });
-                            }
-                        });
-                        handler.openIframe();
-                    });
-                </script>";
-                echo "</body></html>";
-                exit;
-            } else {
-                $db->rollBack(); // Rollback if Paystack failed to initialize
-                $error = 'Payment initialization failed. Ensure Paystack API keys are set. Error: ' . ($result['message'] ?? 'Unknown error');
-            }
-            
-        } catch (\Exception $e) {
-            if ($db->inTransaction()) $db->rollBack();
-            $error = 'Checkout failed: ' . $e->getMessage();
-        }
-    }
-}
-
 include 'includes/header.php';
 ?>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <section style="padding-top:44px;">
   <div class="wrap">
     <div class="checkout-steps reveal">
@@ -187,16 +63,10 @@ include 'includes/header.php';
       <span class="step">③ Confirmation</span>
     </div>
 
-    <form method="POST"><div class="checkout-layout">
+    <div id="checkoutError" style="display: none; padding: 15px; background: #fee; border-left: 4px solid #c00; margin-bottom: 20px; font-size: 0.9rem; color: #c00;"></div>
 
-      
-      <?php if ($error): ?>
-        <div style="padding: 15px; background: #fee; border-left: 4px solid #c00; margin-bottom: 20px; font-size: 0.9rem; color: #c00;">
-            <?php echo htmlspecialchars($error); ?>
-        </div>
-      <?php endif; ?>
-      <div class="reveal">
-
+    <div class="checkout-layout">
+      <form id="checkoutForm" class="reveal">
         <div class="checkout-block">
           <h3>Contact information</h3>
           <div class="field-row">
@@ -252,21 +122,21 @@ include 'includes/header.php';
           <h3>Payment method</h3>
           <div class="payment-option active" onclick="">
             <div class="radio-dot"></div>
-            <input type="radio" name="payment" style="display:none;" checked>
+            <input type="radio" name="payment" value="momo" style="display:none;" checked>
             <div><div class="pm-name">Mobile Money</div><div class="pm-desc">Pay instantly with MTN, Vodafone, or AirtelTigo</div></div>
           </div>
           <div class="payment-option">
             <div class="radio-dot"></div>
-            <input type="radio" name="payment" style="display:none;">
+            <input type="radio" name="payment" value="card" style="display:none;">
             <div><div class="pm-name">Debit / Credit Card</div><div class="pm-desc">Visa, Mastercard accepted</div></div>
           </div>
           <div class="payment-option">
             <div class="radio-dot"></div>
-            <input type="radio" name="payment" style="display:none;">
+            <input type="radio" name="payment" value="cod" style="display:none;">
             <div><div class="pm-name">Cash on Delivery</div><div class="pm-desc">Pay when your order arrives</div></div>
           </div>
         </div>
-      </div>
+      </form>
 
       <div class="summary-card reveal">
         <h3>Order summary</h3>
@@ -284,12 +154,94 @@ include 'includes/header.php';
           <span class="lbl" style="font-weight:700; color:var(--ink);">Total</span>
           <span class="val" style="font-weight:700;">GH₵ <?php echo number_format($grandTotal, 2); ?></span>
         </div>
-        <button class="form-submit btn-full" type="submit" style="margin-top:18px;">Place order</button>
+        <button type="submit" form="checkoutForm" class="btn btn-dark btn-full" id="placeOrderBtn" style="margin-top:20px; position: relative;">Place order — Secure Payment</button>
         <p class="form-note">By placing your order you agree to our Terms & delivery policy.</p>
       </div>
 
-    </div></form>
+    </div>
   </div>
 </section>
+
+<script>
+document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('placeOrderBtn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Processing...';
+    submitBtn.disabled = true;
+    document.getElementById('checkoutError').style.display = 'none';
+
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+        const res = await fetch(`${BASE_URL}/api/orders/checkout.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await res.json();
+
+        if (result.status === 'success') {
+            const verifyUrl = `${BASE_URL}/verify_payment.php?reference=`;
+            
+            const handler = PaystackPop.setup({
+                key: result.data.public_key,
+                access_code: result.data.access_code,
+                email: result.data.email,
+                amount: result.data.amount,
+                currency: 'GHS',
+                ref: result.data.reference,
+                callback: function(response) {
+                    window.location.href = verifyUrl + response.reference;
+                },
+                onClose: function() {
+                    fetch(`${BASE_URL}/api/orders/cancel.php`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ reference: result.data.reference })
+                    }).then(() => {
+                        const modal = document.getElementById('cancelModal');
+                        if (modal) modal.classList.add('show');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    });
+                }
+            });
+            handler.openIframe();
+        } else {
+            document.getElementById('checkoutError').textContent = result.message || 'An error occurred';
+            document.getElementById('checkoutError').style.display = 'block';
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    } catch (error) {
+        document.getElementById('checkoutError').textContent = 'Network error. Please try again.';
+        document.getElementById('checkoutError').style.display = 'block';
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+function closeCancelModal() {
+    const modal = document.getElementById('cancelModal');
+    if (modal) modal.classList.remove('show');
+}
+</script>
+
+<div class="modal-overlay" id="cancelModal">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </div>
+    <div class="modal-title">Payment Cancelled</div>
+    <div class="modal-text">Your payment process was interrupted and your order has not been placed.</div>
+    <button class="btn btn-dark btn-full" onclick="closeCancelModal()">Okay</button>
+  </div>
+</div>
 
 <?php include 'includes/footer.php'; ?>

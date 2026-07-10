@@ -2,69 +2,81 @@
 
 <header class="page-hero">
   <svg class="page-hero-watermark" viewBox="0 0 60 60" fill="none">
-    <circle cx="30" cy="30" r="29" fill="none" stroke="#E7C766" stroke-width="1"/>
-    <circle cx="30" cy="30" r="22" fill="none" stroke="#E7C766" stroke-width="1"/>
-    <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#E7C766"/>
+    <circle cx="30" cy="30" r="29" fill="none" stroke="#E7C766" stroke-width="1" />
+    <circle cx="30" cy="30" r="22" fill="none" stroke="#E7C766" stroke-width="1" />
+    <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#E7C766" />
   </svg>
   <div class="wrap">
-    <div class="breadcrumb"><a href="<?php echo BASE_URL; ?>index">Home</a><span>/</span><span>Heritage</span></div>
-    <span class="eyebrow">Our story</span>
-    <h1>Born in Kumasi. Named for a queen.</h1>
-    <p class="lede">Every formula we bottle still answers to the same standard the first batch was mixed to, by hand, in a single room in Kumasi.</p>
+    <div class="breadcrumb"><a href="<?php echo BASE_URL; ?>index">Home</a><span>/</span><span>About Us</span></div>
+    <span class="eyebrow">About Us</span>
+    <h1>Inhealth Medical Solutions</h1>
+    <p class="lede">A fully owned, registered company by the Ghana Food and Drugs Authority, supplying high-quality
+      household detergents.</p>
   </div>
   <div class="kente-strip" style="margin-top:48px;"></div>
 </header>
 
 <section class="heritage">
-  <div class="wrap heritage-grid">
+  <div class="wrap heritage-grid" style="align-items: center;">
     <div class="heritage-copy reveal">
-      <p><strong>Ohemaa</strong> — the Twi word for queen — is what Ashanti households have called the woman who holds a home together: the one who notices what needs doing before anyone asks. We borrowed the name because that is exactly the standard we hold ourselves to.</p>
-      <p>The company started as a single mixing room in Kumasi, blending detergent by hand for neighbours who wanted something that worked as hard as they did. There was no marketing budget — word travelled by way of satisfied customers telling the next shop owner, and the next.</p>
-      <p>What kept people coming back wasn't a slogan. It was consistency: the bottle you bought this month cleaned exactly like the one you bought six months ago. That single promise is still the whole business model.</p>
-      <p>Today the same formulas, refined and lab-verified, reach homes, salons, chop bars, and hospitals across the Ashanti Region and beyond — but they're still mixed, tested, and bottled in Kumasi, by the same quality team that started it.</p>
+      <h2>Mission</h2>
+      <p style="margin-bottom: 24px;">At Ohemaa Detergents, our mission is to provide high-quality, affordable cleaning
+        solutions while promoting sustainability and innovation. We strive to enhance daily lives and ensure a cleaner,
+        healthier environment for future generations.</p>
+
+      <h2>Vision</h2>
+      <p>To be a leading provider of innovative and sustainable cleaning solutions, recognized for our commitment to
+        quality, customer satisfaction, and environmental stewardship.</p>
     </div>
     <div class="stat-cards reveal">
-      <div class="stat-card"><span class="num">Kumasi</span><span class="lbl">Where every batch is mixed and bottled</span></div>
-      <div class="stat-card"><span class="num">15+ yrs</span><span class="lbl">Formulating for Ghanaian households</span></div>
-      <div class="stat-card"><span class="num">200+</span><span class="lbl">Stockists carrying the full range</span></div>
-      <div class="stat-card"><span class="num">0.2%</span><span class="lbl">Batch rejection rate at quality control</span></div>
+      <div class="stat-card"><span class="num">Ghana</span><span class="lbl">Where every batch is mixed and
+          bottled</span></div>
+      <div class="stat-card"><span class="num">15+ yrs</span><span class="lbl">Formulating for Ghanaian
+          households</span></div>
+      <div class="stat-card"><span class="num">200+</span><span class="lbl">Stockists carrying the full range</span>
+      </div>
+      <div class="stat-card"><span class="num">SIC & MoH</span><span class="lbl">Trusted by top institutions</span>
+      </div>
     </div>
   </div>
 </section>
 
 <div class="kente-strip thin"></div>
 
-<section>
+<section style="background: var(--paper); padding-top: 80px; padding-bottom: 80px;">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">How we got here</span>
-      <h2>A timeline built on repeat customers, not funding rounds.</h2>
+      <span class="eyebrow">What We Do</span>
+      <h2>Creating high-quality cleaning products designed to meet a variety of needs.</h2>
+      <p style="max-width: 600px; margin: 16px auto 0; color: var(--text);">Our detergent is one of the best in Ghana
+        and we have managed to provide services for companies like SIC, Ministry of Health, and others. Our team of
+        experienced professionals utilizes specialized skills to achieve client satisfaction.</p>
     </div>
-    <div class="timeline reveal" style="max-width:760px;">
+
+    <div class="timeline reveal" style="max-width:800px; margin-top: 40px;">
       <div class="timeline-item">
-        <span class="timeline-year">Year One</span>
-        <h3>The mixing room</h3>
-        <p>A single room, hand-mixed batches, and a delivery bicycle. The first formula was multi-surface cleaner — still our best seller today.</p>
+        <h3>Washing Powder</h3>
+        <p>Hard on fabrics but soft on the skin, delivering a deep clean without irritation.</p>
       </div>
       <div class="timeline-item">
-        <span class="timeline-year">Year Three</span>
-        <h3>First stockists sign on</h3>
-        <p>Provision shops in Bantama and Adum start carrying Ohemaa after customers began asking for it by name rather than by category.</p>
+        <h3>Baby Bottle Cleaner</h3>
+        <p>A plant-based formulated cleaning agent which removes milk residue and is dermatologically tested.</p>
       </div>
       <div class="timeline-item">
-        <span class="timeline-year">Year Six</span>
-        <h3>The lab opens</h3>
-        <p>Growth meant every batch needed to be provably consistent, not just carefully mixed. We built a quality-control lab and locked every formula by weight.</p>
+        <h3>Antiseptic</h3>
+        <p>An antiseptic disinfectant perfect for first aid medical and personal hygiene use.</p>
       </div>
       <div class="timeline-item">
-        <span class="timeline-year">Year Ten</span>
-        <h3>The full range ships</h3>
-        <p>Liquid detergent, dishwashing liquid, fabric softener, and disinfectant bleach join multi-surface cleaner as the five-product core line.</p>
+        <h3>Liquid Soap</h3>
+        <p>Our liquid soap effectively cleans while remaining exceptionally gentle on the skin.</p>
       </div>
       <div class="timeline-item">
-        <span class="timeline-year">Today</span>
-        <h3>200+ stockists, one standard</h3>
-        <p>From a single room to a regional distribution network — with the same batch-testing discipline the first bottle was held to.</p>
+        <h3>Floor Cleaner</h3>
+        <p>Provides strong cleaning power, leaving surfaces spotless and shining.</p>
+      </div>
+      <div class="timeline-item">
+        <h3>Thick Bleach</h3>
+        <p>Provides powerful stain removal and effective disinfection for your toughest cleaning jobs.</p>
       </div>
     </div>
   </div>
@@ -75,24 +87,39 @@
 <section class="heritage">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">What we hold onto</span>
-      <h2>Three things that don't change as we grow.</h2>
+      <span class="eyebrow">Company Values</span>
+      <h2>Exceptional business procedures and customer satisfaction.</h2>
     </div>
-    <div class="value-grid">
+    <div class="value-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
       <div class="value-card reveal">
-        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C766" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
-        <h3>Consistency over cleverness</h3>
-        <p>A locked formula, weighed the same way every time. No seasonal reformulations, no cutting corners when costs rise.</p>
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C766" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg></div>
+        <h3>Integrity</h3>
+        <p>We conduct our business with honesty and transparency.</p>
       </div>
       <div class="value-card reveal">
-        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C766" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21l2-7.5L2 9h7z"/></svg></div>
-        <h3>A standard worth the name</h3>
-        <p>We named the company after a queen. That's not a marketing line — it's the bar every batch has to clear before it's bottled.</p>
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C766" stroke-width="2">
+            <path d="M12 2l3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21l2-7.5L2 9h7z" />
+          </svg></div>
+        <h3>Quality</h3>
+        <p>We are dedicated to producing high-quality products that meet the highest standards of our customers.</p>
       </div>
       <div class="value-card reveal">
-        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C766" stroke-width="2"><path d="M3 21c0-4 4-6 9-6s9 2 9 6M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></div>
-        <h3>Built on the shopkeeper relationship</h3>
-        <p>Our earliest stockists are still stockists. Growth hasn't meant leaving behind the shops that carried us first.</p>
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C766" stroke-width="2">
+            <path d="M9 12l2 2 4-4" />
+            <circle cx="12" cy="12" r="9" />
+          </svg></div>
+        <h3>Safety</h3>
+        <p>We ensure the safety of our employees, customers, and the communities we serve.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E7C766" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg></div>
+        <h3>Customer Satisfaction</h3>
+        <p>We prioritize our customers' needs and strive to exceed their expectations.</p>
       </div>
     </div>
   </div>
@@ -103,7 +130,8 @@
     <div class="reveal" style="max-width:560px; margin:0 auto;">
       <span class="eyebrow" style="justify-content:center;">Join the story</span>
       <h2>Want Ohemaa on your shelf?</h2>
-      <p style="margin:16px auto 28px;">We're expanding past the Ashanti Region — apply to become a stockist and we'll route you to your nearest supply line.</p>
+      <p style="margin:16px auto 28px;">We're expanding past the Ashanti Region — apply to become a stockist and we'll
+        route you to your nearest supply line.</p>
       <a href="<?php echo BASE_URL; ?>become_stockist" class="btn btn-dark">Become a stockist</a>
     </div>
   </div>

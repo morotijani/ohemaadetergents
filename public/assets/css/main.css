@@ -675,3 +675,29 @@ footer{ background:var(--indigo-deep); color:rgba(247,243,234,0.7); padding:70px
   box-shadow:0 20px 40px -18px rgba(0,0,0,0.4);
 }
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.show {
+  opacity: 1; pointer-events: auto;
+}
+.modal-box {
+  background: var(--paper); border-radius: 20px; padding: 40px; text-align: center;
+  width: 90%; max-width: 400px; transform: translateY(20px); transition: transform 0.3s ease;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+.modal-overlay.show .modal-box {
+  transform: translateY(0);
+}
+.modal-icon {
+  width: 60px; height: 60px; border-radius: 50%; background: rgba(220,53,69,0.1); color: var(--crimson);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+}
+.modal-icon svg { width: 30px; height: 30px; stroke: currentColor; stroke-width: 2; }
+.modal-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; color: var(--ink); }
+.modal-text { color: rgba(26,22,32,0.6); font-size: 0.95rem; margin-bottom: 26px; }

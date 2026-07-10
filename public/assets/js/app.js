@@ -186,11 +186,8 @@ function recalcCartSummary(){
   });
   const subtotalEl = document.querySelector('.js-subtotal');
   const totalEl = document.querySelector('.js-total');
-  const shippingEl = document.querySelector('.js-shipping');
-  const shipping = subtotal > 0 ? 15 : 0;
   if(subtotalEl) subtotalEl.textContent = 'GH₵ ' + subtotal.toFixed(2);
-  if(shippingEl) shippingEl.textContent = shipping ? 'GH₵ ' + shipping.toFixed(2) : '—';
-  if(totalEl) totalEl.textContent = 'GH₵ ' + (subtotal + shipping).toFixed(2);
+  if(totalEl) totalEl.textContent = 'GH₵ ' + subtotal.toFixed(2);
 }
 recalcCartSummary();
 
@@ -204,9 +201,11 @@ document.querySelectorAll('.cart-remove').forEach(btn => {
       const remaining = document.querySelectorAll('.cart-row').length;
       const listEl = document.querySelector('.js-cart-list');
       const emptyEl = document.querySelector('.js-cart-empty');
+      const summaryEl = document.querySelector('.js-cart-summary');
       if(remaining === 0 && listEl && emptyEl){
         listEl.style.display = 'none';
         emptyEl.style.display = 'block';
+        if(summaryEl) summaryEl.style.display = 'none';
       }
     }
   });
@@ -294,7 +293,7 @@ async function addToCart(productId, qty = 1, btn = null) {
     btn.textContent = 'Adding...';
   }
   try {
-    const res = await fetch(`${BASE_URL}/cart_action.php`, {
+    const res = await fetch(`${BASE_URL}/api/cart/action.php`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'add', product_id: productId, qty: qty })

@@ -17,18 +17,18 @@ $cartCount = $cartObj->count();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php
-    $seoTitle = $pageTitle ?? 'Ohemaa Detergents — Cleanliness Fit for a Queen';
-    $seoDescription = $pageDescription ?? 'Ohemaa Cleaning Agents. Premium, highly effective liquid soaps, detergents, and cleaning products formulated and bottled in Kumasi, Ghana.';
-    $seoKeywords = $pageKeywords ?? 'Ohemaa, Detergents, Liquid Soap, Cleaning Products, Kumasi, Ghana, Home Care';
-    $seoImage = $pageImage ?? (BASE_URL . 'public/assets/img/logo.png');
-    $seoUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+  $seoTitle = $pageTitle ?? 'Ohemaa Detergents — Cleanliness Fit for a Queen';
+  $seoDescription = $pageDescription ?? 'Ohemaa Cleaning Agents. Premium, highly effective liquid soaps, detergents, and cleaning products formulated and bottled in Kumasi, Ghana.';
+  $seoKeywords = $pageKeywords ?? 'Ohemaa, Detergents, Liquid Soap, Cleaning Products, Kumasi, Ghana, Home Care';
+  $seoImage = $pageImage ?? (BASE_URL . 'public/assets/img/logo.png');
+  $seoUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
   ?>
   <title><?php echo htmlspecialchars($seoTitle); ?></title>
   <meta name="description" content="<?php echo htmlspecialchars($seoDescription); ?>">
   <meta name="keywords" content="<?php echo htmlspecialchars($seoKeywords); ?>">
   <meta name="author" content="Ohemaa Detergents">
   <link rel="canonical" href="<?php echo htmlspecialchars($seoUrl); ?>">
-  
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="<?php echo htmlspecialchars($seoUrl); ?>">
@@ -65,17 +65,17 @@ $cartCount = $cartObj->count();
           <circle cx="30" cy="30" r="4" fill="#2B1B4D" />
         </svg>
         <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.1;">
-            <span style="font-weight: 800; font-size: 1em;">OHEMAA</span>
-            <span style="font-size: 0.4em; letter-spacing: 0.15em; opacity: 0.85; font-weight: 600;">DETERGENTS</span>
+          <span style="font-weight: 800; font-size: 1em;">OHEMAA</span>
+          <span style="font-size: 0.4em; letter-spacing: 0.15em; opacity: 0.85; font-weight: 600;">DETERGENTS</span>
         </div>
       </a>
       <div class="nav-main">
         <div class="nav-links" id="navLinks">
-          <a href="<?php echo BASE_URL; ?>about">Heritage</a>
-          <a href="<?php echo BASE_URL; ?>shop">Products</a>
+          <a href="<?php echo BASE_URL; ?>about">About</a>
+          <a href="<?php echo BASE_URL; ?>shop">Shop</a>
           <a href="<?php echo BASE_URL; ?>process">Process</a>
           <a href="<?php echo BASE_URL; ?>stockists">Stockists</a>
-          <a href="#sustainability">Sustainability</a>
+          <!-- <a href="#sustainability">Sustainability</a> -->
           <a href="<?php echo BASE_URL; ?>contact">Contact</a>
           <a href="<?php echo BASE_URL; ?>track_order">Track Order</a>
           <a href="<?php echo BASE_URL; ?>become_stockist" class="nav-cta"
