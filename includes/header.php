@@ -17,7 +17,7 @@ $cartCount = $cartObj->count();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php
-  $seoTitle = $pageTitle ?? 'Ohemaa Detergents — Cleanliness Fit for a Queen';
+  $seoTitle = $pageTitle ?? 'Ohemaa Detergents — Clean Household... Live in Health';
   $seoDescription = $pageDescription ?? 'Ohemaa Cleaning Agents. Premium, highly effective liquid soaps, detergents, and cleaning products formulated and bottled in Kumasi, Ghana.';
   $seoKeywords = $pageKeywords ?? 'Ohemaa, Detergents, Liquid Soap, Cleaning Products, Kumasi, Ghana, Home Care';
   $seoImage = $pageImage ?? (BASE_URL . 'public/assets/img/logo.png');

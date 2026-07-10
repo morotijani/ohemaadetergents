@@ -15,7 +15,7 @@
             <span style="font-size: 0.4em; letter-spacing: 0.15em; opacity: 0.85; font-weight: 600;">DETERGENTS</span>
           </div>
         </div>
-        <p>Formulated and bottled in Ghana, and by Ghanaians. Cleanliness fit for a queen, since day one.</p>
+        <p>Formulated and bottled in Ghana, and by Ghanaians. Clean Household...... Live in Health, since day one.</p>
       </div>
       <div class="foot-col">
         <h4>Explore</h4>

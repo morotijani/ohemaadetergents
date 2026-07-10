@@ -9,7 +9,7 @@
     <div class="wrap hero-grid">
         <div class="hero-copy reveal in">
             <span class="eyebrow">Accra, Greater Accra Region — Nii Tempon Street, SDA Junction, Adenta</span>
-            <h1>Cleanliness fit for <em>a queen.</em></h1>
+            <h1>Clean Household <em>Live in Health.</em></h1>
             <p>Ohemaa means queen in Twi. Every bottle carries that standard — formulated in Ghana, tested to a royal
                 degree, and priced for every home in the household.</p>
             <div class="btn-row">
