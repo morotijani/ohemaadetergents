@@ -2,6 +2,8 @@
 
 namespace App;
 
+require_once __DIR__ . '/Helpers.php';
+
 class Auth
 {
     private static string $secretKey = 'your_super_secret_jwt_key_should_be_in_env_in_production';

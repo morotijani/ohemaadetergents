@@ -1,360 +1,360 @@
 // ---------- Mobile nav ----------
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
-if(navToggle && navLinks){
-  navToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    navToggle.setAttribute('aria-expanded', isOpen);
-  });
-  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 }
 
 // ---------- Scroll reveal ----------
 const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting){
-      entry.target.classList.add('in');
-      revealObserver.unobserve(entry.target);
-    }
-  });
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            revealObserver.unobserve(entry.target);
+        }
+    });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // ---------- Toast ----------
-function showToast(msg){
-  let toast = document.querySelector('.toast');
-  if(!toast){
-    toast = document.createElement('div');
-    toast.className = 'toast';
-    document.body.appendChild(toast);
-  }
-  toast.textContent = msg;
-  toast.classList.add('show');
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+function showToast(msg) {
+    let toast = document.querySelector('.toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
 }
 
 // ---------- In-memory cart badge demo (no backend / no storage) ----------
 window.__cartCount = window.__cartCount || 0;
-function bumpCartBadge(delta){
-  window.__cartCount = Math.max(0, window.__cartCount + delta);
-  document.querySelectorAll('.js-cart-badge').forEach(b => {
-    b.textContent = window.__cartCount;
-    b.style.display = window.__cartCount > 0 ? 'flex' : 'none';
-  });
+function bumpCartBadge(delta) {
+    window.__cartCount = Math.max(0, window.__cartCount + delta);
+    document.querySelectorAll('.js-cart-badge').forEach(b => {
+        b.textContent = window.__cartCount;
+        b.style.display = window.__cartCount > 0 ? 'flex' : 'none';
+    });
 }
 document.querySelectorAll('.add-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const box = btn.closest('.pd-buybox');
-    const qtyEl = box ? box.querySelector('.qty-val') : null;
-    const delta = qtyEl ? parseInt(qtyEl.textContent, 10) : 1;
-    bumpCartBadge(delta);
-    const original = btn.textContent;
-    btn.textContent = 'Added ✓';
-    btn.classList.add('added');
-    showToast(btn.dataset.product ? `${btn.dataset.product} added to cart` : 'Added to cart');
-    setTimeout(() => { btn.textContent = original; btn.classList.remove('added'); }, 1400);
-  });
+    btn.addEventListener('click', () => {
+        const box = btn.closest('.pd-buybox');
+        const qtyEl = box ? box.querySelector('.qty-val') : null;
+        const delta = qtyEl ? parseInt(qtyEl.textContent, 10) : 1;
+        bumpCartBadge(delta);
+        const original = btn.textContent;
+        btn.textContent = 'Added ✓';
+        btn.classList.add('added');
+        showToast(btn.dataset.product ? `${btn.dataset.product} added to cart` : 'Added to cart');
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('added'); }, 1400);
+    });
 });
 
 // ---------- Product detail tabs ----------
 document.querySelectorAll('.tab-nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const nav = btn.closest('.tab-nav');
-    nav.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const wrapper = nav.closest('.pd-tabs');
-    wrapper.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    const target = wrapper.querySelector('#' + btn.dataset.tabTarget);
-    if(target) target.classList.add('active');
-  });
+    btn.addEventListener('click', () => {
+        const nav = btn.closest('.tab-nav');
+        nav.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const wrapper = nav.closest('.pd-tabs');
+        wrapper.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        const target = wrapper.querySelector('#' + btn.dataset.tabTarget);
+        if (target) target.classList.add('active');
+    });
 });
 
 // ---------- Product detail option chips (size) ----------
 document.querySelectorAll('.option-row').forEach(row => {
-  row.querySelectorAll('.option-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      row.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
+    row.querySelectorAll('.option-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            row.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+        });
     });
-  });
 });
 
 // ---------- Product gallery thumbnails ----------
 document.querySelectorAll('.pd-thumb').forEach(thumb => {
-  thumb.addEventListener('click', () => {
-    thumb.parentElement.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
-    thumb.classList.add('active');
-  });
+    thumb.addEventListener('click', () => {
+        thumb.parentElement.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+    });
 });
 
 // ---------- Stockist directory search ----------
 const directorySearch = document.getElementById('directorySearch');
-if(directorySearch){
-  directorySearch.addEventListener('input', () => {
-    const q = directorySearch.value.trim().toLowerCase();
-    let visibleCount = 0;
-    document.querySelectorAll('.stockist-card').forEach(card => {
-      const activeChip = document.querySelector('.filter-chip.active');
-      const cat = activeChip ? activeChip.dataset.filter : 'all';
-      const matchesRegion = cat === 'all' || card.dataset.category === cat;
-      const matchesSearch = !q || card.textContent.toLowerCase().includes(q);
-      const show = matchesRegion && matchesSearch;
-      card.style.display = show ? '' : 'none';
-      if(show) visibleCount++;
+if (directorySearch) {
+    directorySearch.addEventListener('input', () => {
+        const q = directorySearch.value.trim().toLowerCase();
+        let visibleCount = 0;
+        document.querySelectorAll('.stockist-card').forEach(card => {
+            const activeChip = document.querySelector('.filter-chip.active');
+            const cat = activeChip ? activeChip.dataset.filter : 'all';
+            const matchesRegion = cat === 'all' || card.dataset.category === cat;
+            const matchesSearch = !q || card.textContent.toLowerCase().includes(q);
+            const show = matchesRegion && matchesSearch;
+            card.style.display = show ? '' : 'none';
+            if (show) visibleCount++;
+        });
+        const noResults = document.querySelector('.no-results');
+        if (noResults) noResults.classList.toggle('show', visibleCount === 0);
     });
-    const noResults = document.querySelector('.no-results');
-    if(noResults) noResults.classList.toggle('show', visibleCount === 0);
-  });
 }
-if(filterChips.length && document.querySelector('.stockist-card')){
-  filterChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      if(directorySearch) directorySearch.dispatchEvent(new Event('input'));
+if (filterChips.length && document.querySelector('.stockist-card')) {
+    filterChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            if (directorySearch) directorySearch.dispatchEvent(new Event('input'));
+        });
     });
-  });
 }
 
 // ---------- Accordion ----------
 document.querySelectorAll('.accordion-trigger').forEach(trigger => {
-  trigger.addEventListener('click', () => {
-    const item = trigger.closest('.accordion-item');
-    const panel = item.querySelector('.accordion-panel');
-    const isOpen = item.classList.contains('open');
-    item.parentElement.querySelectorAll('.accordion-item.open').forEach(openItem => {
-      if(openItem !== item){
-        openItem.classList.remove('open');
-        openItem.querySelector('.accordion-panel').style.maxHeight = null;
-      }
+    trigger.addEventListener('click', () => {
+        const item = trigger.closest('.accordion-item');
+        const panel = item.querySelector('.accordion-panel');
+        const isOpen = item.classList.contains('open');
+        item.parentElement.querySelectorAll('.accordion-item.open').forEach(openItem => {
+            if (openItem !== item) {
+                openItem.classList.remove('open');
+                openItem.querySelector('.accordion-panel').style.maxHeight = null;
+            }
+        });
+        if (isOpen) {
+            item.classList.remove('open');
+            panel.style.maxHeight = null;
+        } else {
+            item.classList.add('open');
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+        }
     });
-    if(isOpen){
-      item.classList.remove('open');
-      panel.style.maxHeight = null;
-    } else {
-      item.classList.add('open');
-      panel.style.maxHeight = panel.scrollHeight + 'px';
-    }
-  });
 });
 
 // ---------- Auth tabs (login page) ----------
 document.querySelectorAll('.tab-btn').forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = tab.dataset.tab;
-    tab.parentElement.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    document.querySelectorAll('.form-flip').forEach(f => f.classList.remove('active'));
-    const targetForm = document.getElementById(target);
-    if(targetForm) targetForm.classList.add('active');
-  });
+    tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+        tab.parentElement.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.form-flip').forEach(f => f.classList.remove('active'));
+        const targetForm = document.getElementById(target);
+        if (targetForm) targetForm.classList.add('active');
+    });
 });
 
 // ---------- Cart quantity steppers (cart page) ----------
 document.querySelectorAll('.qty-stepper').forEach(stepper => {
-  const valEl = stepper.querySelector('.qty-val');
-  const minus = stepper.querySelector('.qty-minus');
-  const plus = stepper.querySelector('.qty-plus');
-  if(!valEl || !minus || !plus) return;
-  const updateLineTotal = () => {
-    const row = stepper.closest('.cart-row');
-    if(!row) return;
-    const unit = parseFloat(row.dataset.unitPrice || '0');
-    const qty = parseInt(valEl.textContent, 10);
-    const lineEl = row.querySelector('.cart-line-total');
-    if(lineEl) lineEl.textContent = 'GH₵ ' + (unit * qty).toFixed(2);
-    recalcCartSummary();
-  };
-  minus.addEventListener('click', () => {
-    let v = parseInt(valEl.textContent, 10);
-    if(v > 1){ valEl.textContent = v - 1; updateLineTotal(); }
-  });
-  plus.addEventListener('click', () => {
-    let v = parseInt(valEl.textContent, 10);
-    valEl.textContent = v + 1; updateLineTotal();
-  });
+    const valEl = stepper.querySelector('.qty-val');
+    const minus = stepper.querySelector('.qty-minus');
+    const plus = stepper.querySelector('.qty-plus');
+    if (!valEl || !minus || !plus) return;
+    const updateLineTotal = () => {
+        const row = stepper.closest('.cart-row');
+        if (!row) return;
+        const unit = parseFloat(row.dataset.unitPrice || '0');
+        const qty = parseInt(valEl.textContent, 10);
+        const lineEl = row.querySelector('.cart-line-total');
+        if (lineEl) lineEl.textContent = 'GH₵ ' + (unit * qty).toFixed(2);
+        recalcCartSummary();
+    };
+    minus.addEventListener('click', () => {
+        let v = parseInt(valEl.textContent, 10);
+        if (v > 1) { valEl.textContent = v - 1; updateLineTotal(); }
+    });
+    plus.addEventListener('click', () => {
+        let v = parseInt(valEl.textContent, 10);
+        valEl.textContent = v + 1; updateLineTotal();
+    });
 });
 
-function recalcCartSummary(){
-  const rows = document.querySelectorAll('.cart-row[data-unit-price]');
-  if(!rows.length) return;
-  let subtotal = 0;
-  rows.forEach(row => {
-    const unit = parseFloat(row.dataset.unitPrice || '0');
-    const qty = parseInt(row.querySelector('.qty-val').textContent, 10);
-    subtotal += unit * qty;
-  });
-  const subtotalEl = document.querySelector('.js-subtotal');
-  const totalEl = document.querySelector('.js-total');
-  const shippingEl = document.querySelector('.js-shipping');
-  const shipping = subtotal > 0 ? 15 : 0;
-  if(subtotalEl) subtotalEl.textContent = 'GH₵ ' + subtotal.toFixed(2);
-  if(shippingEl) shippingEl.textContent = shipping ? 'GH₵ ' + shipping.toFixed(2) : '—';
-  if(totalEl) totalEl.textContent = 'GH₵ ' + (subtotal + shipping).toFixed(2);
+function recalcCartSummary() {
+    const rows = document.querySelectorAll('.cart-row[data-unit-price]');
+    if (!rows.length) return;
+    let subtotal = 0;
+    rows.forEach(row => {
+        const unit = parseFloat(row.dataset.unitPrice || '0');
+        const qty = parseInt(row.querySelector('.qty-val').textContent, 10);
+        subtotal += unit * qty;
+    });
+    const subtotalEl = document.querySelector('.js-subtotal');
+    const totalEl = document.querySelector('.js-total');
+    const shippingEl = document.querySelector('.js-shipping');
+    const shipping = subtotal > 0 ? 15 : 0;
+    if (subtotalEl) subtotalEl.textContent = 'GH₵ ' + subtotal.toFixed(2);
+    if (shippingEl) shippingEl.textContent = shipping ? 'GH₵ ' + shipping.toFixed(2) : '—';
+    if (totalEl) totalEl.textContent = 'GH₵ ' + (subtotal + shipping).toFixed(2);
 }
 recalcCartSummary();
 
 document.querySelectorAll('.cart-remove').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const row = btn.closest('.cart-row');
-    if(row){
-      row.remove();
-      recalcCartSummary();
-      const remaining = document.querySelectorAll('.cart-row').length;
-      const listEl = document.querySelector('.js-cart-list');
-      const emptyEl = document.querySelector('.js-cart-empty');
-      if(remaining === 0 && listEl && emptyEl){
-        listEl.style.display = 'none';
-        emptyEl.style.display = 'block';
-      }
-    }
-  });
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const row = btn.closest('.cart-row');
+        if (row) {
+            row.remove();
+            recalcCartSummary();
+            const remaining = document.querySelectorAll('.cart-row').length;
+            const listEl = document.querySelector('.js-cart-list');
+            const emptyEl = document.querySelector('.js-cart-empty');
+            if (remaining === 0 && listEl && emptyEl) {
+                listEl.style.display = 'none';
+                emptyEl.style.display = 'block';
+            }
+        }
+    });
 });
 
 // ---------- Product filter chips ----------
 const filterChips = document.querySelectorAll('.filter-chip');
-if(filterChips.length){
-  filterChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      filterChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      const cat = chip.dataset.filter;
-      let visibleCount = 0;
-      document.querySelectorAll('[data-category]').forEach(card => {
-        const show = cat === 'all' || card.dataset.category === cat;
-        card.style.display = show ? '' : 'none';
-        if(show) visibleCount++;
-      });
-      const noResults = document.querySelector('.no-results');
-      if(noResults && !document.getElementById('directorySearch')) noResults.classList.toggle('show', visibleCount === 0);
+if (filterChips.length) {
+    filterChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            filterChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            const cat = chip.dataset.filter;
+            let visibleCount = 0;
+            document.querySelectorAll('[data-category]').forEach(card => {
+                const show = cat === 'all' || card.dataset.category === cat;
+                card.style.display = show ? '' : 'none';
+                if (show) visibleCount++;
+            });
+            const noResults = document.querySelector('.no-results');
+            if (noResults && !document.getElementById('directorySearch')) noResults.classList.toggle('show', visibleCount === 0);
+        });
     });
-  });
 }
 
 // ---------- Password visibility toggle ----------
 document.querySelectorAll('.pw-toggle').forEach(toggle => {
-  toggle.addEventListener('click', () => {
-    const field = toggle.closest('.pw-field').querySelector('input');
-    const showing = field.type === 'text';
-    field.type = showing ? 'password' : 'text';
-    toggle.textContent = showing ? 'Show' : 'Hide';
-  });
+    toggle.addEventListener('click', () => {
+        const field = toggle.closest('.pw-field').querySelector('input');
+        const showing = field.type === 'text';
+        field.type = showing ? 'password' : 'text';
+        toggle.textContent = showing ? 'Show' : 'Hide';
+    });
 });
 
 // ---------- Checkout payment options ----------
 document.querySelectorAll('.payment-option').forEach(opt => {
-  opt.addEventListener('click', () => {
-    opt.parentElement.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
-    opt.classList.add('active');
-    const radio = opt.querySelector('input[type=radio]');
-    if(radio) radio.checked = true;
-  });
+    opt.addEventListener('click', () => {
+        opt.parentElement.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        const radio = opt.querySelector('input[type=radio]');
+        if (radio) radio.checked = true;
+    });
 });
 
 // ---------- Resend verification cooldown ----------
 document.querySelectorAll('.js-resend-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    let seconds = 30;
-    btn.disabled = true;
-    const original = btn.textContent;
-    const timerEl = document.querySelector('.resend-timer');
-    showToast('Verification email sent');
-    const interval = setInterval(() => {
-      if(timerEl) timerEl.textContent = `You can resend in ${seconds}s`;
-      seconds--;
-      if(seconds < 0){
-        clearInterval(interval);
-        btn.disabled = false;
-        btn.textContent = original;
-        if(timerEl) timerEl.textContent = '';
-      }
-    }, 1000);
-  });
+    btn.addEventListener('click', () => {
+        let seconds = 30;
+        btn.disabled = true;
+        const original = btn.textContent;
+        const timerEl = document.querySelector('.resend-timer');
+        showToast('Verification email sent');
+        const interval = setInterval(() => {
+            if (timerEl) timerEl.textContent = `You can resend in ${seconds}s`;
+            seconds--;
+            if (seconds < 0) {
+                clearInterval(interval);
+                btn.disabled = false;
+                btn.textContent = original;
+                if (timerEl) timerEl.textContent = '';
+            }
+        }, 1000);
+    });
 });
 
 // ---------- Wholesale quote builder ----------
 const wholesaleProducts = [
-  { id: 'msc', name: 'Multi-Surface Cleaner', carton: 12, tiers: [{min:1,max:9,price:24},{min:10,max:49,price:21},{min:50,max:Infinity,price:18}] },
-  { id: 'ld',  name: 'Liquid Detergent',       carton: 12, tiers: [{min:1,max:9,price:30},{min:10,max:49,price:26},{min:50,max:Infinity,price:23}] },
-  { id: 'dw',  name: 'Dishwashing Liquid',     carton: 24, tiers: [{min:1,max:9,price:16},{min:10,max:49,price:14},{min:50,max:Infinity,price:12}] },
-  { id: 'fs',  name: 'Fabric Softener',        carton: 12, tiers: [{min:1,max:9,price:22},{min:10,max:49,price:19},{min:50,max:Infinity,price:17}] },
-  { id: 'db',  name: 'Disinfectant Bleach',    carton: 12, tiers: [{min:1,max:9,price:18},{min:10,max:49,price:16},{min:50,max:Infinity,price:14}] },
+    { id: 'msc', name: 'Multi-Surface Cleaner', carton: 12, tiers: [{ min: 1, max: 9, price: 24 }, { min: 10, max: 49, price: 21 }, { min: 50, max: Infinity, price: 18 }] },
+    { id: 'ld', name: 'Liquid Detergent', carton: 12, tiers: [{ min: 1, max: 9, price: 30 }, { min: 10, max: 49, price: 26 }, { min: 50, max: Infinity, price: 23 }] },
+    { id: 'dw', name: 'Dishwashing Liquid', carton: 24, tiers: [{ min: 1, max: 9, price: 16 }, { min: 10, max: 49, price: 14 }, { min: 50, max: Infinity, price: 12 }] },
+    { id: 'fs', name: 'Fabric Softener', carton: 12, tiers: [{ min: 1, max: 9, price: 22 }, { min: 10, max: 49, price: 19 }, { min: 50, max: Infinity, price: 17 }] },
+    { id: 'db', name: 'Disinfectant Bleach', carton: 12, tiers: [{ min: 1, max: 9, price: 18 }, { min: 10, max: 49, price: 16 }, { min: 50, max: Infinity, price: 14 }] },
 ];
 
-function tierPriceFor(product, cartons){
-  const tier = product.tiers.find(t => cartons >= t.min && cartons <= t.max) || product.tiers[0];
-  return tier.price;
+function tierPriceFor(product, cartons) {
+    const tier = product.tiers.find(t => cartons >= t.min && cartons <= t.max) || product.tiers[0];
+    return tier.price;
 }
 
 const quoteBuilder = document.getElementById('quoteBuilder');
-if(quoteBuilder){
-  function recalcQuoteBuilder(){
-    let subtotal = 0;
-    document.querySelectorAll('.quote-row[data-product-id]').forEach(row => {
-      const product = wholesaleProducts.find(p => p.id === row.dataset.productId);
-      const input = row.querySelector('.carton-input');
-      const cartons = Math.max(0, parseInt(input.value, 10) || 0);
-      const unitPrice = tierPriceFor(product, cartons || 1);
-      const lineTotal = cartons * product.carton * unitPrice;
-      row.querySelector('.quote-unit-price').textContent = cartons > 0 ? `GH₵ ${unitPrice.toFixed(2)} / unit` : '—';
-      row.querySelector('.quote-line-total').textContent = `GH₵ ${lineTotal.toFixed(2)}`;
-      subtotal += lineTotal;
+if (quoteBuilder) {
+    function recalcQuoteBuilder() {
+        let subtotal = 0;
+        document.querySelectorAll('.quote-row[data-product-id]').forEach(row => {
+            const product = wholesaleProducts.find(p => p.id === row.dataset.productId);
+            const input = row.querySelector('.carton-input');
+            const cartons = Math.max(0, parseInt(input.value, 10) || 0);
+            const unitPrice = tierPriceFor(product, cartons || 1);
+            const lineTotal = cartons * product.carton * unitPrice;
+            row.querySelector('.quote-unit-price').textContent = cartons > 0 ? `GH₵ ${unitPrice.toFixed(2)} / unit` : '—';
+            row.querySelector('.quote-line-total').textContent = `GH₵ ${lineTotal.toFixed(2)}`;
+            subtotal += lineTotal;
+        });
+        const vat = subtotal * 0.15;
+        const total = subtotal + vat;
+        document.querySelector('.js-wh-subtotal').textContent = `GH₵ ${subtotal.toFixed(2)}`;
+        document.querySelector('.js-wh-vat').textContent = `GH₵ ${vat.toFixed(2)}`;
+        document.querySelector('.js-wh-total').textContent = `GH₵ ${total.toFixed(2)}`;
+        return { subtotal, vat, total };
+    }
+    document.querySelectorAll('.carton-input').forEach(input => {
+        input.addEventListener('input', recalcQuoteBuilder);
     });
-    const vat = subtotal * 0.15;
-    const total = subtotal + vat;
-    document.querySelector('.js-wh-subtotal').textContent = `GH₵ ${subtotal.toFixed(2)}`;
-    document.querySelector('.js-wh-vat').textContent = `GH₵ ${vat.toFixed(2)}`;
-    document.querySelector('.js-wh-total').textContent = `GH₵ ${total.toFixed(2)}`;
-    return { subtotal, vat, total };
-  }
-  document.querySelectorAll('.carton-input').forEach(input => {
-    input.addEventListener('input', recalcQuoteBuilder);
-  });
-  recalcQuoteBuilder();
-  window.__recalcQuoteBuilder = recalcQuoteBuilder;
+    recalcQuoteBuilder();
+    window.__recalcQuoteBuilder = recalcQuoteBuilder;
 }
 
-function generateInvoice(){
-  const totals = window.__recalcQuoteBuilder ? window.__recalcQuoteBuilder() : null;
-  if(!totals || totals.subtotal <= 0){
-    showToast('Add at least one product quantity first');
-    return;
-  }
-  const company = document.getElementById('whCompany').value || 'Your Company Name';
-  const contact = document.getElementById('whContact').value || 'Contact Person';
-  const email = document.getElementById('whEmail').value || 'you@company.com';
-  const phone = document.getElementById('whPhone').value || '—';
-  const address = document.getElementById('whAddress').value || 'Delivery address';
+function generateInvoice() {
+    const totals = window.__recalcQuoteBuilder ? window.__recalcQuoteBuilder() : null;
+    if (!totals || totals.subtotal <= 0) {
+        showToast('Add at least one product quantity first');
+        return;
+    }
+    const company = document.getElementById('whCompany').value || 'Your Company Name';
+    const contact = document.getElementById('whContact').value || 'Contact Person';
+    const email = document.getElementById('whEmail').value || 'you@company.com';
+    const phone = document.getElementById('whPhone').value || '—';
+    const address = document.getElementById('whAddress').value || 'Delivery address';
 
-  const today = new Date();
-  const validUntil = new Date(today.getTime() + 14*24*60*60*1000);
-  const fmt = d => d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-  const piNumber = 'PI-' + today.getFullYear() + '-' + String(Math.floor(1000 + Math.random()*9000));
+    const today = new Date();
+    const validUntil = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000);
+    const fmt = d => d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    const piNumber = 'PI-' + today.getFullYear() + '-' + String(Math.floor(1000 + Math.random() * 9000));
 
-  let rows = '';
-  document.querySelectorAll('.quote-row[data-product-id]').forEach(row => {
-    const product = wholesaleProducts.find(p => p.id === row.dataset.productId);
-    const cartons = parseInt(row.querySelector('.carton-input').value, 10) || 0;
-    if(cartons <= 0) return;
-    const unitPrice = tierPriceFor(product, cartons);
-    const units = cartons * product.carton;
-    const lineTotal = units * unitPrice;
-    rows += `<tr>
-      <td>${product.name}<br><span style="font-size:0.76rem; color:rgba(26,22,32,0.5);">${cartons} carton${cartons>1?'s':''} × ${product.carton} units</span></td>
+    let rows = '';
+    document.querySelectorAll('.quote-row[data-product-id]').forEach(row => {
+        const product = wholesaleProducts.find(p => p.id === row.dataset.productId);
+        const cartons = parseInt(row.querySelector('.carton-input').value, 10) || 0;
+        if (cartons <= 0) return;
+        const unitPrice = tierPriceFor(product, cartons);
+        const units = cartons * product.carton;
+        const lineTotal = units * unitPrice;
+        rows += `<tr>
+      <td>${product.name}<br><span style="font-size:0.76rem; color:rgba(26,22,32,0.5);">${cartons} carton${cartons > 1 ? 's' : ''} × ${product.carton} units</span></td>
       <td class="num">${units}</td>
       <td class="num">GH₵ ${unitPrice.toFixed(2)}</td>
       <td class="num">GH₵ ${lineTotal.toFixed(2)}</td>
     </tr>`;
-  });
+    });
 
-  document.getElementById('invoiceDoc').innerHTML = `
+    document.getElementById('invoiceDoc').innerHTML = `
     <div class="invoice-head">
       <div>
         <div class="invoice-brand">
           <svg width="36" height="36" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="29" fill="#2B1B4D" stroke="#C9A227" stroke-width="1.5"/><circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1"/><path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227"/><circle cx="30" cy="30" r="4" fill="#2B1B4D"/></svg>
           OHEMAA
         </div>
-        <p style="font-size:0.82rem; color:rgba(26,22,32,0.55); margin-top:6px;">Kaase Industrial Area, Kumasi, Ashanti Region, GH<br>hello@ohemaaclean.com · +233 24 000 0000</p>
+        <p style="font-size:0.82rem; color:rgba(26,22,32,0.55); margin-top:6px;">Accra, Greater Accra Region — Nii Tempon Street, SDA Junction, Adenta, GH<br>info@ohemaa-detergents.com · +233 24 515 5966 / +233 55 964 5525</p>
       </div>
       <div class="invoice-meta">
         <span class="invoice-title">Pro-Forma Invoice</span>
@@ -394,20 +394,20 @@ function generateInvoice(){
     </div>
   `;
 
-  document.getElementById('invoiceSection').style.display = 'block';
-  document.getElementById('invoiceSection').scrollIntoView({ behavior:'smooth', block:'start' });
-  showToast('Pro-forma invoice generated');
+    document.getElementById('invoiceSection').style.display = 'block';
+    document.getElementById('invoiceSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('Pro-forma invoice generated');
 }
 
 // ---------- Track order demo ----------
 const trackForm = document.getElementById('trackForm');
-if(trackForm){
-  trackForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const result = document.getElementById('trackResult');
-    if(result){
-      result.style.display = 'block';
-      result.scrollIntoView({ behavior:'smooth', block:'start' });
-    }
-  });
+if (trackForm) {
+    trackForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const result = document.getElementById('trackResult');
+        if (result) {
+            result.style.display = 'block';
+            result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
 }

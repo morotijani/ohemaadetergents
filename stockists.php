@@ -1,4 +1,20 @@
-<?php include 'includes/header.php'; ?>
+<?php
+require_once __DIR__ . '/src/Database.php';
+use App\Database;
+
+try {
+    $db = Database::getInstance()->getConnection();
+    $stmt = $db->query("SELECT shop_name, region, town_area, phone, business_type 
+                        FROM stockist_applications 
+                        WHERE status = 'approved' 
+                        ORDER BY region ASC, shop_name ASC");
+    $stockists = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $stockists = [];
+}
+
+include 'includes/header.php'; 
+?>
 
 <header class="page-hero">
   <svg class="page-hero-watermark" viewBox="0 0 60 60" fill="none">
@@ -38,12 +54,16 @@
     <div class="directory-toolbar reveal">
       <div class="filter-bar" style="margin-bottom:0;">
         <button class="filter-chip active" data-filter="all">All regions</button>
-        <button class="filter-chip" data-filter="kumasi">Kumasi</button>
-        <button class="filter-chip" data-filter="obuasi">Obuasi</button>
-        <button class="filter-chip" data-filter="ejisu">Ejisu</button>
-        <button class="filter-chip" data-filter="mampong">Mampong</button>
-        <button class="filter-chip" data-filter="konongo">Konongo</button>
-        <button class="filter-chip" data-filter="accra">Accra</button>
+        <?php
+        $regions = array_unique(array_column($stockists, 'region'));
+        sort($regions);
+        foreach ($regions as $r):
+            if (empty(trim($r))) continue;
+            $filterVal = strtolower(htmlspecialchars($r));
+            $displayName = htmlspecialchars($r);
+        ?>
+        <button class="filter-chip" data-filter="<?php echo $filterVal; ?>"><?php echo $displayName; ?></button>
+        <?php endforeach; ?>
       </div>
       <div class="directory-search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
@@ -53,85 +73,15 @@
 
     <div class="stockist-grid">
 
-      <div class="stockist-card reveal" data-category="kumasi">
-        <div class="stockist-top"><h3>Yeboah Provisions</h3><span class="stockist-region-tag">Kumasi</span></div>
-        <div class="stockist-type">Provision Shop</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Bantama Market Road, Kumasi</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>024 112 3344</div>
-        <div class="stockist-hours">Mon–Sat · 7:00am – 8:00pm</div>
-      </div>
-
-      <div class="stockist-card reveal" data-category="kumasi">
-        <div class="stockist-top"><h3>Adum Central Mart</h3><span class="stockist-region-tag">Kumasi</span></div>
-        <div class="stockist-type">Supermarket</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Adum High Street, Kumasi</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>024 556 7788</div>
-        <div class="stockist-hours">Mon–Sun · 8:00am – 9:00pm</div>
-      </div>
-
-      <div class="stockist-card reveal" data-category="kumasi">
-        <div class="stockist-top"><h3>Kwame Owusu Salon Supply</h3><span class="stockist-region-tag">Kumasi</span></div>
-        <div class="stockist-type">Salon & Spa</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Adum, near Roman Hill, Kumasi</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>020 334 5566</div>
-        <div class="stockist-hours">Tue–Sun · 9:00am – 7:00pm</div>
-      </div>
-
-      <div class="stockist-card reveal" data-category="kumasi">
-        <div class="stockist-top"><h3>Asokwa Home Essentials</h3><span class="stockist-region-tag">Kumasi</span></div>
-        <div class="stockist-type">Provision Shop</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Asokwa Roundabout, Kumasi</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>054 221 9080</div>
-        <div class="stockist-hours">Mon–Sat · 7:30am – 8:30pm</div>
-      </div>
-
-      <div class="stockist-card reveal" data-category="obuasi">
-        <div class="stockist-top"><h3>Obuasi Fresh Mart</h3><span class="stockist-region-tag">Obuasi</span></div>
-        <div class="stockist-type">Supermarket</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Zongo Road, Obuasi</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>020 887 1122</div>
+      <?php foreach ($stockists as $s): ?>
+      <div class="stockist-card reveal" data-category="<?php echo strtolower(htmlspecialchars($s['region'])); ?>">
+        <div class="stockist-top"><h3><?php echo htmlspecialchars($s['shop_name']); ?></h3><span class="stockist-region-tag"><?php echo htmlspecialchars($s['region']); ?></span></div>
+        <div class="stockist-type"><?php echo htmlspecialchars($s['business_type']); ?></div>
+        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg><?php echo htmlspecialchars($s['town_area']); ?>, <?php echo htmlspecialchars($s['region']); ?></div>
+        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg><?php echo htmlspecialchars($s['phone']); ?></div>
         <div class="stockist-hours">Mon–Sat · 8:00am – 8:00pm</div>
       </div>
-
-      <div class="stockist-card reveal" data-category="ejisu">
-        <div class="stockist-top"><h3>Ejisu Corner Shop</h3><span class="stockist-region-tag">Ejisu</span></div>
-        <div class="stockist-type">Provision Shop</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Ejisu Main Road, near the market</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>027 445 6612</div>
-        <div class="stockist-hours">Mon–Sat · 7:00am – 7:30pm</div>
-      </div>
-
-      <div class="stockist-card reveal" data-category="mampong">
-        <div class="stockist-top"><h3>Mampong Valley Hotel</h3><span class="stockist-region-tag">Mampong</span></div>
-        <div class="stockist-type">Hospitality</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Kumasi Road, Mampong</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>032 208 4471</div>
-        <div class="stockist-hours">Front desk supply · 24 hours</div>
-      </div>
-
-      <div class="stockist-card reveal" data-category="konongo">
-        <div class="stockist-top"><h3>Konongo Household Store</h3><span class="stockist-region-tag">Konongo</span></div>
-        <div class="stockist-type">Provision Shop</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Konongo Zongo Junction</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>054 990 3321</div>
-        <div class="stockist-hours">Mon–Sat · 7:00am – 8:00pm</div>
-      </div>
-
-      <div class="stockist-card reveal" data-category="accra">
-        <div class="stockist-top"><h3>Osu Lifestyle Mart</h3><span class="stockist-region-tag">Accra</span></div>
-        <div class="stockist-type">Supermarket</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>Oxford Street, Osu, Accra</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>020 776 4432</div>
-        <div class="stockist-hours">Mon–Sun · 8:00am – 9:00pm</div>
-      </div>
-
-      <div class="stockist-card reveal" data-category="accra">
-        <div class="stockist-top"><h3>East Legon Home Care</h3><span class="stockist-region-tag">Accra</span></div>
-        <div class="stockist-type">Provision Shop</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"/></svg>American House Road, East Legon</div>
-        <div class="stockist-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>055 302 8891</div>
-        <div class="stockist-hours">Mon–Sat · 8:00am – 8:00pm</div>
-      </div>
+      <?php endforeach; ?>
 
     </div>
 

@@ -564,6 +564,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <a href="<?php echo BASE_URL; ?>admin/customers/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/customers/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">group</span> Customers
             </a>
+            <a href="<?php echo BASE_URL; ?>admin/stockists/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/stockists/') !== false ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">storefront</span> Stockists
+            </a>
+            <a href="<?php echo BASE_URL; ?>admin/wholesale/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/wholesale/') !== false ? 'active' : ''; ?>">
+                <span class="material-symbols-outlined">box</span> Wholesale
+            </a>
             <a href="<?php echo BASE_URL; ?>admin/coupons/index" class="<?php echo strpos($_SERVER['PHP_SELF'], '/coupons/') !== false ? 'active' : ''; ?>">
                 <span class="material-symbols-outlined">sell</span> Coupons
             </a>
