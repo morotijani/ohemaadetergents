@@ -713,7 +713,7 @@ section{ padding:100px 0; position:relative; }
 /* ---------- Footer ---------- */
 footer{ background:var(--indigo-deep); color:rgba(247,243,234,0.7); padding:70px 0 30px; }
 .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(247,243,234,0.12); }
-@media (max-width:760px){ .foot-grid{grid-template-columns:1fr 1fr; row-gap:34px;} }
+@media (max-width:760px){ .foot-grid{grid-template-columns:1fr 1fr; row-gap:34px;} .foot-brand{grid-column:span 2;} }
 .foot-brand .brand{ color:var(--ivory); margin-bottom:14px; }
 .foot-brand p{ font-size:0.9rem; max-width:32ch; }
 .foot-col h4{ font-family:'Manrope', sans-serif; font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-light); margin-bottom:14px; font-weight:700; }
