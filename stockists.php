@@ -92,7 +92,7 @@ include 'includes/header.php';
   </div>
 </section>
 
-<section class="stockists">
+<section class="stockists" style="background-color: rgb(220 53 69 / 22%) !important;">
   <div class="wrap" style="text-align:center;">
     <div class="reveal" style="max-width:560px; margin:0 auto;">
       <span class="eyebrow" style="justify-content:center;">Not on this list yet?</span>

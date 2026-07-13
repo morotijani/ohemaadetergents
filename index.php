@@ -313,7 +313,7 @@
     </div>
 </section>
 
-<section class="stockists" id="stockists">
+<section class="stockists" id="stockists" style="background-color: rgb(220 53 69 / 22%) !important;">
     <div class="wrap stock-grid">
         <div class="reveal">
             <span class="eyebrow">Get Ohemaa in your shop</span>

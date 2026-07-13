@@ -26,7 +26,7 @@
                             d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z" />
                     </svg></div>
                 <h3>Call us</h3>
-                <p><a href="tel:+233240000000">+233 24 515 5966 / +233 55 964 5525</a></p>
+                <p><a href="tel:+233245155966">+233 24 515 5966</a></p>
                 <p>Mon–Sat, 8am–6pm GMT</p>
             </div>
             <div class="contact-card">
@@ -36,7 +36,7 @@
                         <path d="M4 6l8 7 8-7" />
                     </svg></div>
                 <h3>Email us</h3>
-                <p><a href="mailto:hello@ohemaaclean.com">hello@ohemaaclean.com</a></p>
+                <p><a href="mailto:info@ohemaa-detergents.com">info@ohemaa-detergents.com</a></p>
                 <p>We reply within one business day</p>
             </div>
             <div class="contact-card">
@@ -113,29 +113,31 @@
             <h2>Quick answers</h2>
         </div>
         <div class="wrap-narrow" style="padding:0; margin:0 auto;">
-            <div class="accordion">
-                <div class="accordion-item">
-                    <button class="accordion-trigger">Where's my order? <span class="plus">+</span></button>
-                    <div class="accordion-panel">
-                        <div class="accordion-panel-inner">Use our <a href="<?php echo BASE_URL; ?>track_order"
+            <div class="faq-accordion">
+                <div class="faq-accordion-item">
+                    <button class="faq-accordion-trigger">Where's my order? <span class="plus">+</span></button>
+                    <div class="faq-accordion-panel">
+                        <div class="faq-accordion-panel-inner">Use our <a href="<?php echo BASE_URL; ?>track_order"
                                 style="color:var(--indigo); font-weight:700;">order tracking page</a> with your order
                             number for the fastest answer.</div>
                     </div>
                 </div>
-                <div class="accordion-item">
-                    <button class="accordion-trigger">I want to sell Ohemaa in my shop. <span
+                <div class="faq-accordion-item">
+                    <button class="faq-accordion-trigger">I want to sell Ohemaa Detergents in my shop. <span
                             class="plus">+</span></button>
-                    <div class="accordion-panel">
-                        <div class="accordion-panel-inner">Head to our <a href="<?php echo BASE_URL; ?>become_stockist"
+                    <div class="faq-accordion-panel">
+                        <div class="faq-accordion-panel-inner">Head to our <a
+                                href="<?php echo BASE_URL; ?>become_stockist"
                                 style="color:var(--indigo); font-weight:700;">Become a Stockist</a> page and fill out
                             the short application form.</div>
                     </div>
                 </div>
-                <div class="accordion-item">
-                    <button class="accordion-trigger">Do you deliver outside the Ashanti Region? <span
+                <div class="faq-accordion-item">
+                    <button class="faq-accordion-trigger">Do you deliver outside the Ashanti Region? <span
                             class="plus">+</span></button>
-                    <div class="accordion-panel">
-                        <div class="accordion-panel-inner">We're actively expanding delivery coverage — Greater Accra is
+                    <div class="faq-accordion-panel">
+                        <div class="faq-accordion-panel-inner">We're actively expanding delivery coverage — Greater
+                            Accra is
                             now live, with more regions being added. Message us to check your area.</div>
                     </div>
                 </div>

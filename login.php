@@ -62,12 +62,8 @@ include 'includes/header.php';
 ?>
 <div class="auth-shell">
   <div class="auth-visual">
-    <svg class="seal" width="56" height="56" viewBox="0 0 60 60" fill="none">
-      <circle cx="30" cy="30" r="29" fill="none" stroke="#C9A227" stroke-width="1.5" />
-      <circle cx="30" cy="30" r="22" fill="none" stroke="#C9A227" stroke-width="1" />
-      <path d="M30 14 L34 26 L47 26 L36.5 33 L40.5 45 L30 37.5 L19.5 45 L23.5 33 L13 26 L26 26 Z" fill="#C9A227" />
-      <circle cx="30" cy="30" r="4" fill="#2B1B4D" />
-    </svg>
+    <img src="<?php echo BASE_URL; ?>/public/assets/img/logo.jpeg" alt="Ohemaa Detergents"
+                        style="width: 100px; height: auto;">
     <h2>Welcome back to Ohemaa.</h2>
     <p>Track orders, save delivery addresses, and reorder your regulars in a couple of taps.</p>
     <div class="hero-stats" style="margin-top:44px; padding-top:24px;">

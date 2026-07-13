@@ -98,22 +98,22 @@ include 'includes/header.php';
       <h2>Product FAQs</h2>
     </div>
     <div class="wrap-narrow" style="padding:0;">
-      <div class="accordion">
-        <div class="accordion-item">
-          <button class="accordion-trigger">Are Ohemaa products safe for sensitive skin? <span class="plus">+</span></button>
-          <div class="accordion-panel"><div class="accordion-panel-inner">Our dishwashing liquid and liquid detergent are formulated within dermatologically tested pH ranges. If you have a diagnosed skin condition, we recommend a patch test before regular use.</div></div>
+      <div class="faq-accordion">
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger">Are Ohemaa products safe for sensitive skin? <span class="plus">+</span></button>
+          <div class="faq-accordion-panel"><div class="faq-accordion-panel-inner">Our dishwashing liquid and liquid detergent are formulated within dermatologically tested pH ranges. If you have a diagnosed skin condition, we recommend a patch test before regular use.</div></div>
         </div>
-        <div class="accordion-item">
-          <button class="accordion-trigger">Can I buy Ohemaa products online for delivery? <span class="plus">+</span></button>
-          <div class="accordion-panel"><div class="accordion-panel-inner">Yes — add items to your cart and check out for delivery within Kumasi and select regions. You can also find a stockist near you for same-day pickup.</div></div>
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger">Can I buy Ohemaa products online for delivery? <span class="plus">+</span></button>
+          <div class="faq-accordion-panel"><div class="faq-accordion-panel-inner">Yes — add items to your cart and check out for delivery within Kumasi and select regions. You can also find a stockist near you for same-day pickup.</div></div>
         </div>
-        <div class="accordion-item">
-          <button class="accordion-trigger">Do you offer bulk or wholesale pricing? <span class="plus">+</span></button>
-          <div class="accordion-panel"><div class="accordion-panel-inner">Shops, hotels, and cleaning services ordering in volume can apply for wholesale pricing through our stockist programme or by contacting our business team directly.</div></div>
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger">Do you offer bulk or wholesale pricing? <span class="plus">+</span></button>
+          <div class="faq-accordion-panel"><div class="faq-accordion-panel-inner">Shops, hotels, and cleaning services ordering in volume can apply for wholesale pricing through our stockist programme or by contacting our business team directly.</div></div>
         </div>
-        <div class="accordion-item">
-          <button class="accordion-trigger">What's the shelf life of an unopened bottle? <span class="plus">+</span></button>
-          <div class="accordion-panel"><div class="accordion-panel-inner">Unopened, all Ohemaa products are stable for 24 months from the batch date printed on the bottle. Store away from direct sunlight for best results.</div></div>
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger">What's the shelf life of an unopened bottle? <span class="plus">+</span></button>
+          <div class="faq-accordion-panel"><div class="faq-accordion-panel-inner">Unopened, all Ohemaa products are stable for 24 months from the batch date printed on the bottle. Store away from direct sunlight for best results.</div></div>
         </div>
       </div>
     </div>
