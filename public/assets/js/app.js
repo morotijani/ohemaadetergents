@@ -34,28 +34,51 @@ function showToast(msg) {
     window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
 }
 
-// ---------- In-memory cart badge demo (no backend / no storage) ----------
-window.__cartCount = window.__cartCount || 0;
-function bumpCartBadge(delta) {
-    window.__cartCount = Math.max(0, window.__cartCount + delta);
-    document.querySelectorAll('.js-cart-badge').forEach(b => {
-        b.textContent = window.__cartCount;
-        b.style.display = window.__cartCount > 0 ? 'flex' : 'none';
-    });
+async function addToCart(productId, qty = 1, sizeId = null, btn = null) {
+    if (btn) {
+        btn.disabled = true;
+        btn.dataset.originalText = btn.textContent;
+        btn.textContent = 'Adding...';
+    }
+    
+    try {
+        const res = await fetch(`${BASE_URL}/api/cart/action.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'add', product_id: productId, qty: qty, size_id: sizeId })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            document.querySelectorAll('.js-cart-badge').forEach(b => {
+                b.textContent = data.data.count;
+                b.style.display = data.data.count > 0 ? 'flex' : 'none';
+            });
+            showToast('Added to cart');
+            if (btn) {
+                btn.textContent = 'Added ✓';
+                btn.classList.add('added');
+                setTimeout(() => { 
+                    btn.textContent = btn.dataset.originalText; 
+                    btn.classList.remove('added'); 
+                    btn.disabled = false; 
+                }, 1400);
+            }
+        } else {
+            showToast(data.message || 'Could not add to cart');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = btn.dataset.originalText;
+            }
+        }
+    } catch(e) {
+        console.error(e);
+        showToast('Network error');
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = btn.dataset.originalText;
+        }
+    }
 }
-document.querySelectorAll('.add-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const box = btn.closest('.pd-buybox');
-        const qtyEl = box ? box.querySelector('.qty-val') : null;
-        const delta = qtyEl ? parseInt(qtyEl.textContent, 10) : 1;
-        bumpCartBadge(delta);
-        const original = btn.textContent;
-        btn.textContent = 'Added ✓';
-        btn.classList.add('added');
-        showToast(btn.dataset.product ? `${btn.dataset.product} added to cart` : 'Added to cart');
-        setTimeout(() => { btn.textContent = original; btn.classList.remove('added'); }, 1400);
-    });
-});
 
 // ---------- Product detail tabs ----------
 document.querySelectorAll('.tab-nav-btn').forEach(btn => {
@@ -186,31 +209,13 @@ function recalcCartSummary() {
     });
     const subtotalEl = document.querySelector('.js-subtotal');
     const totalEl = document.querySelector('.js-total');
-    const shippingEl = document.querySelector('.js-shipping');
-    const shipping = subtotal > 0 ? 15 : 0;
     if (subtotalEl) subtotalEl.textContent = 'GH₵ ' + subtotal.toFixed(2);
-    if (shippingEl) shippingEl.textContent = shipping ? 'GH₵ ' + shipping.toFixed(2) : '—';
-    if (totalEl) totalEl.textContent = 'GH₵ ' + (subtotal + shipping).toFixed(2);
+    if (totalEl) totalEl.textContent = 'GH₵ ' + subtotal.toFixed(2);
 }
 recalcCartSummary();
 
-document.querySelectorAll('.cart-remove').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const row = btn.closest('.cart-row');
-        if (row) {
-            row.remove();
-            recalcCartSummary();
-            const remaining = document.querySelectorAll('.cart-row').length;
-            const listEl = document.querySelector('.js-cart-list');
-            const emptyEl = document.querySelector('.js-cart-empty');
-            if (remaining === 0 && listEl && emptyEl) {
-                listEl.style.display = 'none';
-                emptyEl.style.display = 'block';
-            }
-        }
-    });
-});
+// cart-remove click is handled per-row via inline onclick="removeItem()" in cart.php
+// No global listener needed here to avoid double-firing
 
 // ---------- Product filter chips ----------
 if (filterChips.length) {

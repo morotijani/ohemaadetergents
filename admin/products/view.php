@@ -76,6 +76,10 @@
                         <label class="text-muted small d-block">Price</label>
                         <span class="fw-bold fs-5 text-primary" id="viewPrice">GHS 0.00</span>
                     </div>
+                    <div class="mb-3" id="viewSizesSection" style="display:none;">
+                        <label class="text-muted small d-block">Sizes &amp; Pricing</label>
+                        <div id="viewSizesList" class="d-flex flex-wrap gap-2 mt-1"></div>
+                    </div>
                     <div class="mb-3">
                         <label class="text-muted small d-block">Category</label>
                         <span class="badge bg-light text-dark border" id="viewCategory">Uncategorized</span>
@@ -128,6 +132,7 @@
                                         <tr style="background-color: var(--hover-bg);">
                                             <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Order #</th>
                                             <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Date</th>
+                                            <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Size</th>
                                             <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Qty</th>
                                             <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Total</th>
                                             <th class="border-0 px-4 py-3 text-muted fw-medium" style="font-size: 14px;">Status</th>
@@ -206,6 +211,23 @@
         document.getElementById('viewDateAdded').innerText = new Date(p.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         document.getElementById('viewDescription').innerText = p.description || 'No description provided.';
 
+        // Populate Sizes
+        if (p.has_sizes && p.sizes && p.sizes.length > 0) {
+            document.getElementById('viewSizesSection').style.display = 'block';
+            const sizesList = document.getElementById('viewSizesList');
+            sizesList.innerHTML = '';
+            p.sizes.forEach(s => {
+                const badge = document.createElement('span');
+                badge.className = 'badge border d-inline-flex flex-column align-items-center px-3 py-2';
+                badge.style.cssText = 'font-size:12px; font-weight:500; color: var(--bs-body-color); background: var(--hover-bg); border-color: var(--bs-border-color)!important;';
+                badge.innerHTML = `<span>${s.label}</span><span class="text-primary fw-bold mt-1">GHS ${parseFloat(s.price).toFixed(2)}</span><span class="text-muted" style="font-size:10px;">Stock: ${s.stock}${s.is_default ? ' · Default' : ''}</span>`;
+                if (s.is_default) badge.classList.add('border-primary');
+                sizesList.appendChild(badge);
+            });
+        } else {
+            document.getElementById('viewSizesSection').style.display = 'none';
+        }
+
         // Populate Media
         const imageGrid = document.getElementById('viewImageGrid');
         imageGrid.innerHTML = '';
@@ -228,15 +250,19 @@
         const orderBody = document.getElementById('orderHistoryBody');
         orderBody.innerHTML = '';
         if (data.orders.length === 0) {
-            orderBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No orders yet.</td></tr>';
+            orderBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No orders yet.</td></tr>';
         } else {
             data.orders.forEach(o => {
                 const tr = document.createElement('tr');
                 tr.className = 'ohemaa-list-item';
                 tr.style.display = 'table-row';
+                const sizeCell = o.size_label 
+                    ? `<span class="badge bg-secondary-subtle text-secondary" style="font-size:11px;">${o.size_label}</span>`
+                    : `<span class="text-muted" style="font-size:12px;">—</span>`;
                 tr.innerHTML = `
                     <td class="px-4 py-3 fw-bold text-primary">#${o.tracking_number}</td>
                     <td class="px-4 py-3 text-muted" style="font-size: 14px;">${new Date(o.created_at).toLocaleDateString()}</td>
+                    <td class="px-4 py-3">${sizeCell}</td>
                     <td class="px-4 py-3">${o.quantity}</td>
                     <td class="px-4 py-3 fw-medium">GHS ${parseFloat(o.total_amount).toFixed(2)}</td>
                     <td class="px-4 py-3"><span class="badge rounded-pill bg-${getStatusColor(o.status)}" style="font-size: 11px; padding: 6px 12px; text-transform: capitalize;">${o.status}</span></td>

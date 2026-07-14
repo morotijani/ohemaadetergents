@@ -35,16 +35,33 @@ $defaultAddress = $loggedInCustomer['address'] ?? '';
 
 $total = 0;
 $products = [];
-$ids = array_keys($cartItems);
-$inClause = implode(',', array_fill(0, count($ids), '?'));
-$stmt = $db->prepare("SELECT id, name, price, stock, image_url FROM products WHERE id IN ($inClause)");
-$stmt->execute($ids);
-$productsData = $stmt->fetchAll();
+if (!empty($cartItems)) {
+  $productIds = array_values(array_unique(array_column($cartItems, 'product_id')));
+  $inClause = implode(',', array_fill(0, count($productIds), '?'));
+  $stmt = $db->prepare("SELECT id, name, price, stock, image_url FROM products WHERE id IN ($inClause)");
+  $stmt->execute($productIds);
+  $productsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $productsMap = [];
+  foreach ($productsData as $p) {
+      $productsMap[$p['id']] = $p;
+  }
 
-foreach ($productsData as $p) {
-    $qty = $cartItems[$p['id']];
-    $total += ($qty * $p['price']);
-    $products[] = ['id' => $p['id'], 'price' => $p['price'], 'qty' => $qty, 'name' => $p['name'], 'image_url' => $p['image_url']];
+  foreach ($cartItems as $key => $item) {
+    if (!isset($productsMap[$item['product_id']])) continue;
+    $p = $productsMap[$item['product_id']];
+    $qty = $item['qty'];
+    $price = $item['size_price'] !== null ? $item['size_price'] : $p['price'];
+    $total += ($qty * $price);
+    $products[] = [
+      'cart_key' => $key,
+      'id' => $p['id'],
+      'price' => $price,
+      'qty' => $qty,
+      'name' => $p['name'],
+      'image_url' => $p['image_url'],
+      'size_label' => $item['size_label']
+    ];
+  }
 }
 
 $deliveryFee = 0; // Will be calculated later
@@ -143,7 +160,15 @@ include 'includes/header.php';
         <div class="checkout-summary-items">
           <?php foreach ($products as $p): ?>
           <div class="mini-line">
-            <span><?php echo htmlspecialchars($p['name']); ?> <span class="qty-tag">×<?php echo $p['qty']; ?></span></span>
+            <span>
+              <div style="font-weight:700; color:var(--ink); font-size:1.05rem;">
+                <?php echo htmlspecialchars($p['name']); ?>
+                <?php if ($p['size_label']): ?>
+                  <span style="font-size: 0.8em; color: var(--ink-light); font-weight: normal;">(<?php echo htmlspecialchars($p['size_label']); ?>)</span>
+                <?php endif; ?>
+              </div>
+              <span class="qty-tag">×<?php echo $p['qty']; ?></span>
+            </span>
             <span>GH₵ <?php echo number_format($p['price'] * $p['qty'], 2); ?></span>
           </div>
           <?php endforeach; ?>

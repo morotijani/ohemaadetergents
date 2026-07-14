@@ -166,7 +166,10 @@ try {
             ?>
             <tr>
                 <td class="ps-0 py-3">
-                    <div class="fw-bold"><?php echo $item['product_name']; ?></div>
+                    <div class="fw-bold"><?php echo htmlspecialchars($item['product_name']); ?></div>
+                    <?php if (!empty($item['size_label'])): ?>
+                    <div style="font-size:12px; color:#5f6368; margin-top:2px;">Size: <?php echo htmlspecialchars($item['size_label']); ?></div>
+                    <?php endif; ?>
                 </td>
                 <td class="text-center py-3"><?php echo $item['quantity']; ?></td>
                 <td class="text-end py-3">GHS <?php echo number_format($item['unit_price'], 2); ?></td>

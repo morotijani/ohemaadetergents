@@ -279,9 +279,12 @@
                 <tbody>
     `;
         o.items.forEach(item => {
+            const sizeTag = item.size_label 
+                ? `<span class="badge bg-secondary-subtle text-secondary ms-1" style="font-size:11px; font-weight:500;">${item.size_label}</span>` 
+                : '';
             itemsHtml += `
             <tr class="ohemaa-list-item" style="display: table-row;">
-                <td class="px-4 py-3 fw-medium">${item.product_name}</td>
+                <td class="px-4 py-3 fw-medium">${item.product_name} ${sizeTag}</td>
                 <td class="px-4 py-3 text-center">${item.quantity}</td>
                 <td class="px-4 py-3 text-end">GHS ${parseFloat(item.unit_price).toFixed(2)}</td>
                 <td class="px-4 py-3 text-end fw-medium">GHS ${parseFloat(item.subtotal).toFixed(2)}</td>

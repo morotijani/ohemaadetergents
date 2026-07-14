@@ -13,27 +13,48 @@ class Cart
         }
     }
 
-    public function add(int $productId, int $qty = 1)
+    /**
+     * Generate a unique cart key.
+     * For sized products: "productId:sizeId"
+     * For plain products: "productId"
+     */
+    private function key(int $productId, ?int $sizeId = null): string
     {
-        if (isset($_SESSION['cart'][$productId])) {
-            $_SESSION['cart'][$productId] += $qty;
+        return $sizeId ? "{$productId}:{$sizeId}" : (string)$productId;
+    }
+
+    public function add(int $productId, int $qty = 1, ?int $sizeId = null, ?string $sizeLabel = null, ?float $sizePrice = null)
+    {
+        $key = $this->key($productId, $sizeId);
+        if (isset($_SESSION['cart'][$key])) {
+            $_SESSION['cart'][$key]['qty'] += $qty;
         } else {
-            $_SESSION['cart'][$productId] = $qty;
+            $_SESSION['cart'][$key] = [
+                'product_id' => $productId,
+                'qty'        => $qty,
+                'size_id'    => $sizeId,
+                'size_label' => $sizeLabel,
+                'size_price' => $sizePrice,
+            ];
         }
     }
 
-    public function update(int $productId, int $qty)
+    public function update(int $productId, int $qty, ?int $sizeId = null)
     {
+        $key = $this->key($productId, $sizeId);
         if ($qty <= 0) {
-            $this->remove($productId);
+            $this->remove($productId, $sizeId);
         } else {
-            $_SESSION['cart'][$productId] = $qty;
+            if (isset($_SESSION['cart'][$key])) {
+                $_SESSION['cart'][$key]['qty'] = $qty;
+            }
         }
     }
 
-    public function remove(int $productId)
+    public function remove(int $productId, ?int $sizeId = null)
     {
-        unset($_SESSION['cart'][$productId]);
+        $key = $this->key($productId, $sizeId);
+        unset($_SESSION['cart'][$key]);
     }
 
     public function clear()
@@ -48,6 +69,10 @@ class Cart
 
     public function count(): int
     {
-        return array_sum($_SESSION['cart']);
+        $total = 0;
+        foreach ($_SESSION['cart'] as $item) {
+            $total += is_array($item) ? (int)$item['qty'] : (int)$item;
+        }
+        return $total;
     }
 }

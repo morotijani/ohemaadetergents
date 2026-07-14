@@ -39,16 +39,31 @@ if (empty($cartItems)) {
 
 $total = 0;
 $products = [];
-$ids = array_keys($cartItems);
-$inClause = implode(',', array_fill(0, count($ids), '?'));
-$stmt = $db->prepare("SELECT id, name, price, stock, image_url FROM products WHERE id IN ($inClause)");
-$stmt->execute($ids);
-$productsData = $stmt->fetchAll();
+if (!empty($cartItems)) {
+  $productIds = array_values(array_unique(array_column($cartItems, 'product_id')));
+  $inClause = implode(',', array_fill(0, count($productIds), '?'));
+  $stmt = $db->prepare("SELECT id, name, price, stock, image_url FROM products WHERE id IN ($inClause)");
+  $stmt->execute($productIds);
+  $productsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $productsMap = [];
+  foreach ($productsData as $p) {
+      $productsMap[$p['id']] = $p;
+  }
 
-foreach ($productsData as $p) {
-    $qty = $cartItems[$p['id']];
-    $total += ($qty * $p['price']);
-    $products[] = ['id' => $p['id'], 'price' => $p['price'], 'qty' => $qty];
+  foreach ($cartItems as $key => $item) {
+    if (!isset($productsMap[$item['product_id']])) continue;
+    $p = $productsMap[$item['product_id']];
+    $qty = $item['qty'];
+    $price = $item['size_price'] !== null ? $item['size_price'] : $p['price'];
+    $total += ($qty * $price);
+    $products[] = [
+      'id' => $p['id'], 
+      'price' => $price, 
+      'qty' => $qty,
+      'size_id' => $item['size_id'],
+      'size_label' => $item['size_label']
+    ];
+  }
 }
 
 $grandTotal = $total;
@@ -80,9 +95,17 @@ try {
     $stmt->execute([$orderUuid, $trackingNumber, $customerId, $grandTotal, $address, $townArea, $region, $deliveryNote]);
     $orderId = $db->lastInsertId();
 
-    $stmt = $db->prepare("INSERT INTO order_items (order_item_id, order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO order_items (order_item_id, order_id, product_id, size_id, size_label, quantity, unit_price) VALUES (?, ?, ?, ?, ?, ?, ?)");
     foreach ($products as $p) {
-        $stmt->execute([Helpers::generateUuidV7Binary(), $orderId, $p['id'], $p['qty'], $p['price']]);
+        $stmt->execute([
+            Helpers::generateUuidV7Binary(), 
+            $orderId, 
+            $p['id'], 
+            $p['size_id'], 
+            $p['size_label'], 
+            $p['qty'], 
+            $p['price']
+        ]);
     }
 
     $amountInPesewas = $grandTotal * 100; 

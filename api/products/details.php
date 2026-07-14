@@ -43,8 +43,14 @@ try {
     $stmt->execute([$id]);
     $product['extra_images'] = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
+    // 2b. Sizes
+    $stmt = $db->prepare("SELECT id, label, price, stock, is_default, sort_order FROM product_sizes WHERE product_id = ? ORDER BY sort_order ASC, id ASC");
+    $stmt->execute([$id]);
+    $product['sizes']     = $stmt->fetchAll();
+    $product['has_sizes'] = !empty($product['sizes']);
+
     // 3. Order History
-    $stmt = $db->prepare("SELECT o.id, o.tracking_number, o.status, o.total_amount, o.created_at, oi.quantity, oi.unit_price as price_at_time
+    $stmt = $db->prepare("SELECT o.id, o.tracking_number, o.status, o.total_amount, o.created_at, oi.quantity, oi.unit_price as price_at_time, oi.size_label
                           FROM order_items oi
                           JOIN orders o ON oi.order_id = o.id
                           WHERE oi.product_id = ?

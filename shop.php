@@ -25,6 +25,22 @@ try {
     $stmt = $db->prepare($query);
     $stmt->execute($queryParams);
     $products = $stmt->fetchAll();
+
+    // Attach sizes to each product
+    if (!empty($products)) {
+        $ids = array_column($products, 'id');
+        $inClause = implode(',', array_fill(0, count($ids), '?'));
+        $szStmt = $db->prepare("SELECT id, product_id, label, price, stock, is_default FROM product_sizes WHERE product_id IN ($inClause) ORDER BY sort_order ASC, id ASC");
+        $szStmt->execute($ids);
+        $allSizes = $szStmt->fetchAll();
+        $sizesByPid = [];
+        foreach ($allSizes as $sz) $sizesByPid[$sz['product_id']][] = $sz;
+        foreach ($products as &$p) {
+            $p['sizes']     = $sizesByPid[$p['id']] ?? [];
+            $p['has_sizes'] = !empty($p['sizes']);
+        }
+        unset($p);
+    }
 } catch (Exception $e) {
     $categories = [];
     $products = [];
@@ -74,8 +90,14 @@ include 'includes/header.php';
             <span class="product-tag"><?php echo htmlspecialchars($p['category_name'] ?? 'Product'); ?></span>
             <h3><a href="<?php echo BASE_URL; ?>product?slug=<?php echo urlencode($p['slug']); ?>" style="color:inherit;"><?php echo htmlspecialchars($p['name']); ?></a></h3>
             <div class="product-card-foot" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
-              <span class="price" style="font-family:'Fraunces', serif; color:var(--gold-light); font-weight:600;">GH₵ <?php echo number_format($p['price'], 2); ?></span>
-              <button class="add-btn" onclick="addToCart(<?php echo $p['id']; ?>, 1, this)">Add to cart</button>
+              <span class="price" style="font-family:'Fraunces', serif; color:var(--gold-light); font-weight:600;">
+                <?php if ($p['has_sizes']): ?>From <?php endif; ?>GH&#8373; <?php echo number_format($p['price'], 2); ?>
+              </span>
+              <?php if ($p['has_sizes']): ?>
+              <a href="<?php echo BASE_URL; ?>product?slug=<?php echo urlencode($p['slug']); ?>" class="add-btn" style="text-decoration:none;">Choose size</a>
+              <?php else: ?>
+              <button class="add-btn" onclick="addToCart(<?php echo $p['id']; ?>, 1, null, this)">Add to cart</button>
+              <?php endif; ?>
             </div>
           </div>
           <?php endforeach; ?>
@@ -84,7 +106,7 @@ include 'includes/header.php';
       <div class="product-card reveal in" style="display:flex; flex-direction:column; justify-content:center; align-items:flex-start; background:transparent; border-style:dashed;">
         <h3 style="margin-bottom:12px;">Need a custom formula?</h3>
         <p>We produce private-label runs for salons, hotels, and cleaning services — your branding, our formulas.</p>
-        <a href="<?php echo BASE_URL; ?>contact" class="btn btn-primary" style="margin-top:8px;">Talk to our team</a>
+        <a href="<?php echo BASE_URL; ?>contact" class="btn btn-white" style="margin-top:8px;">Talk to our team</a>
       </div>
 
     </div>

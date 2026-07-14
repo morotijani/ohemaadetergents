@@ -31,9 +31,19 @@ try {
         $imagesByProduct[$img['product_id']][] = $img['image_url'];
     }
 
+    // Fetch all sizes grouped by product_id
+    $stmtSizes = $db->query("SELECT id, product_id, label, price, stock, is_default, sort_order FROM product_sizes ORDER BY product_id ASC, sort_order ASC, id ASC");
+    $allSizes = $stmtSizes->fetchAll();
+    $sizesByProduct = [];
+    foreach ($allSizes as $sz) {
+        $sizesByProduct[$sz['product_id']][] = $sz;
+    }
+
     foreach ($products as &$product) {
-        $product['uuid'] = Helpers::uuidBinToStr(hex2bin($product['uuid']));
-        $product['images'] = $imagesByProduct[$product['id']] ?? [];
+        $product['uuid']      = Helpers::uuidBinToStr(hex2bin($product['uuid']));
+        $product['images']    = $imagesByProduct[$product['id']] ?? [];
+        $product['sizes']     = $sizesByProduct[$product['id']] ?? [];
+        $product['has_sizes'] = !empty($product['sizes']);
         if ($product['image_url']) {
             array_unshift($product['images'], $product['image_url']);
         }

@@ -25,7 +25,7 @@ try {
                         ORDER BY o.created_at DESC");
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    $stmtItems = $db->query("SELECT oi.order_id, oi.quantity, oi.unit_price, p.name as product_name 
+    $stmtItems = $db->query("SELECT oi.order_id, oi.quantity, oi.unit_price, oi.size_label, p.name as product_name 
                              FROM order_items oi 
                              JOIN products p ON oi.product_id = p.id");
     $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
@@ -34,9 +34,10 @@ try {
     foreach ($items as $item) {
         $itemsByOrderId[$item['order_id']][] = [
             'product_name' => $item['product_name'],
-            'quantity' => $item['quantity'],
-            'unit_price' => $item['unit_price'],
-            'subtotal' => $item['quantity'] * $item['unit_price']
+            'size_label'   => $item['size_label'],
+            'quantity'     => $item['quantity'],
+            'unit_price'   => $item['unit_price'],
+            'subtotal'     => $item['quantity'] * $item['unit_price']
         ];
     }
     

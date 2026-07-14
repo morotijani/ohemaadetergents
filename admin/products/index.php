@@ -35,7 +35,7 @@
 
 <!-- Product Modal -->
 <div class="modal fade" id="productModal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content ohemaa-card border-0 p-0 overflow-hidden">
       <div class="modal-header border-0 p-4 pb-0">
         <div>
@@ -81,20 +81,40 @@
 
                 <!-- Right Column: Inventory & Pricing -->
                 <div class="col-md-5">
-                    <div class="p-4 rounded-4 bg-light border mb-4">
+                    <div class="p-4 rounded-4 bg-light border mb-3">
                         <h6 class="fw-bold mb-3 d-flex align-items-center">
                             <span class="material-symbols-outlined me-2 fs-5 text-success">payments</span>
-                            Inventory & Pricing
+                            Inventory &amp; Pricing
                         </h6>
-                        <div class="form-floating mb-3">
-                            <input type="number" step="0.01" class="form-control" id="productPrice" placeholder="0.00" required>
-                            <label>Price (GHS)</label>
+
+                        <!-- Has Sizes Toggle -->
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="productHasSizes" role="switch" onchange="toggleSizesUI()">
+                            <label class="form-check-label fw-medium" for="productHasSizes">This product has multiple sizes</label>
                         </div>
-                        <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="productStock" placeholder="0" required>
-                            <label>Stock Quantity</label>
+
+                        <!-- Single price/stock (shown when no sizes) -->
+                        <div id="singlePriceSection">
+                            <div class="form-floating mb-3">
+                                <input type="number" step="0.01" class="form-control" id="productPrice" placeholder="0.00">
+                                <label>Price (GHS)</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="productStock" placeholder="0">
+                                <label>Stock Quantity</label>
+                            </div>
                         </div>
-                        <div class="form-floating mb-0">
+
+                        <!-- Size manager (shown when has sizes) -->
+                        <div id="sizesSection" style="display:none;">
+                            <div id="sizeRowsContainer"></div>
+                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="addSizeRow()">
+                                <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">add</span> Add size
+                            </button>
+                            <div class="text-muted mt-2" style="font-size:11px;">Mark one size as "Default" — its price sets the shop listing price.</div>
+                        </div>
+
+                        <div class="form-floating mt-3 mb-0">
                             <input type="number" class="form-control" id="productThreshold" placeholder="5">
                             <label>Low Stock Threshold</label>
                             <div class="text-muted" style="font-size: 10px;">Default is 5. Turns red when stock hits this.</div>
@@ -133,11 +153,17 @@
   </div>
 </div>
 
+<style>
+.size-row { display:grid; grid-template-columns:1fr 90px 80px auto auto; gap:8px; align-items:center; margin-bottom:8px; }
+.size-row input { font-size:0.85rem; padding:6px 10px; border:1px solid #dee2e6; border-radius:8px; width:100%; }
+.size-row .def-radio { width:18px; height:18px; cursor:pointer; }
+</style>
 <script>
 let products = [];
 let productModalInstance = null;
 let currentExistingImages = [];
 let pendingFiles = [];
+let sizeRows = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     productModalInstance = new bootstrap.Modal(document.getElementById('productModal'));
@@ -306,12 +332,80 @@ function handleSearch(term) {
     renderTable(term);
 }
 
+function toggleSizesUI() {
+    const hasSizes = document.getElementById('productHasSizes').checked;
+    document.getElementById('singlePriceSection').style.display = hasSizes ? 'none' : '';
+    document.getElementById('sizesSection').style.display = hasSizes ? '' : 'none';
+    if (hasSizes && sizeRows.length === 0) addSizeRow();
+}
+
+function addSizeRow(label = '', price = '', stock = '', isDefault = false) {
+    const idx = sizeRows.length;
+    sizeRows.push({ label, price, stock, isDefault });
+    renderSizeRows();
+}
+
+function removeSizeRow(idx) {
+    sizeRows.splice(idx, 1);
+    if (sizeRows.length > 0 && !sizeRows.some(r => r.isDefault)) sizeRows[0].isDefault = true;
+    renderSizeRows();
+}
+
+function setDefaultSize(idx) {
+    sizeRows.forEach((r, i) => r.isDefault = (i === idx));
+    renderSizeRows();
+}
+
+function renderSizeRows() {
+    const container = document.getElementById('sizeRowsContainer');
+    container.innerHTML = '';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'size-row';
+    header.style.fontWeight = '600';
+    header.style.fontSize = '11px';
+    header.style.color = '#6c757d';
+    header.innerHTML = '<span>Label</span><span>Price (GHS)</span><span>Stock</span><span title="Default">Default</span><span></span>';
+    container.appendChild(header);
+
+    sizeRows.forEach((row, idx) => {
+        const div = document.createElement('div');
+        div.className = 'size-row';
+        div.innerHTML = `
+            <input type="text" placeholder="e.g. 350ml" value="${escHtml(row.label)}" oninput="sizeRows[${idx}].label=this.value">
+            <input type="number" step="0.01" placeholder="0.00" value="${escHtml(row.price)}" oninput="sizeRows[${idx}].price=this.value">
+            <input type="number" placeholder="0" value="${escHtml(row.stock)}" oninput="sizeRows[${idx}].stock=this.value">
+            <input type="radio" class="def-radio" name="defaultSize" ${row.isDefault ? 'checked' : ''} onchange="setDefaultSize(${idx})">
+            <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeSizeRow(${idx})"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function escHtml(v) {
+    return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getSizesJson() {
+    return JSON.stringify(sizeRows.map(r => ({
+        label:      r.label,
+        price:      parseFloat(r.price) || 0,
+        stock:      parseInt(r.stock) || 0,
+        is_default: r.isDefault ? 1 : 0
+    })));
+}
+
 function openCreateModal() {
     document.getElementById('productForm').reset();
     document.getElementById('productId').value = '';
     document.getElementById('modalTitle').innerText = 'Add Product';
     document.getElementById('modalAlert').classList.add('d-none');
-    
+    document.getElementById('productHasSizes').checked = false;
+    sizeRows = [];
+    renderSizeRows();
+    toggleSizesUI();
+
     currentExistingImages = [];
     pendingFiles = [];
     renderPreviews();
@@ -320,19 +414,31 @@ function openCreateModal() {
 function openEditModal(id) {
     const p = products.find(x => x.id == id);
     if (!p) return;
-    
+
     document.getElementById('productForm').reset();
     document.getElementById('modalAlert').classList.add('d-none');
-    
-    document.getElementById('productId').value = p.id;
-    document.getElementById('productName').value = p.name;
+
+    document.getElementById('productId').value         = p.id;
+    document.getElementById('productName').value        = p.name;
     document.getElementById('productDescription').value = p.description;
-    document.getElementById('productPrice').value = p.price;
-    document.getElementById('productStock').value = p.stock;
-    document.getElementById('productCategory').value = p.category_id || '';
-    document.getElementById('productThreshold').value = p.stock_threshold || '';
+    document.getElementById('productCategory').value    = p.category_id || '';
+    document.getElementById('productThreshold').value   = p.stock_threshold || '';
     document.getElementById('productIsFeatured').checked = p.is_featured == 1;
-    
+
+    // Sizes
+    const hasSizes = p.sizes && p.sizes.length > 0;
+    document.getElementById('productHasSizes').checked = hasSizes;
+    sizeRows = hasSizes
+        ? p.sizes.map(s => ({ label: s.label, price: s.price, stock: s.stock, isDefault: s.is_default == 1 }))
+        : [];
+    renderSizeRows();
+    toggleSizesUI();
+
+    if (!hasSizes) {
+        document.getElementById('productPrice').value = p.price;
+        document.getElementById('productStock').value = p.stock;
+    }
+
     currentExistingImages = p.images ? [...p.images] : [];
     pendingFiles = [];
     renderPreviews();
@@ -342,20 +448,27 @@ function openEditModal(id) {
 }
 
 async function saveProduct() {
-    const id = document.getElementById('productId').value;
+    const id     = document.getElementById('productId').value;
     const isEdit = !!id;
     const endpoint = isEdit ? '/products/update' : '/products/create';
-    
+    const hasSizes = document.getElementById('productHasSizes').checked;
+
     const formData = new FormData();
     if (isEdit) formData.append('id', id);
-    formData.append('name', document.getElementById('productName').value);
-    formData.append('description', document.getElementById('productDescription').value);
-    formData.append('price', document.getElementById('productPrice').value);
-    formData.append('stock', document.getElementById('productStock').value);
+    formData.append('name',            document.getElementById('productName').value);
+    formData.append('description',     document.getElementById('productDescription').value);
     formData.append('stock_threshold', document.getElementById('productThreshold').value);
-    formData.append('category_id', document.getElementById('productCategory').value);
-    formData.append('is_featured', document.getElementById('productIsFeatured').checked ? 1 : 0);
-    
+    formData.append('category_id',     document.getElementById('productCategory').value);
+    formData.append('is_featured',     document.getElementById('productIsFeatured').checked ? 1 : 0);
+
+    if (hasSizes) {
+        formData.append('sizes', getSizesJson());
+    } else {
+        formData.append('price', document.getElementById('productPrice').value);
+        formData.append('stock', document.getElementById('productStock').value);
+        formData.append('sizes', '[]');
+    }
+
     currentExistingImages.forEach(img => formData.append('existing_images[]', img));
     pendingFiles.forEach(file => formData.append('images[]', file));
     

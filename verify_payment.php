@@ -37,7 +37,7 @@ if ($result && $result['status'] === true && $result['data']['status'] === 'succ
     
     if ($orderData) {
         // Always fetch items so we can display them on the page
-        $stmt = $db->prepare("SELECT oi.quantity, oi.unit_price, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?");
+        $stmt = $db->prepare("SELECT oi.product_id, oi.size_id, oi.quantity, oi.unit_price, oi.size_label, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?");
         $stmt->execute([$orderData['order_id']]);
         $items = $stmt->fetchAll();
 
@@ -46,7 +46,29 @@ if ($result && $result['status'] === true && $result['data']['status'] === 'succ
             
             $stmt = $db->prepare("UPDATE orders SET status = 'processing' WHERE tracking_number = ?");
             $stmt->execute([$reference]);
-            
+
+            // ---- Reduce stock after confirmed payment ----
+            $affectedProductIds = [];
+            foreach ($items as $itm) {
+                if (!empty($itm['size_id'])) {
+                    // Sized product: reduce the specific size stock
+                    $db->prepare("UPDATE product_sizes SET stock = GREATEST(0, stock - ?) WHERE id = ?")
+                       ->execute([$itm['quantity'], $itm['size_id']]);
+                    // Track product for re-sync below
+                    $affectedProductIds[] = $itm['product_id'];
+                } else {
+                    // Simple product: reduce product stock directly
+                    $db->prepare("UPDATE products SET stock = GREATEST(0, stock - ?) WHERE id = ?")
+                       ->execute([$itm['quantity'], $itm['product_id']]);
+                }
+            }
+            // Re-sync parent product stock from sum of size stocks
+            foreach (array_unique($affectedProductIds) as $pid) {
+                $db->prepare("UPDATE products SET stock = (SELECT COALESCE(SUM(stock), 0) FROM product_sizes WHERE product_id = ?) WHERE id = ?")
+                   ->execute([$pid, $pid]);
+            }
+            // ---- End stock reduction ----
+
             $cart = new Cart();
             $cart->clear();
 
@@ -77,10 +99,11 @@ if ($result && $result['status'] === true && $result['data']['status'] === 'succ
         
         foreach ($items as $item) {
             $priceFormatted = number_format($item['quantity'] * $item['unit_price'], 2);
+            $sizeHtml = !empty($item['size_label']) ? "<br><span style='color:#aaa; font-size:12px;'>Size: {$item['size_label']}</span>" : '';
             $body .= "
                     <tr>
                         <td style='padding: 12px 0; color: #333; border-bottom: 1px solid #f5f5f5;'>
-                            <strong>{$item['name']}</strong><br>
+                            <strong>{$item['name']}</strong>{$sizeHtml}<br>
                             <span style='color: #888; font-size: 13px;'>Qty: {$item['quantity']}</span>
                         </td>
                         <td style='text-align: right; padding: 12px 0; color: #111; border-bottom: 1px solid #f5f5f5;'>GHS {$priceFormatted}</td>
@@ -149,7 +172,13 @@ include 'includes/header.php';
                     <div style="margin-bottom: 16px;">
                         <?php foreach($items as $item): ?>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
-                            <span><?php echo htmlspecialchars($item['name']); ?> <span style="color: #888; font-size: 0.85rem;">×<?php echo $item['quantity']; ?></span></span>
+                            <span>
+                                <?php echo htmlspecialchars($item['name']); ?>
+                                <?php if (!empty($item['size_label'])): ?>
+                                <span style="color: #888; font-size: 0.8rem; display:block;">Size: <?php echo htmlspecialchars($item['size_label']); ?></span>
+                                <?php endif; ?>
+                                <span style="color: #888; font-size: 0.85rem;">×<?php echo $item['quantity']; ?></span>
+                            </span>
                             <span>GH₵ <?php echo number_format($item['quantity'] * $item['unit_price'], 2); ?></span>
                         </div>
                         <?php endforeach; ?>

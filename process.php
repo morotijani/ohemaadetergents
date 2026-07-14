@@ -97,18 +97,18 @@
       <h2>Questions about how we make it</h2>
     </div>
     <div class="wrap-narrow" style="padding:0; margin:0 auto;">
-      <div class="accordion">
-        <div class="accordion-item">
-          <button class="accordion-trigger">Is production certified by any external body? <span class="plus">+</span></button>
-          <div class="accordion-panel"><div class="accordion-panel-inner">Our facility follows Ghana Standards Authority guidelines for household chemical manufacturing, with in-house lab checks on every batch prior to release.</div></div>
+      <div class="faq-accordion">
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger">Is production certified by any external body? <span class="plus">+</span></button>
+          <div class="faq-accordion-panel"><div class="faq-accordion-panel-inner">Our facility follows Ghana Standards Authority guidelines for household chemical manufacturing, with in-house lab checks on every batch prior to release.</div></div>
         </div>
-        <div class="accordion-item">
-          <button class="accordion-trigger">What happens if a batch fails quality testing? <span class="plus">+</span></button>
-          <div class="accordion-panel"><div class="accordion-panel-inner">It's held back from bottling and reworked to formula, or discarded if it can't be corrected. No out-of-tolerance batch is shipped.</div></div>
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger">What happens if a batch fails quality testing? <span class="plus">+</span></button>
+          <div class="faq-accordion-panel"><div class="faq-accordion-panel-inner">It's held back from bottling and reworked to formula, or discarded if it can't be corrected. No out-of-tolerance batch is shipped.</div></div>
         </div>
-        <div class="accordion-item">
-          <button class="accordion-trigger">Can I visit the Kumasi facility? <span class="plus">+</span></button>
-          <div class="accordion-panel"><div class="accordion-panel-inner">Stockists and prospective distributors are welcome to arrange a facility visit — reach out through our contact page to schedule one.</div></div>
+        <div class="faq-accordion-item">
+          <button class="faq-accordion-trigger">Can I visit the Kumasi facility? <span class="plus">+</span></button>
+          <div class="faq-accordion-panel"><div class="faq-accordion-panel-inner">Stockists and prospective distributors are welcome to arrange a facility visit — reach out through our contact page to schedule one.</div></div>
         </div>
       </div>
     </div>
